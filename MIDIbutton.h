@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "Bounce.h"
 
-extern const int MIDIchannel;
+extern int MIDIchannel;
 
 class MIDIbutton{
     int channel;

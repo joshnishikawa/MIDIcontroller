@@ -5,7 +5,7 @@
 #include "Bounce.h"
 #include "Encoder.h"
 
-extern const int MIDIchannel;
+extern int MIDIchannel;
 
 class MIDIenc{
     Encoder *myKnob;

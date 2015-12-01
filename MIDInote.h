@@ -3,14 +3,14 @@
 
 #include "Arduino.h"
 
-extern const int MIDIchannel;
+extern int MIDIchannel;
 
 class MIDInote{
     int pin;
     int channel;    
     int number;
     bool velocity;
-    bool afterTouch;
+    bool polyPressure;
     int inLo, inHi, outLo, outHi;
     bool invert;
     int threshold;
@@ -22,7 +22,7 @@ class MIDInote{
     unsigned long int timer;
     int divider;
     void readVelocity();
-    void readAftertouch();
+    void readPolyPressure();
 
   public:
     MIDInote();
@@ -38,6 +38,7 @@ class MIDInote{
     void setChannel(int ch);	
     void inputRange(int min, int max);
     void outputRange(int min, int max);
+    void setThreshold(int thresh);
 };
 
 #endif

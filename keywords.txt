@@ -10,3 +10,4 @@ setMode	KEYWORD2
 setChannel	KEYWORD2
 inputRange	KEYWORD2
 outputRange	KEYWORD2
+setThreshold  KEYWORD2

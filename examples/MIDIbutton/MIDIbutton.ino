@@ -3,7 +3,7 @@
 #include <Encoder.h>
 #include "MIDIbutton.h"
 
-const int MIDIchannel = 5;
+int MIDIchannel = 5;
 const int holdPin = 2;   // Change these numbers to
 const int latchPin = 12; // the pins you have buttons on.
 

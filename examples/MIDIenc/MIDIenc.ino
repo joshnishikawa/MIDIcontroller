@@ -3,7 +3,7 @@
 #include <Encoder.h>
 #include "MIDIcontroller.h"
 
-const int MIDIchannel = 5;
+int MIDIchannel = 5;
 
 const int encPinA = 21;   // Change these numbers to
 const int encPinB = 22;   // the two pins your encoder is on.

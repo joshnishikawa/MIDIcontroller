@@ -1,7 +1,7 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.0          //
+  //          MIDIcontroller - Version 2.0.1        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
@@ -15,7 +15,7 @@
   - Support for encoders
 
   
-***THIS LIBRARY REQUIRES THE MIDI, BOUNCE AND ENCODER LIBRARIES***
+*** THIS LIBRARY REQUIRES THE MIDI, BOUNCE AND ENCODER LIBRARIES ***
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

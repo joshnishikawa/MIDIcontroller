@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 
-extern const int MIDIchannel;
+extern int MIDIchannel;
 
 class MIDIpot{
     int pin;

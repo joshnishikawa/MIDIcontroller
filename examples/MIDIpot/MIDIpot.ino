@@ -14,7 +14,7 @@
              10k
 */
 
-const int MIDIchannel = 5;
+int MIDIchannel = 5;
 const int potPin = A0;  // Change these numbers to the ANALOG
 const int sensPin = A5; // pins your pot and sensor are on.
 

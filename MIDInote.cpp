@@ -9,18 +9,18 @@ MIDInote::MIDInote(int p, int num){
   channel = MIDIchannel;
   number = num;
   velocity = false;
-  afterTouch = false;
+  polyPressure = false;
   inLo = 0;
-  inHi = 800;
+  inHi = 1023;
   outLo = 0;
   outHi = 127;
   invert = outHi < outLo;
-  threshold = 50;
+  threshold = 100;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 100;
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
   newValue = 0;
@@ -37,18 +37,18 @@ MIDInote::MIDInote(int p, int num, bool vel){
   channel = MIDIchannel;
   number = num;
   velocity = vel;
-  afterTouch = false;
+  polyPressure = false;
   inLo = 0;
-  inHi = 800;
+  inHi = 1023;
   outLo = 0;
   outHi = 127;
   invert = outHi < outLo;
-  threshold = 50;
+  threshold = 100;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 100;
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
   newValue = 0;
@@ -65,18 +65,18 @@ MIDInote::MIDInote(int p, int num, bool vel, bool aft){
   channel = MIDIchannel;
   number = num;
   velocity = vel;
-  afterTouch = aft;
+  polyPressure = aft;
   inLo = 0;
-  inHi = 800;
+  inHi = 1023;
   outLo = 0;
   outHi = 127;
   invert = outLo > outHi;
-  threshold = 50;
+  threshold = 100;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 100;
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
   newValue = 0;
@@ -94,32 +94,32 @@ MIDInote::~MIDInote(){
 
 void MIDInote::read(){
   if (waiting){ // Wait after note off to reduce false triggers.
-    if (millis() - timer > waitTime){
+    if (micros() - timer > waitTime){
       waiting = false;
-      timer = millis();
+      timer = micros();
     }
   }
-  else if (velocity){ // readVelocity() also handles aftertouch if engaged
+  else if (velocity){ // readVelocity() also handles poly pressure if engaged
     newValue = analogRead(pin);
     readVelocity();
   }
-  else if (afterTouch){ // Aftertouch without velocity? It's possible.
+  else if (polyPressure){ // PolyPressure without velocity? It's possible.
     newValue = analogRead(pin);
     if (newValue > threshold){
       usbMIDI.sendNoteOn(number, outHi, channel);
       state = true;
-      readAftertouch();
+      readPolyPressure();
     }
     else {
       usbMIDI.sendAfterTouch(outLo, channel);
-//    usbMIDI.sendControlChange(3, newValue, channel); // SEE LINES #139 & #197
+//    usbMIDI.sendControlChange(number, newValue, channel); // SEE LINES #146 & #200
       usbMIDI.sendNoteOn(number, outLo, channel);
       state = false;
       waiting = true;
-      timer = millis();
+      timer = micros();
     }
   }
-  else { // No velocity, no aftertouch. ON/OFF only.
+  else { // No velocity, no poly pressure. ON/OFF only.
     if (state == false && analogRead(pin) >= threshold){
       usbMIDI.sendNoteOn(number, outHi, channel);
       state = true;
@@ -133,19 +133,24 @@ void MIDInote::read(){
 
 void MIDInote::readVelocity(){
   if(state){ // A note is on so... 
-    if (newValue > threshold){ // Send aftertouch until analog signal drops or
-      readAftertouch();
+    if (newValue > threshold){ // Send poly pressure until analog signal drops or
+      if (polyPressure){
+        readPolyPressure();
+      }
     }
-    else { // send a final aftertouch message and NOTE off.
-      usbMIDI.sendAfterTouch(outLo, channel);
+    else { // send a final poly pressure message and NOTE off.
+      if (polyPressure){
+        usbMIDI.sendAfterTouch(outLo, channel);
+      }
       usbMIDI.sendNoteOn(number, outLo, channel);
-      // If using aft CC, send it after the NOTE off for DAW assigning reasons.
-//    usbMIDI.sendControlChange(3, newValue, channel);
+//    if (polyPressure){ // if using CC, send AFTER note off for DAW assigning.
+//      usbMIDI.sendControlChange(number, newValue, channel);
+//    }
       state = false;
       waiting = true;
       hiVal = 0;
       loVal = threshold;
-      timer = millis();
+      timer = micros();
     }
   }
   else { // Check for user input.
@@ -156,7 +161,7 @@ void MIDInote::readVelocity(){
       loVal = newValue;
     }
 
-    if (millis() - timer >= 1){ // Compare hiVal & loVal for spikes every milli.
+    if (micros() - timer >= 500){ // Compare hiVal & loVal for spikes.
       if (listening){ // After spike detected and peak found...
         newValue = constrain(newValue / divider, outLo, outHi); // assign MIDI &
         usbMIDI.sendNoteOn(number, newValue, channel); // send NOTE on.
@@ -170,12 +175,12 @@ void MIDInote::readVelocity(){
         hiVal = 0;
         loVal = threshold;
       }
-      timer = millis();
+      timer = micros();
     }
   }
 };
 
-void MIDInote::readAftertouch(){
+void MIDInote::readPolyPressure(){
   if (newValue >= inHi){ // Explicitly assign hi analog to hi MIDI
     newValue = outHi;
   }
@@ -184,18 +189,18 @@ void MIDInote::readAftertouch(){
   }
   else if (newValue % divider == 0){ // Filter intermittent values
     newValue = map(newValue, inLo, inHi, outLo, outHi);
-    newValue = invert ? constrain(newValue, outHi, outLo) : constrain(newValue, outLo, outHi);
+    newValue = invert ? constrain(newValue, outHi, outLo) :
+                        constrain(newValue, outLo, outHi);
   }
   else{
     newValue = -1;
   }
 
   if (newValue >= 0 && newValue != value){
-
-  // I find a CC to be more versatile and easier to assign than aftertouch.
+    // I find a CC to be more versatile and easier to assign than poly pressure.
     // Uncomment whichever you wish to use...or both.
     usbMIDI.sendAfterTouch(newValue, channel);
-//  usbMIDI.sendControlChange(3, newValue, channel);
+//  usbMIDI.sendControlChange(number, newValue, channel);
 
     value = newValue;
   }
@@ -220,11 +225,15 @@ void MIDInote::inputRange(int min, int max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-void MIDInote::outputRange(int min, int max){ // Set min & max aftertouch
+void MIDInote::outputRange(int min, int max){ // Set min & max poly pressure
   outLo = min;
   outHi = max;
   invert = outLo > outHi; // Check again for reverse polarity.
   // Reset the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+};
+
+void MIDInote::setThreshold(int thresh){
+  threshold = thresh;
 };
