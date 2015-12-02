@@ -7,21 +7,33 @@ extern int MIDIchannel;
 
 class MIDIpot{
     int pin;
-    int channel;    
+    int channel;
     int number;
+    bool kill;  // in case you need to kill an effect entirely
     int inLo, inHi, outLo, outHi;
-    int divider;
-    int newValue;
+    int divider; // for converting from analog to MIDI resolution
     bool invert;
-
+    
   public:
+    // default constructor
     MIDIpot();
+    
+    // constructor when only pin & control number are given
     MIDIpot(int p, int num);
+    
+    // " when pin, control number are given and kill switch is enabled
+    MIDIpot(int p, int num, bool kll);
+    
+    // " pin, control number, minimum & maximum outgoing MIDI values are set
     MIDIpot(int p, int num, int min, int max);
+    
+    // " pin, control number, min/max values are given and kill switch is enabled
+    MIDIpot(int p, int num, int min, int max, bool kll);
+    
+    // destructor
    	~MIDIpot();
 
-    void read();
-    int value;
+    int read(); // read input and return value of message sent (or -1 if none)
     void setControlNumber(int num);
     void setChannel(int ch);	
     void inputRange(int min, int max);

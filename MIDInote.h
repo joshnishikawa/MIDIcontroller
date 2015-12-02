@@ -13,6 +13,7 @@ class MIDInote{
     bool polyPressure;
     int inLo, inHi, outLo, outHi;
     bool invert;
+    int floor;
     int threshold;
     bool listening;
     int newValue;
@@ -21,19 +22,19 @@ class MIDInote{
     unsigned int waitTime;
     unsigned long int timer;
     int divider;
-    void readVelocity();
-    void readPolyPressure();
-
+    int sendVelocity(int newValue);
+    int sendPolyPressure(int newValue);
+    int analogToMIDI(int newValue);
+    
   public:
     MIDInote();
     MIDInote(int p, int num);
     MIDInote(int p, int num, bool vel);
-    MIDInote(int p, int num, bool vel, bool aft);
+    MIDInote(int p, int num, bool vel, bool pp);
    	~MIDInote();
 
-    void read();
+    int read();
     bool state;
-    int value;
     void setNoteNumber(int num);
     void setChannel(int ch);	
     void inputRange(int min, int max);

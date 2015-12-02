@@ -16,23 +16,23 @@ class MIDIbutton{
     // default constructor
     MIDIbutton();
 
-    // constructor when only pin & message number are given
+    // constructor when only pin & control number are given
     MIDIbutton(int p, int num);
 
-    // " when pin, message number & mode are given
+    // " when pin, control number & mode are given
     MIDIbutton(int p, int num, int mod);
 
-    // " pin, message number, velocity & off value are given
+    // " pin, control number, on & off values are given
     MIDIbutton(int p, int num, int min, int max);
 
-    // " pin, message number, velocity, off value & mode are given
+    // " pin, control number, on/off values & mode are given
     MIDIbutton(int p, int num, int min, int max, int mod);
  
     // destructor
     ~MIDIbutton();
 
     Bounce *myButt;
-    void read();
+    int read(); // read input and return value of message sent (or -1 if none)
     bool state;
     void setControlNumber(int num);
     void setChannel(int ch);

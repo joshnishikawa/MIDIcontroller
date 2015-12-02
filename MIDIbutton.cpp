@@ -56,32 +56,36 @@ MIDIbutton::~MIDIbutton(){
 /* This function will send the appropriate Control Change messages for the press
 and/or release of any MIDI button whether it's set to 'latch' 'momentary' or
 'instantaneous' mode.*/
-void MIDIbutton::read(){
-  if(myButt->update()){           // Force a status report of the Bounce object.
-    if (myButt->fallingEdge()){   // If the button's been pressed,
-      if (state == false){        // and if the button was latched OFF,
-        usbMIDI.sendControlChange(number,outHi,channel);// send CC value 
-        state = true;             // and remember the button is now on.
-        if (mode == 2){           // If the button's in instant mode(2),
-          usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo 
-          state = true;           // and remember the STATE ONLY is on.
-        }
-      }
-      else{                       // If the button was latched ON,
-        if (mode == 2){           // If the button's in instant mode(2),
-          usbMIDI.sendControlChange(number,outHi,channel);// send CC max first 
-        }
-        usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo
-        state = false;             // and remember the button is now off.
+int MIDIbutton::read(){
+  int returnme = -1;
+  myButt->update();             // Force a status report of the Bounce object.
+  if (myButt->fallingEdge()){   // If the button's been pressed,
+    if (state == false){        // and if the button was latched OFF,
+      usbMIDI.sendControlChange(number,outHi,channel);// send CC value,
+      returnme = number;        // return the CC number and
+      state = true;             // remember the button is now on.
+      if (mode == 2){           // If the button's in instant mode(2),
+        usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo,
+        state = true;           // and remember the STATE ONLY is on.
       }
     }
-    else if (myButt->risingEdge()){// If the button has been released,
-      if (mode == 0){             // and if the button's in momentary mode,
-        usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo
-        state = false;            // and remember the button is now off.
+    else{                       // If the button was latched ON,
+      if (mode == 2){           // If the button's in instant mode(2),
+        usbMIDI.sendControlChange(number,outHi,channel);// send CC max first 
       }
+      usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo,
+      returnme = number;        // return the CC number and
+      state = false;            // remember the button is now off.
     }
   }
+  else if (myButt->risingEdge()){// If the button has been released,
+    if (mode == 0){             // and if the button's in momentary mode,
+      usbMIDI.sendControlChange(number,outLo,channel);// send CC outLo,
+      returnme = number;        // return the CC number and
+      state = false;            // remember the button is now off.
+    }
+  }
+  return returnme;
 };
 
 

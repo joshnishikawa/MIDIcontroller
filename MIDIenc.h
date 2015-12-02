@@ -14,13 +14,19 @@ class MIDIenc{
     int outLo, outHi;
 
   public:
+    // default constructor
     MIDIenc();
+    
+    // constructor when only pins and control number are given
     MIDIenc(int a, int b, int num);
+    
+    // " when pins, control number, minimum and maximum outgoing MIDI values set
     MIDIenc(int a, int b, int num, int min, int max);
+    
+    // destructor
     ~MIDIenc();
 
-    void read();
-    int value;
+    int read(); // read input and return value of message sent (or -1 if none)
     void setControlNumber(int num);
     void setChannel(int ch);	
     void outputRange(int min, int max);
