@@ -1,23 +1,22 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.0.2        //
+  //          MIDIcontroller - Version 2.0.3        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
 
 /*  FEATURES INCLUDE:
   - Velocity sensitive inputs with poly pressure (per-note aftertouch)
-  - momentary, latch or instant-off buttons
+  - momentary, latch or instantaneous buttons
   - Stable analog to MIDI conversion for potentiometers and other sensors
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
   - Support for encoders
 
     UPDATED IN THIS VERSION:
-  - Total restructuring of the MIDInote class
-  - MIDInote is now more stable with lower latency
-  - All read functions now return a value (for display purposes)
+  - Reading muxed analog is now stable again.
+  - Note latency has been increased from 300 micros to 1 milli for accuracy
 
     IN THE WORKS:
   - True (channel pressure) aftertouch

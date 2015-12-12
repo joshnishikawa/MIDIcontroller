@@ -8,7 +8,6 @@
 extern int MIDIchannel;
 
 class MIDIenc{
-    Encoder *myKnob;
     int channel;
     int number;
     int outLo, outHi;
@@ -27,6 +26,8 @@ class MIDIenc{
     ~MIDIenc();
 
     int read(); // read input and return value of message sent (or -1 if none)
+    int value = 0;
+    Encoder *myKnob;
     void setControlNumber(int num);
     void setChannel(int ch);	
     void outputRange(int min, int max);

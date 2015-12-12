@@ -8,7 +8,6 @@ extern int MIDIchannel;
 
 class MIDIbutton{
     int channel;
-    int number;
     int outLo, outHi;
     int mode;    
 
@@ -33,6 +32,7 @@ class MIDIbutton{
 
     Bounce *myButt;
     int read(); // read input and return value of message sent (or -1 if none)
+    int number;
     bool state;
     void setControlNumber(int num);
     void setChannel(int ch);

@@ -1,5 +1,5 @@
-#ifndef MIDIkey_h
-#define MIDIkey_h
+#ifndef MIDInote_h
+#define MIDInote_h
 
 #include "Arduino.h"
 
@@ -13,7 +13,6 @@ class MIDInote{
     bool polyPressure;
     int inLo, inHi, outLo, outHi;
     bool invert;
-    int floor;
     int threshold;
     bool listening;
     int newValue;

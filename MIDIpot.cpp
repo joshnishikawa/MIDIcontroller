@@ -8,8 +8,9 @@ MIDIpot::MIDIpot(int p, int num){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   kill = false;
- inLo = 0;
+  inLo = 0;
   inHi = 1023;
   outLo = 0;
   outHi = 127;
@@ -25,6 +26,7 @@ MIDIpot::MIDIpot(int p, int num, bool kll){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   kill = kll;
   inLo = 0;
   inHi = 1023;
@@ -42,6 +44,7 @@ MIDIpot::MIDIpot(int p, int num, int min, int max){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   kill = false;
   inLo = 0;
   inHi = 1023;
@@ -59,8 +62,9 @@ MIDIpot::MIDIpot(int p, int num, int min, int max, bool kll){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   kill = kll;
- inLo = 0;
+  inLo = 0;
   inHi = 1023;
   outLo = min;
   outHi = max;
@@ -79,7 +83,6 @@ MIDIpot::~MIDIpot(){
 // Sends CC only if there's a significant enough change in analog input
 int MIDIpot::read(){
   int returnme = -1;
-  static int value = 0;
   int newValue = analogRead(pin);
 
   if (newValue >= inHi){ // Explicitly assign hi analog to hi MIDI

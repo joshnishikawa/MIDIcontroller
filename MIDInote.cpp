@@ -15,13 +15,12 @@ MIDInote::MIDInote(int p, int num){
   outLo = 0;
   outHi = 127;
   invert = outHi < outLo;
-  floor = inLo + 3;
   threshold = 80;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 15000; // micros
+  waitTime = 10; // millis
   timer = 0;
   state = false;
 
@@ -42,13 +41,12 @@ MIDInote::MIDInote(int p, int num, bool vel){
   outLo = 0;
   outHi = 127;
   invert = outHi < outLo;
-  floor = inLo + 3;
   threshold = 80;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 15000; // micros
+  waitTime = 10; // millis
   timer = 0;
   state = false;
 
@@ -69,13 +67,12 @@ MIDInote::MIDInote(int p, int num, bool vel, bool pp){
   outLo = 0;
   outHi = 127;
   invert = outLo > outHi;
-  floor = inLo + 3;
   threshold = 80;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 15000; // micros
+  waitTime = 10; // millis
   timer = 0;
   state = false;
 
@@ -96,9 +93,9 @@ int MIDInote::read(){
   // After a note off, wait until signal hits floor to eliminate double triggers
   // on hits near the threshold & wait a few ms to eliminate phase shift.
   if (waiting){
-    if (micros() - timer > waitTime && newValue <= floor){
+    if (millis() - timer > waitTime){
       waiting = false;
-      timer = micros();
+      timer = millis();
     }
   }
   else {
@@ -160,7 +157,7 @@ int MIDInote::sendVelocity(int newValue){
       waiting = true;
       hiVal = 0;
       loVal = threshold;
-      timer = micros();
+      timer = millis();
     }
   }
   else { // Check for user input.
@@ -170,7 +167,7 @@ int MIDInote::sendVelocity(int newValue){
     else if (newValue < loVal && listening == false){ // and the lowest value.
       loVal = newValue;
     }
-    if (micros() - timer >= 300){ // Compare hiVal & loVal for spikes.
+    if (millis() - timer >= 1){ // Compare hiVal & loVal for spikes.
       if (listening){ // After spike detected and peak found...
         newValue = constrain(newValue / divider, outLo, outHi); // assign MIDI &
         usbMIDI.sendNoteOn(number, newValue, channel); // send note on.
@@ -185,7 +182,7 @@ int MIDInote::sendVelocity(int newValue){
         hiVal = 0;
         loVal = newValue;
       }
-      timer = micros();
+      timer = millis();
     }
   }
   return returnme;
@@ -218,7 +215,7 @@ int MIDInote::sendPolyPressure(int newValue){
     returnme = number;
     state = false;
     waiting = true;
-    timer = micros();
+    timer = millis();
   }
   else {
     returnme = -1;
