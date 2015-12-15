@@ -2,6 +2,7 @@ MIDIbutton	KEYWORD1
 MIDIenc	KEYWORD1
 MIDIpot	KEYWORD1
 MIDInote	KEYWORD1
+MIDIcapSens KEYWORD1
 
 read	KEYWORD2
 setNoteNumber	KEYWORD2
@@ -11,3 +12,4 @@ setChannel	KEYWORD2
 inputRange	KEYWORD2
 outputRange	KEYWORD2
 setThreshold  KEYWORD2
+setThresholds  KEYWORD2

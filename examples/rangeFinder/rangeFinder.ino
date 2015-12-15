@@ -10,7 +10,7 @@ void setup(){
 }
 int val;
 void loop(){
-  val = analogRead(A4); //Change if needed
+  val = analogRead(14); //Change if needed
   Serial.println(val);
   delay(1000);
 }
