@@ -14,14 +14,17 @@
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
 
-    UPDATED IN THIS VERSION:
-  - Added support for capacitive sensors
-  
     IN THE WORKS:
   - True (channel pressure) aftertouch
   - Interrupts for encoders
   - Support for piezos
 
+  2.0.5:
+  - Added a condition to prevent many double note triggers.
+  
+  2.0.4:
+  - Added support for capacitive sensors
+  
 
   
 ***THIS LIBRARY REQUIRES THE MIDI, BOUNCE AND ENCODER LIBRARIES***

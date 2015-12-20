@@ -9,11 +9,13 @@ class MIDInote{
     int pin;
     int channel;    
     int number;
+    int value;
     bool velocity;
     bool polyPressure;
     int inLo, inHi, outLo, outHi;
     bool invert;
     int threshold;
+    int floor;
     bool listening;
     int newValue;
     int loVal, hiVal;

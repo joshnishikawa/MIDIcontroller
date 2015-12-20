@@ -8,6 +8,7 @@ MIDInote::MIDInote(int p, int num){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   velocity = false;
   polyPressure = false;
   inLo = 0;
@@ -16,11 +17,12 @@ MIDInote::MIDInote(int p, int num){
   outHi = 127;
   invert = outHi < outLo;
   threshold = 80;
+  floor = inLo + 3;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 10; // millis
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
 
@@ -34,6 +36,7 @@ MIDInote::MIDInote(int p, int num, bool vel){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   velocity = vel;
   polyPressure = false;
   inLo = 0;
@@ -42,11 +45,12 @@ MIDInote::MIDInote(int p, int num, bool vel){
   outHi = 127;
   invert = outHi < outLo;
   threshold = 80;
+  floor = inLo + 3;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 10; // millis
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
 
@@ -60,6 +64,7 @@ MIDInote::MIDInote(int p, int num, bool vel, bool pp){
   pin = p;
   channel = MIDIchannel;
   number = num;
+  value = 0;
   velocity = vel;
   polyPressure = pp;
   inLo = 0;
@@ -68,11 +73,12 @@ MIDInote::MIDInote(int p, int num, bool vel, bool pp){
   outHi = 127;
   invert = outLo > outHi;
   threshold = 80;
+  floor = inLo + 3;
   listening = false;
   loVal = threshold; 
   hiVal = 0;
   waiting = false;
-  waitTime = 10; // millis
+  waitTime = 10000; // micros
   timer = 0;
   state = false;
 
@@ -91,11 +97,11 @@ int MIDInote::read(){
   int newValue = analogRead(pin);
 
   // After a note off, wait until signal hits floor to eliminate double triggers
-  // on hits near the threshold & wait a few ms to eliminate phase shift.
+  // on hits near the threshold & wait a few msecs to eliminate phase shift.
   if (waiting){
-    if (millis() - timer > waitTime){
+    if (micros() - timer > waitTime && newValue <= floor){
       waiting = false;
-      timer = millis();
+      timer = micros();
     }
   }
   else {
@@ -157,7 +163,7 @@ int MIDInote::sendVelocity(int newValue){
       waiting = true;
       hiVal = 0;
       loVal = threshold;
-      timer = millis();
+      timer = micros();
     }
   }
   else { // Check for user input.
@@ -167,7 +173,7 @@ int MIDInote::sendVelocity(int newValue){
     else if (newValue < loVal && listening == false){ // and the lowest value.
       loVal = newValue;
     }
-    if (millis() - timer >= 1){ // Compare hiVal & loVal for spikes.
+    if (micros() - timer >= 600){ // Compare hiVal & loVal for spikes.
       if (listening){ // After spike detected and peak found...
         newValue = constrain(newValue / divider, outLo, outHi); // assign MIDI &
         usbMIDI.sendNoteOn(number, newValue, channel); // send note on.
@@ -182,7 +188,7 @@ int MIDInote::sendVelocity(int newValue){
         hiVal = 0;
         loVal = newValue;
       }
-      timer = millis();
+      timer = micros();
     }
   }
   return returnme;
@@ -215,7 +221,7 @@ int MIDInote::sendPolyPressure(int newValue){
     returnme = number;
     state = false;
     waiting = true;
-    timer = millis();
+    timer = micros();
   }
   else {
     returnme = -1;
@@ -225,7 +231,6 @@ int MIDInote::sendPolyPressure(int newValue){
 
 
 int MIDInote::analogToMIDI(int newValue){
-  static int value = 0;
   int returnme = -1;
   
   if (newValue >= inHi){ // Explicitly assign hi analog to hi MIDI
