@@ -156,9 +156,10 @@ int MIDInote::sendVelocity(int newValue){
     else { // Send NOTE off when signal drops.
       usbMIDI.sendNoteOn(number, outLo, channel); // note off
       returnme = number;
-//    if (polyPressure){ // If using CC, send AFTER note off for DAW assigning.
-//      usbMIDI.sendControlChange(number, newValue, channel);
-//    }
+// Uncomment this 'if' statement if using CC instead of polyPressure.
+//      if (polyPressure){ // If using CC, send AFTER note off for DAW assigning.
+//        usbMIDI.sendControlChange(number, 0, channel);
+//      }
       state = false;
       waiting = true;
       hiVal = 0;
@@ -208,7 +209,7 @@ int MIDInote::sendPolyPressure(int newValue){
       newValue = analogToMIDI(newValue);
       if (newValue >= 0){
         usbMIDI.sendPolyPressure(number, newValue, channel);
-//      usbMIDI.sendControlChange(number, newValue, channel); // SEE LINE #140
+//      usbMIDI.sendControlChange(number, newValue, channel); // SEE LINE #143
       }
       else {
         returnme = -1;
@@ -217,7 +218,7 @@ int MIDInote::sendPolyPressure(int newValue){
   }
   else if (newValue <= threshold && state == true){
     usbMIDI.sendNoteOn(number, outLo, channel); // note off
-//  usbMIDI.sendControlChange(number, newValue, channel); // SEE LINE #156
+//  usbMIDI.sendControlChange(number, 0, channel); // SEE LINE #159
     returnme = number;
     state = false;
     waiting = true;
