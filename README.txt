@@ -1,7 +1,7 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.0.4        //
+  //          MIDIcontroller - Version 2.0.5        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
