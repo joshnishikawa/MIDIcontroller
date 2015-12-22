@@ -1,7 +1,7 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.0.5        //
+  //          MIDIcontroller - Version 2.0.6        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
@@ -19,11 +19,9 @@
   - Interrupts for encoders
   - Support for piezos
 
-  2.0.5:
-  - Added a condition to prevent many double note triggers.
-  
-  2.0.4:
-  - Added support for capacitive sensors
+  2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
+  2.0.5 - Added a condition to prevent many double note triggers.
+  2.0.4 - Added support for capacitive sensors
   
 
   

@@ -22,8 +22,8 @@ void setup(){
 }
 
 void loop(){
-  myCap.read();
-//  myCap.chaos(); // Try chaos instead of read.
+//  myCap.read();
+  myCap.chaos(); // Try chaos instead of read.
 }
 
 /*                MIDI NOTE NUMBERS 

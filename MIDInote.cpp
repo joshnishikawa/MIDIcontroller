@@ -156,7 +156,7 @@ int MIDInote::sendVelocity(int newValue){
     else { // Send NOTE off when signal drops.
       usbMIDI.sendNoteOn(number, outLo, channel); // note off
       returnme = number;
-// Uncomment this 'if' statement if using CC instead of polyPressure.
+// Comment out this 'if' statement if using polyPressure instead of CC.
 //      if (polyPressure){ // If using CC, send AFTER note off for DAW assigning.
 //        usbMIDI.sendControlChange(number, 0, channel);
 //      }
@@ -174,7 +174,7 @@ int MIDInote::sendVelocity(int newValue){
     else if (newValue < loVal && listening == false){ // and the lowest value.
       loVal = newValue;
     }
-    if (micros() - timer >= 600){ // Compare hiVal & loVal for spikes.
+    if (micros() - timer >= 100){ // Compare hiVal & loVal for spikes.
       if (listening){ // After spike detected and peak found...
         newValue = constrain(newValue / divider, outLo, outHi); // assign MIDI &
         usbMIDI.sendNoteOn(number, newValue, channel); // send note on.

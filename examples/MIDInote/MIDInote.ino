@@ -8,9 +8,9 @@
   force sensitive resistor.
   It's wired like so:
  
-  GND---(FORCE RESISTOR)---\
+  3.3v--(FORCE RESISTOR)---\
                             )---Analog Pin
-  3.3v-------/\/\/---------/
+  GND--------/\/\/---------/
               10k
 */
 
@@ -18,12 +18,15 @@ int MIDIchannel = 5;
 const int pressPin = A0; // Change this to the correct ANALOG pin
 
 // Note Parameters are: pin, note number, velocity on, poly pressure on
-MIDInote myPad(pressPin, 37, true, false);
+MIDInote myPad(pressPin, 37, true, true);
 
 void setup(){
   // Use the rangeFinder example to find the usable range of
   // your sensor and enter it here.
-  myPad.inputRange(50, 830);
+  myPad.inputRange(10, 800);
+
+  // Set the threshold where you want notes to trigger.
+  myPad.setThreshold(50);
   MIDI.begin();
 }
 
