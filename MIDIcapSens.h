@@ -3,11 +3,10 @@
 
 #include "Arduino.h"
 
-extern int MIDIchannel;
+extern int* MC;
 
 class MIDIcapSens{
     int pin;
-    int channel;    
     int number;
     bool afterRelease;
     int outLo, outHi;
@@ -22,13 +21,13 @@ class MIDIcapSens{
     MIDIcapSens(int p, int num, int min, int max);
    	~MIDIcapSens();
 
-    int read();
+    int read(); // returns 2:risingEdge, 1:fallingEdge, 0:outOfRange, -1:none
+    int send(); // calls read(), sends a MIDI value & returns the value
     int chaos();
     int value;
     bool hovered;
     bool touched;
     void setNoteNumber(int num);
-    void setChannel(int ch);	
     void outputRange(int min, int max);
     void setThresholds(int loT, int hiT);
     void setThresholds(int offT, int loT, int hiT);

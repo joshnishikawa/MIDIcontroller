@@ -6,7 +6,6 @@ MIDIpot::MIDIpot(){};
 MIDIpot::MIDIpot(int p, int num){
   pinMode(p, INPUT);
   pin = p;
-  channel = MIDIchannel;
   number = num;
   value = 0;
   kill = false;
@@ -24,7 +23,6 @@ MIDIpot::MIDIpot(int p, int num){
 MIDIpot::MIDIpot(int p, int num, bool kll){
   pinMode(p, INPUT);
   pin = p;
-  channel = MIDIchannel;
   number = num;
   value = 0;
   kill = kll;
@@ -42,7 +40,6 @@ MIDIpot::MIDIpot(int p, int num, bool kll){
 MIDIpot::MIDIpot(int p, int num, int min, int max){
   pinMode(p, INPUT);
   pin = p;
-  channel = MIDIchannel;
   number = num;
   value = 0;
   kill = false;
@@ -60,7 +57,6 @@ MIDIpot::MIDIpot(int p, int num, int min, int max){
 MIDIpot::MIDIpot(int p, int num, int min, int max, bool kll){
   pinMode(p, INPUT);
   pin = p;
-  channel = MIDIchannel;
   number = num;
   value = 0;
   kill = kll;
@@ -82,44 +78,43 @@ MIDIpot::~MIDIpot(){
 
 // Sends CC only if there's a significant enough change in analog input
 int MIDIpot::read(){
-  int returnme = -1;
   int newValue = analogRead(pin);
-
-  if (newValue >= inHi){ // Explicitly assign hi analog to hi MIDI
+  if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
     newValue = outHi;
   }
-  else if (newValue <= inLo){ // Explicitly assign low analog to low MIDI
+  else if (newValue <= inLo && value != outLo){ // Assign low analog to low MIDI
     newValue = outLo;
   }
   else if (newValue % divider == 0){ // Filter intermittent values
     newValue = map(newValue, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
-  }
-  else{
-    newValue = -1;
-  }
-
-  if (newValue >= 0 && newValue != value){
-    if (kill == true && newValue > 0 && value == 0){ // Send on BEFORE main msg
-      usbMIDI.sendControlChange(3, 127, channel);
+    if (newValue == value){
+      newValue = -1;
     }
-    usbMIDI.sendControlChange(number, newValue, channel); // MAIN MESSAGE
-    if (kill == true && newValue == 0 && value > 0){ // Send kill AFTER main msg
-      usbMIDI.sendControlChange(3, 0, channel);
+  }
+  else{newValue = -1;}
+  return newValue;
+};
+
+int MIDIpot::send(){
+  int newValue = read();
+  if (kill == true && newValue > outLo && value == outLo){ // ON before main msg
+    usbMIDI.sendControlChange(3, 127, *MC);
+  }
+  if (newValue >= 0){
+    usbMIDI.sendControlChange(number, newValue, *MC);    // MAIN MESSAGE
+    if (kill == true && newValue == outLo && value > outLo){ //KILL aft main msg
+      usbMIDI.sendControlChange(3, 0, *MC);
     }
     value = newValue;
-    returnme = value;
   }
-  return returnme;
+  return newValue;
 };
+
 
 void MIDIpot::setControlNumber(int num){ // Set the CC number.
   number = num;
-};
-
-void MIDIpot::setChannel(int ch){ // Set the MIDI channel
-  channel = ch;
 };
 
 // Limit the analog input to the usable range of a sensor.

@@ -1,5 +1,5 @@
-MIDIcapSens.ino.o: \
- C:\Users\Josh\AppData\Local\Temp\build35a2998eeff84bc0d65c3007ea2ee573.tmp\sketch\MIDIcapSens.ino.cpp \
+MIDIpot.ino.o: \
+ C:\Users\Josh\AppData\Local\Temp\build431aede76374cb919aabfa628ee9ba2b.tmp\sketch\MIDIpot.ino.cpp \
  C:\Arduino\libraries\MIDIcontroller/MIDIcontroller.h \
  C:\Arduino\libraries\MIDIcontroller/MIDIbutton.h \
  C:\Arduino\hardware\teensy\avr\cores\teensy3/Arduino.h \

@@ -4,10 +4,9 @@
 #include "Arduino.h"
 #include "Bounce.h"
 
-extern int MIDIchannel;
+extern int* MC;
 
 class MIDIbutton{
-    int channel;
     int outLo, outHi;
     int mode;    
 
@@ -31,11 +30,11 @@ class MIDIbutton{
     ~MIDIbutton();
 
     Bounce *myButt;
-    int read(); // read input and return value of message sent (or -1 if none)
+    int read(); // returns 1 for fallingEdge, 0 for risingEdge or -1 if neither
+    int send(); // calls read(), sends a MIDI value & returns the control number
     int number;
     bool state;
     void setControlNumber(int num);
-    void setChannel(int ch);
     void setMode(int mod);
     void outputRange(int min, int max);
 };

@@ -5,6 +5,7 @@
 #include "MIDIpot.h"
 #include "MIDIenc.h"
 #include "MIDInote.h"
+#include "MIDIcapSens.h"
 
 #endif
 

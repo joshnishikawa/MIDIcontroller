@@ -5,10 +5,9 @@
 #include "Bounce.h"
 #include "Encoder.h"
 
-extern int MIDIchannel;
+extern int* MC;
 
 class MIDIenc{
-    int channel;
     int number;
     int outLo, outHi;
 
@@ -25,11 +24,11 @@ class MIDIenc{
     // destructor
     ~MIDIenc();
 
-    int read(); // read input and return value of message sent (or -1 if none)
+    int read(); // read input and return a MIDI value (or -1 if none)
+    int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
     int value = 0;
     Encoder *myKnob;
     void setControlNumber(int num);
-    void setChannel(int ch);	
     void outputRange(int min, int max);
 };
 

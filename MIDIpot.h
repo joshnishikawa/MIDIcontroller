@@ -3,11 +3,10 @@
 
 #include "Arduino.h"
 
-extern int MIDIchannel;
+extern int* MC;
 
 class MIDIpot{
     int pin;
-    int channel;
     int number;
     bool kill;  // in case you need to kill an effect entirely
     int inLo, inHi, outLo, outHi;
@@ -33,10 +32,10 @@ class MIDIpot{
     // destructor
    	~MIDIpot();
 
-    int read(); // read input and return value of message sent (or -1 if none)
+    int read(); // read input and return a MIDI value (or -1 if none)
+    int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
     int value = 0;
     void setControlNumber(int num);
-    void setChannel(int ch);	
     void inputRange(int min, int max);
     void outputRange(int min, int max);
 };

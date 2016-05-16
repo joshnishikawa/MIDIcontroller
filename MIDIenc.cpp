@@ -10,7 +10,6 @@ MIDIenc::MIDIenc(){};
 
 MIDIenc::MIDIenc(int a, int b, int num){
   myKnob = new Encoder(a, b);
-	channel = MIDIchannel;
 	number = num;
   value = 0;
   outLo = 0;
@@ -19,7 +18,6 @@ MIDIenc::MIDIenc(int a, int b, int num){
 
 MIDIenc::MIDIenc(int a, int b, int num, int min, int max){
   myKnob = new Encoder(a, b);
-	channel = MIDIchannel;
 	number = num;
   value = 0;
   outLo = min;
@@ -33,29 +31,29 @@ MIDIenc::~MIDIenc(){
 
 
 int MIDIenc::read(){
-  int returnme = -1;
+  int newValue = -1;
   int incdec = myKnob->read(); // Using only +1 or -1
   myKnob->write(0);            // then resetting to 0
-  // allows one MIDIencoder to set values for any number of objects.
-
   if((incdec == 1 && value < outHi) || (incdec == -1 && value > outLo)){
     // If turned up but not already maxed OR down but not already bottomed out
-    value += incdec;
-    usbMIDI.sendControlChange(number, value, channel);
-    returnme = value;
+    newValue = value + incdec;
   }
-  return returnme;
+  else {newValue = -1;}
+  return newValue;
 };
 
+int MIDIenc::send(){
+  int newValue = read();
+  if (newValue >= 0){
+    usbMIDI.sendControlChange(number, newValue, *MC);
+    value = newValue;
+  }
+  return newValue;
+}
 
 // Set the CC number.
 void MIDIenc::setControlNumber(int num){
   number = num;
-};
-
-// Set a specific MIDI channel for a single enc.
-void MIDIenc::setChannel(int ch){
-  channel = ch;
 };
 
 // Set upper and lower limits for outgoing MIDI messages.
