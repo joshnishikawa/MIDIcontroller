@@ -1,7 +1,7 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.0.6        //
+  //          MIDIcontroller - Version 2.1.0        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
@@ -16,9 +16,9 @@
 
     IN THE WORKS:
   - True (channel pressure) aftertouch
-  - Interrupts for encoders
   - Support for piezos
 
+  2.1.0 - Split read() and send() functions. MIDI channel is now user selectable
   2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
   2.0.5 - Added a condition to prevent many double note triggers.
   2.0.4 - Added support for capacitive sensors
