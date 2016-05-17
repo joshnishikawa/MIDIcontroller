@@ -1,4 +1,6 @@
-/*This is just here for your convenience.
+/*
+  TODO: needs to handle capsens, and auto-store min/max values
+  This is just here for your convenience.
   You can read any analog sensor and have it
   printed to the serial monitor while you
   find the desired upper and lower limits
@@ -10,7 +12,7 @@ void setup(){
 }
 int val;
 void loop(){
-  val = analogRead(14); //Change if needed
+  val = analogRead(A0); //Change if needed
   Serial.println(val);
-  delay(1000);
+  delay(100);
 }

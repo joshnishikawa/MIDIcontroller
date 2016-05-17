@@ -1,6 +1,3 @@
-#include <MIDI.h>
-#include <Bounce.h>
-#include <Encoder.h>
 #include "MIDIcontroller.h"
 
 // This is an example of how to set up a capacitive touch
@@ -17,13 +14,11 @@ MIDIcapSens myCap(capPin, 60, 20, 100);
 
 void setup(){
   // Thresholds for note OFF, afterRelease, and note ON
-  myCap.setThresholds(1150, 1500, 4500);
-  MIDI.begin();
+  myCap.setThresholds(1080, 1300, 2200);
 }
 
 void loop(){
-//  myCap.read();
-  myCap.chaos(); // Try chaos instead of read.
+  myCap.send();
 }
 
 /*                MIDI NOTE NUMBERS 

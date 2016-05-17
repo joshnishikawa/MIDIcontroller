@@ -1,6 +1,3 @@
-#include <MIDI.h>
-#include <Bounce.h>
-#include <Encoder.h>
 #include "MIDIcontroller.h"
 
 /*This is an example of how to set up
@@ -17,21 +14,20 @@
 int MIDIchannel = 5;
 const int pressPin = A0; // Change this to the correct ANALOG pin
 
-// Note Parameters are: pin, note number, velocity on, poly pressure on
-MIDInote myPad(pressPin, 37, true, true);
+// Note Parameters are: pin, note number, velocity on
+MIDInote myPad(pressPin, 37, true);
 
 void setup(){
   // Use the rangeFinder example to find the usable range of
   // your sensor and enter it here.
-  myPad.inputRange(10, 800);
+  myPad.inputRange(300, 760);
 
   // Set the threshold where you want notes to trigger.
-  myPad.setThreshold(50);
-  MIDI.begin();
+  myPad.setThreshold(100);
 }
 
 void loop(){
-  myPad.read();
+  myPad.send();
 }
 
 /*                MIDI NOTE NUMBERS 

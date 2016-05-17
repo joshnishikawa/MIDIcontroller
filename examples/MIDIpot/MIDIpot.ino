@@ -1,6 +1,3 @@
-#include <MIDI.h>
-#include <Bounce.h>
-#include <Encoder.h>
 #include "MIDIcontroller.h"
 
 /*This is an example of how to use
@@ -8,15 +5,15 @@
   The use of a photocell will be
   demonstrated. I'ts wired like so:
  
-  GND---(PHOTO CELL)---\
+  3.3v--(PHOTO CELL)---\
                         )---Analog Pin
-  3.3v------/\/\/------/
+  GND-------/\/\/------/
              10k
 */
 
 int MIDIchannel = 5;
 const int potPin = A0;  // Change these numbers to the ANALOG
-const int sensPin = A5; // pins your pot and sensor are on.
+const int sensPin = A9; // pins your pot and sensor are on.
 
 // Pot parameters are: pin, CC number, min value, max value
 MIDIpot myPot(potPin, 22, 0, 63);
@@ -28,11 +25,9 @@ void setup(){
   // Use the rangeFinder example to find the usable range of
   // your sensor and enter it here. (not necessary for potentiometers)
   mySensor.inputRange(350, 950);
-
-  MIDI.begin();
 }
 
 void loop(){
-  myPot.read();
-  mySensor.read();
+  myPot.send();
+//  mySensor.send();
 }
