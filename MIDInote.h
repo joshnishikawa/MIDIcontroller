@@ -3,9 +3,10 @@
 
 #include "Arduino.h"
 
-extern int* MC;
+extern int MIDIchannel;
 
 class MIDInote{
+    int* MC = &MIDIchannel;
     int pin;
     int number;
     int value;

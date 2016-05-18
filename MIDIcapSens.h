@@ -3,9 +3,10 @@
 
 #include "Arduino.h"
 
-extern int* MC;
+extern int MIDIchannel;
 
 class MIDIcapSens{
+    int* MC = &MIDIchannel;
     int pin;
     int number;
     bool afterRelease;

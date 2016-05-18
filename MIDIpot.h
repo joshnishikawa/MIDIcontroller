@@ -3,9 +3,10 @@
 
 #include "Arduino.h"
 
-extern int* MC;
+extern int MIDIchannel;
 
 class MIDIpot{
+    int* MC = &MIDIchannel;
     int pin;
     int number;
     bool kill;  // in case you need to kill an effect entirely
