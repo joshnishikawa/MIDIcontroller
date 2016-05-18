@@ -87,12 +87,12 @@ int MIDInote::read(){
         if (newValue > hiVal){ // Keep track of the highest value...
           hiVal = newValue;
         }
-        else if (newValue < loVal && listening == false){ // and the lowest value.
+        else if (newValue < loVal && listening == false){//and the lowest value.
           loVal = newValue;
         }
         if (micros() - timer >= 100){ // Compare hiVal & loVal for spikes.
           if (listening){ // After spike detected and peak found...
-            newValue = constrain(newValue / divider, outLo, outHi); // assign MIDI &
+            newValue = constrain(hiVal / divider, outLo, outHi);//assign MIDI
             state = true;
             listening = false;
           }
