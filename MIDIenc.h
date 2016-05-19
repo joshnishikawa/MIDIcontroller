@@ -5,10 +5,10 @@
 #include "Bounce.h"
 #include "Encoder.h"
 
-extern int MIDIchannel;
+extern byte MIDIchannel;
 
 class MIDIenc{
-    int* MC = &MIDIchannel;
+    byte* MC = &MIDIchannel;
     int number;
     int outLo, outHi;
 

@@ -1,6 +1,6 @@
 #include "MIDIcontroller.h"
 
-int MIDIchannel = 5;
+byte MIDIchannel = 5;
 
 const int encPinA = 20;   // Change these numbers to
 const int encPinB = 21;   // the two pins your encoder is on.

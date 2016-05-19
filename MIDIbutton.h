@@ -4,10 +4,10 @@
 #include "Arduino.h"
 #include "Bounce.h"
 
-extern int MIDIchannel;
+extern byte MIDIchannel;
 
 class MIDIbutton{
-    int* MC = &MIDIchannel;
+    byte* MC = &MIDIchannel;
     int outLo, outHi;
     int mode;    
 

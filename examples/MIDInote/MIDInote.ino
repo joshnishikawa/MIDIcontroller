@@ -11,7 +11,7 @@
               10k
 */
 
-int MIDIchannel = 5;
+byte MIDIchannel = 5;
 const int pressPin = A0; // Change this to the correct ANALOG pin
 
 // Note Parameters are: pin, note number, velocity on

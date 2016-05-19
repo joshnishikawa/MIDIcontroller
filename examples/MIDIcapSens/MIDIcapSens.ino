@@ -6,7 +6,7 @@
 // conductive between the metal and skin gives smoother response.
 
 
-int MIDIchannel = 5;
+byte MIDIchannel = 5;
 const int capPin = 0; // Change this to the correct TOUCH pin
 
 // capSens Parameters are: pin, note number, 'afterRelease' velocity, and note velocity

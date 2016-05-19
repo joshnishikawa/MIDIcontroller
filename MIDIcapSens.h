@@ -3,10 +3,10 @@
 
 #include "Arduino.h"
 
-extern int MIDIchannel;
+extern byte MIDIchannel;
 
 class MIDIcapSens{
-    int* MC = &MIDIchannel;
+    byte* MC = &MIDIchannel;
     int pin;
     int number;
     bool afterRelease;
