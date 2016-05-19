@@ -3,10 +3,10 @@
 
 #include "Arduino.h"
 
-extern int MIDIchannel;
+extern byte MIDIchannel;
 
 class MIDInote{
-    int* MC = &MIDIchannel;
+    byte* MC = &MIDIchannel;
     int pin;
     int number;
     int value;
@@ -32,6 +32,7 @@ class MIDInote{
     int read();
     int send();
     bool state;
+    int afterTouchValue;
     void setNoteNumber(int num);
     void inputRange(int min, int max);
     void outputRange(int min, int max);

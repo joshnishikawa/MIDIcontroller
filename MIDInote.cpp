@@ -23,6 +23,7 @@ MIDInote::MIDInote(int p, int num){
   waitTime = 10000; // micros
   timer = 0;
   state = false;
+  afterTouchValue = 0;
 
   // Sets the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
@@ -49,7 +50,8 @@ MIDInote::MIDInote(int p, int num, bool vel){
   waitTime = 10000; // micros
   timer = 0;
   state = false;
-
+  afterTouchValue = 0;
+  
   // Sets the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
@@ -75,15 +77,20 @@ int MIDInote::read(){
       if(state){ // A note is on so... 
         if (newValue < threshold){ // Send NOTE off when signal drops.
           newValue = outLo;
+          afterTouchValue = 0;
           state = false;
           waiting = true;
           hiVal = 0;
           loVal = threshold;
           timer = micros();
         }
-        else {newValue = -1;}
+        else {
+          afterTouchValue = constrain(newValue / divider, outLo, outHi);
+          newValue = -1;
+        }
       }
       else { // Check for user input.
+        afterTouchValue = -1;
         if (newValue > hiVal){ // Keep track of the highest value...
           hiVal = newValue;
         }
@@ -92,7 +99,7 @@ int MIDInote::read(){
         }
         if (micros() - timer >= 100){ // Compare hiVal & loVal for spikes.
           if (listening){ // After spike detected and peak found...
-            newValue = constrain(hiVal / divider, outLo, outHi);//assign MIDI
+            newValue = constrain(hiVal / divider, outLo, outHi); // assign MIDI
             state = true;
             listening = false;
           }
