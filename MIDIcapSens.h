@@ -8,28 +8,28 @@ extern byte MIDIchannel;
 class MIDIcapSens{
     byte* MC = &MIDIchannel;
     int pin;
-    int number;
-    bool afterRelease;
-    int outLo, outHi;
-    int hiThreshold, loThreshold, offThreshold;
     bool waiting;
     unsigned int waitTime;
     unsigned long int timer;
+    bool hovered;
+    bool touched;
     
   public:
     MIDIcapSens();
-    MIDIcapSens(int p, int num);
-    MIDIcapSens(int p, int num, int min, int max);
+    MIDIcapSens(int p, byte num);
+    MIDIcapSens(int p, byte num, byte min, byte max);
    	~MIDIcapSens();
 
     int read(); // returns 2:risingEdge, 1:fallingEdge, 0:outOfRange, -1:none
     int send(); // calls read(), sends a MIDI value & returns the value
     int chaos();
     int value;
-    bool hovered;
-    bool touched;
-    void setNoteNumber(int num);
-    void outputRange(int min, int max);
+    int number;
+    bool afterRelease;
+    byte outLo, outHi;
+    int hiThreshold, loThreshold, offThreshold;
+    void setNoteNumber(byte num);
+    void outputRange(byte min, byte max);
     void setThresholds(int loT, int hiT);
     void setThresholds(int offT, int loT, int hiT);
 };

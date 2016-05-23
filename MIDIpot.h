@@ -8,9 +8,6 @@ extern byte MIDIchannel;
 class MIDIpot{
     byte* MC = &MIDIchannel;
     int pin;
-    int number;
-    bool kill;  // in case you need to kill an effect entirely
-    int inLo, inHi, outLo, outHi;
     int divider; // for converting from analog to MIDI resolution
     bool invert;
     
@@ -19,26 +16,30 @@ class MIDIpot{
     MIDIpot();
     
     // constructor when only pin & control number are given
-    MIDIpot(int p, int num);
+    MIDIpot(int p, byte num);
     
     // " when pin, control number are given and kill switch is enabled
-    MIDIpot(int p, int num, bool kll);
+    MIDIpot(int p, byte num, bool kll);
     
     // " pin, control number, minimum & maximum outgoing MIDI values are set
-    MIDIpot(int p, int num, int min, int max);
+    MIDIpot(int p, byte num, byte min, byte max);
     
     // " pin, control number, min/max values are given and kill switch is enabled
-    MIDIpot(int p, int num, int min, int max, bool kll);
+    MIDIpot(int p, byte num, byte min, byte max, bool kll);
     
     // destructor
    	~MIDIpot();
 
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
-    int value = 0;
-    void setControlNumber(int num);
-    void inputRange(int min, int max);
-    void outputRange(int min, int max);
+    byte number;
+    uint16_t inLo, inHi;
+    byte outLo, outHi;
+    bool kill;  // in case you need to kill an effect entirely
+    byte value;
+    void setControlNumber(byte num);
+    void inputRange(uint16_t min, uint16_t max);
+    void outputRange(byte min, byte max);
 };
 
 #endif

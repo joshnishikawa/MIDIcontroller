@@ -8,13 +8,8 @@ extern byte MIDIchannel;
 class MIDInote{
     byte* MC = &MIDIchannel;
     int pin;
-    int number;
     int value;
-    bool velocity;
-    int inLo, inHi, outLo, outHi;
     bool invert;
-    int threshold;
-    int floor;
     bool listening;
     int newValue;
     int loVal, hiVal;
@@ -24,18 +19,31 @@ class MIDInote{
     int divider;
     
   public:
+    // default constructor
     MIDInote();
-    MIDInote(int p, int num);
-    MIDInote(int p, int num, bool vel);
+    
+    // constructor when only pin and note number are given
+    MIDInote(int p, byte num);
+
+    // constructor when pin, note number and velocity sensitivity are specified
+    MIDInote(int p, byte num, bool vel);
+
+    // destructor
    	~MIDInote();
 
     int read();
     int send();
     bool state;
+    byte number;
+    bool velocity;
+    int inLo, inHi;
+    byte outLo, outHi;
     int afterTouchValue;
-    void setNoteNumber(int num);
+    int threshold;
+    int floor;
+    void setNoteNumber(byte num);
     void inputRange(int min, int max);
-    void outputRange(int min, int max);
+    void outputRange(byte min, byte max);
     void setThreshold(int thresh);
 };
 

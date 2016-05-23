@@ -1,13 +1,13 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.1.2        //
+  //          MIDIcontroller - Version 2.1.3        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
 
 /*  FEATURES INCLUDE:
-  - Velocity sensitive inputs
+  - Velocity sensitive inputs (with Aftertouch or Poly Pressure)
   - momentary, latch or instantaneous buttons
   - Stable analog to MIDI conversion for potentiometers and other sensors
   - Support for encoders and capacitive sensors
@@ -15,14 +15,17 @@
       can also be set for analog input (maintaining stability in conversion)
 
     IN THE WORKS:
-  - True (channel pressure) aftertouch
   - Support for piezos
+  - Muxing of large arrays of notes
+  - More user-friendly 'rangeFinder' example
 
-  2.1.2 - new afterTouchValue for MIDInote, MIDIchannel is now a byte
+  2.1.3 - included an example of how to implement aftertouch
+  2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
+          public and private variables are better sorted
   2.1.0 - Split read() and send() functions. MIDI channel is now user selectable
   2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
   2.0.5 - Added a condition to prevent many double note triggers.
-  2.0.4 - Added support for capacitive sensors
+  2.0.4 - Added support for capacitive sensors (and started this version log)
   
 
   

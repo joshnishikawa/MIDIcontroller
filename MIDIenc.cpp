@@ -8,7 +8,7 @@
 // constructors
 MIDIenc::MIDIenc(){};
 
-MIDIenc::MIDIenc(int a, int b, int num){
+MIDIenc::MIDIenc(int a, int b, byte num){
   myKnob = new Encoder(a, b);
 	number = num;
   value = 0;
@@ -16,7 +16,7 @@ MIDIenc::MIDIenc(int a, int b, int num){
   outHi = 127;
 };
 
-MIDIenc::MIDIenc(int a, int b, int num, int min, int max){
+MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max){
   myKnob = new Encoder(a, b);
 	number = num;
   value = 0;
@@ -33,12 +33,12 @@ MIDIenc::~MIDIenc(){
 int MIDIenc::read(){
   int newValue = -1;
   int incdec = myKnob->read(); // Using only +1 or -1
-  myKnob->write(0);            // then resetting to 0
-  if((incdec == 1 && value < outHi) || (incdec == -1 && value > outLo)){
+  if((incdec >= 1 && value < outHi) || (incdec <= -1 && value > outLo)){
     // If turned up but not already maxed OR down but not already bottomed out
-    newValue = value + incdec;
+    myKnob->write(0);           // then reset to 0
+    newValue = value + incdec;  // and return new value
   }
-  else {newValue = -1;}
+  else{newValue = -1;}
   return newValue;
 };
 
@@ -52,12 +52,12 @@ int MIDIenc::send(){
 }
 
 // Set the CC number.
-void MIDIenc::setControlNumber(int num){
+void MIDIenc::setControlNumber(byte num){
   number = num;
 };
 
 // Set upper and lower limits for outgoing MIDI messages.
-void MIDIenc::outputRange(int min, int max){
+void MIDIenc::outputRange(byte min, byte max){
   outLo = min;
   outHi = max;
 };

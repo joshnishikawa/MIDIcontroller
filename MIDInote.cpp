@@ -3,7 +3,7 @@
 // constructors
 MIDInote::MIDInote(){};
 
-MIDInote::MIDInote(int p, int num){
+MIDInote::MIDInote(int p, byte num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -30,7 +30,7 @@ MIDInote::MIDInote(int p, int num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDInote::MIDInote(int p, int num, bool vel){
+MIDInote::MIDInote(int p, byte num, bool vel){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -142,7 +142,7 @@ int MIDInote::send(){
   return newValue;
 };
 
-void MIDInote::setNoteNumber(int num){ // Set the NOTE number.
+void MIDInote::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
@@ -156,7 +156,7 @@ void MIDInote::inputRange(int min, int max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-void MIDInote::outputRange(int min, int max){ // Set min & max poly pressure
+void MIDInote::outputRange(byte min, byte max){ // Set min & max poly pressure
   outLo = min;
   outHi = max;
   invert = outLo > outHi; // Check again for reverse polarity.

@@ -3,7 +3,7 @@
 // constructors
 MIDIcapSens::MIDIcapSens(){};
 
-MIDIcapSens::MIDIcapSens(int p, int num){
+MIDIcapSens::MIDIcapSens(int p, byte num){
   pin = p;
   number = num;
   value = 0;
@@ -20,7 +20,7 @@ MIDIcapSens::MIDIcapSens(int p, int num){
   touched = false;
 };
 
-MIDIcapSens::MIDIcapSens(int p, int num, int min, int max){
+MIDIcapSens::MIDIcapSens(int p, byte num, byte min, byte max){
   pin = p;
   number = num;
   value = 0;
@@ -127,7 +127,7 @@ int MIDIcapSens::chaos(){
   return newValue;
 };
 
-void MIDIcapSens::setNoteNumber(int num){ // Set the NOTE number.
+void MIDIcapSens::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
@@ -145,7 +145,7 @@ void MIDIcapSens::setThresholds(int offT, int loT, int hiT){
   afterRelease = true;
 };
 
-void MIDIcapSens::outputRange(int min, int max){
+void MIDIcapSens::outputRange(byte min, byte max){
   outLo = min;
   outHi = max;
 };

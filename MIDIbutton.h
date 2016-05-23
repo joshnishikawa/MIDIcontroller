@@ -8,24 +8,22 @@ extern byte MIDIchannel;
 
 class MIDIbutton{
     byte* MC = &MIDIchannel;
-    int outLo, outHi;
-    int mode;    
 
   public:
     // default constructor
     MIDIbutton();
 
     // constructor when only pin & control number are given
-    MIDIbutton(int p, int num);
+    MIDIbutton(int p, byte num);
 
     // " when pin, control number & mode are given
-    MIDIbutton(int p, int num, int mod);
+    MIDIbutton(int p, byte num, byte mod);
 
     // " pin, control number, on & off values are given
-    MIDIbutton(int p, int num, int min, int max);
+    MIDIbutton(int p, byte num, byte min, byte max);
 
     // " pin, control number, on/off values & mode are given
-    MIDIbutton(int p, int num, int min, int max, int mod);
+    MIDIbutton(int p, byte num, byte min, byte max, byte mod);
  
     // destructor
     ~MIDIbutton();
@@ -33,11 +31,13 @@ class MIDIbutton{
     Bounce *myButt;
     int read(); // returns 1 for fallingEdge, 0 for risingEdge or -1 if neither
     int send(); // calls read(), sends a MIDI value & returns the control number
-    int number;
+    byte number;
+    byte outLo, outHi;
+    byte mode;    
     bool state;
-    void setControlNumber(int num);
-    void setMode(int mod);
-    void outputRange(int min, int max);
+    void setControlNumber(byte num);
+    void setMode(byte mod);
+    void outputRange(byte min, byte max);
 };
 
 #endif

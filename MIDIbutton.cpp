@@ -3,7 +3,7 @@
 // constructors
 MIDIbutton::MIDIbutton(){};
 
-MIDIbutton::MIDIbutton(int p, int num){
+MIDIbutton::MIDIbutton(int p, byte num){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -13,7 +13,7 @@ MIDIbutton::MIDIbutton(int p, int num){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, int num, int mod){
+MIDIbutton::MIDIbutton(int p, byte num, byte mod){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -23,7 +23,7 @@ MIDIbutton::MIDIbutton(int p, int num, int mod){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, int num, int min, int max){
+MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -33,7 +33,7 @@ MIDIbutton::MIDIbutton(int p, int num, int min, int max){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, int num, int min, int max, int mod){
+MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max, byte mod){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -58,7 +58,7 @@ int MIDIbutton::read(){
   else if (myButt->risingEdge()){// If the button has been released,
     newValue = outLo;            // return the CC value and
   }
-  else {newValue = -1;}
+  else{newValue = -1;}
   return newValue;
 };
 
@@ -71,11 +71,13 @@ int MIDIbutton::send(){
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
       usbMIDI.sendControlChange(number,outHi,*MC); // send CC outHi,
+      newValue = number;
       state = true;             // and remember the button is now on.
     }
     else{                       // If the button was latched ON,
       if (mode == 2){           // and the button's in instant mode(2),
         usbMIDI.sendControlChange(number,outHi,*MC); // send CC outHi again 
+        newValue = number;
       }
       else {usbMIDI.sendControlChange(number,outLo,*MC);}// else send outLo,
       state = false;            // and remember the button is now off.
@@ -92,20 +94,20 @@ int MIDIbutton::send(){
 
 
 // Set the CC number.
-void MIDIbutton::setControlNumber(int num){
+void MIDIbutton::setControlNumber(byte num){
   number = num;
 };
 
 
 // Set specific min and max values.
-void MIDIbutton::outputRange(int min, int max){
+void MIDIbutton::outputRange(byte min, byte max){
 	outLo=min;
 	outHi=max;
 };
 
 
 // Set the button mode.
-void MIDIbutton::setMode(int mod){
+void MIDIbutton::setMode(byte mod){
   mode = mod;
 };
 

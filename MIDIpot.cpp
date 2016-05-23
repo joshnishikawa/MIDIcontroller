@@ -3,7 +3,7 @@
 // constructors
 MIDIpot::MIDIpot(){};
 
-MIDIpot::MIDIpot(int p, int num){
+MIDIpot::MIDIpot(int p, byte num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -20,7 +20,7 @@ MIDIpot::MIDIpot(int p, int num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, int num, bool kll){
+MIDIpot::MIDIpot(int p, byte num, bool kll){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -37,7 +37,7 @@ MIDIpot::MIDIpot(int p, int num, bool kll){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, int num, int min, int max){
+MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -54,7 +54,7 @@ MIDIpot::MIDIpot(int p, int num, int min, int max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, int num, int min, int max, bool kll){
+MIDIpot::MIDIpot(int p, byte num, byte min, byte max, bool kll){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -103,7 +103,7 @@ int MIDIpot::send(){
     usbMIDI.sendControlChange(3, 127, *MC);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, *MC);    // MAIN MESSAGE
+    usbMIDI.sendControlChange(number, newValue, *MC);        //MAIN MESSAGE
     if (kill == true && newValue == outLo && value > outLo){ //KILL aft main msg
       usbMIDI.sendControlChange(3, 0, *MC);
     }
@@ -113,13 +113,13 @@ int MIDIpot::send(){
 };
 
 
-void MIDIpot::setControlNumber(int num){ // Set the CC number.
+void MIDIpot::setControlNumber(byte num){ // Set the CC number.
   number = num;
 };
 
 // Limit the analog input to the usable range of a sensor.
 // NOTE: Stability decreases as the difference between inHi and inLo decreases.
-void MIDIpot::inputRange(int min, int max){
+void MIDIpot::inputRange(uint16_t min, uint16_t max){
   inLo = min;
   inHi = max;
   // Reset the interval at which alalog signals will actually register.
@@ -129,7 +129,7 @@ void MIDIpot::inputRange(int min, int max){
 
 
 // Set upper and lower limits for outgoing MIDI messages.
-void MIDIpot::outputRange(int min, int max){
+void MIDIpot::outputRange(byte min, byte max){
   outLo = min;
   outHi = max;
   // Reset the interval at which alalog signals will actually register.
