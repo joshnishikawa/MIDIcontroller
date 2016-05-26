@@ -136,7 +136,7 @@ int MIDInote::read(){
 int MIDInote::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, newValue, *MC);
+    usbMIDI.sendNoteOn(number, newValue, MIDIchannel);
     value = newValue;
   }
   return newValue;

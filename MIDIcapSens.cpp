@@ -85,7 +85,7 @@ int MIDIcapSens::read(){
 int MIDIcapSens::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, outHi, *MC);
+    usbMIDI.sendNoteOn(number, outHi, MIDIchannel);
     value = newValue;
   }
   return newValue;
@@ -105,7 +105,7 @@ int MIDIcapSens::chaos(){
     }
     else if (newValue <= offThreshold && touched == true){  // falling edge
       touched = false;
-      usbMIDI.sendNoteOn(value, 0, *MC);
+      usbMIDI.sendNoteOn(value, 0, MIDIchannel);
       timer = millis();
       waiting = true;
       newValue = 0;
@@ -114,8 +114,8 @@ int MIDIcapSens::chaos(){
       newValue = map(newValue, offThreshold, hiThreshold, outLo, outHi);
       newValue = constrain(newValue, outLo, outHi);
       if (newValue != value){
-        usbMIDI.sendNoteOn(value, 0, *MC); // cuz we don't want TOTAL chaos
-        usbMIDI.sendNoteOn(newValue, outHi, *MC);
+        usbMIDI.sendNoteOn(value, 0, MIDIchannel); // cuz we don't want TOTAL chaos
+        usbMIDI.sendNoteOn(newValue, outHi, MIDIchannel);
         waitTime = 127 - newValue; // not necessary. just adds flavor.
         value = newValue;
         timer = millis();

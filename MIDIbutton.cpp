@@ -70,22 +70,22 @@ int MIDIbutton::send(){
   int newValue = read();
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
-      usbMIDI.sendControlChange(number,outHi,*MC); // send CC outHi,
+      usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
       newValue = number;
       state = true;             // and remember the button is now on.
     }
     else{                       // If the button was latched ON,
       if (mode == 2){           // and the button's in instant mode(2),
-        usbMIDI.sendControlChange(number,outHi,*MC); // send CC outHi again 
+        usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again 
         newValue = number;
       }
-      else {usbMIDI.sendControlChange(number,outLo,*MC);}// else send outLo,
+      else {usbMIDI.sendControlChange(number,outLo,MIDIchannel);}// else send outLo,
       state = false;            // and remember the button is now off.
       newValue = outLo;
     }
   }
   else if (newValue == outLo && mode == 0){// Button in momentary mode released?
-    usbMIDI.sendControlChange(number,outLo,*MC); // send CC outLo,
+    usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
     state = false;                         // and remember the button is now off
   }
   else {newValue = -1;}

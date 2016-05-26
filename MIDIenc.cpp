@@ -45,7 +45,7 @@ int MIDIenc::read(){
 int MIDIenc::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, *MC);
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
     value = newValue;
   }
   return newValue;

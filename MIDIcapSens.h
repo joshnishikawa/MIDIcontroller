@@ -6,7 +6,6 @@
 extern byte MIDIchannel;
 
 class MIDIcapSens{
-    byte* MC = &MIDIchannel;
     int pin;
     bool waiting;
     unsigned int waitTime;

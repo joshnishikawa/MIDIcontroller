@@ -8,7 +8,7 @@ MIDIpot::MIDIpot(int p, byte num){
   pin = p;
   number = num;
   value = 0;
-  kill = false;
+  mode = 0;
   inLo = 0;
   inHi = 1023;
   outLo = 0;
@@ -20,12 +20,12 @@ MIDIpot::MIDIpot(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, bool kll){
+MIDIpot::MIDIpot(int p, byte num, byte m){
   pinMode(p, INPUT);
   pin = p;
   number = num;
   value = 0;
-  kill = kll;
+  mode = m;
   inLo = 0;
   inHi = 1023;
   outLo = 0;
@@ -42,7 +42,7 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   pin = p;
   number = num;
   value = 0;
-  kill = false;
+  mode = 0;
   inLo = 0;
   inHi = 1023;
   outLo = min;
@@ -54,12 +54,12 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte min, byte max, bool kll){
+MIDIpot::MIDIpot(int p, byte num, byte min, byte max, byte m){
   pinMode(p, INPUT);
   pin = p;
   number = num;
   value = 0;
-  kill = kll;
+  mode = m;
   inLo = 0;
   inHi = 1023;
   outLo = min;
@@ -76,7 +76,7 @@ MIDIpot::~MIDIpot(){
 };
 
 
-// Sends CC only if there's a significant enough change in analog input
+// returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
   int newValue = analogRead(pin);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
@@ -99,13 +99,13 @@ int MIDIpot::read(){
 
 int MIDIpot::send(){
   int newValue = read();
-  if (kill == true && newValue > outLo && value == outLo){ // ON before main msg
-    usbMIDI.sendControlChange(3, 127, *MC);
+  if (mode == true && newValue > outLo && value == outLo){ // ON before main msg
+    usbMIDI.sendControlChange(12, 127, MIDIchannel);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, *MC);        //MAIN MESSAGE
-    if (kill == true && newValue == outLo && value > outLo){ //KILL aft main msg
-      usbMIDI.sendControlChange(3, 0, *MC);
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
+    if (mode == true && newValue == outLo && value > outLo){ //mode aft main msg
+      usbMIDI.sendControlChange(12, 0, MIDIchannel);
     }
     value = newValue;
   }

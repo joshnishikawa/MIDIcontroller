@@ -28,7 +28,7 @@ class MIDIbutton{
     // destructor
     ~MIDIbutton();
 
-    Bounce *myButt;
+    Bounce* myButt;
     int read(); // returns 1 for fallingEdge, 0 for risingEdge or -1 if neither
     int send(); // calls read(), sends a MIDI value & returns the control number
     byte number;

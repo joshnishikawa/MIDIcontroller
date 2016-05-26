@@ -1,7 +1,7 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.1.3        //
+  //          MIDIcontroller - Version 2.1.5        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
@@ -19,6 +19,7 @@
   - Muxing of large arrays of notes
   - More user-friendly 'rangeFinder' example
 
+	2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
   2.1.3 - included an example of how to implement aftertouch
   2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
           public and private variables are better sorted

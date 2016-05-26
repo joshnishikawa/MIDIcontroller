@@ -6,7 +6,6 @@
 extern byte MIDIchannel;
 
 class MIDInote{
-    byte* MC = &MIDIchannel;
     int pin;
     int value;
     bool invert;

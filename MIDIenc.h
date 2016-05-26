@@ -8,8 +8,6 @@
 extern byte MIDIchannel;
 
 class MIDIenc{
-    byte* MC = &MIDIchannel;
-
   public:
     // default constructor
     MIDIenc();
