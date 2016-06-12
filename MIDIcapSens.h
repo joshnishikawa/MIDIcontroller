@@ -21,7 +21,6 @@ class MIDIcapSens{
 
     int read(); // returns 2:risingEdge, 1:fallingEdge, 0:outOfRange, -1:none
     int send(); // calls read(), sends a MIDI value & returns the value
-    int chaos();
     int value;
     int number;
     bool afterRelease;
@@ -34,3 +33,4 @@ class MIDIcapSens{
 };
 
 #endif
+

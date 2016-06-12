@@ -91,42 +91,6 @@ int MIDIcapSens::send(){
   return newValue;
 };
 
-int MIDIcapSens::chaos(){
-  int newValue = touchRead(pin);
-  if (waiting){ // Wait briefly to avoid phase shifting.
-    if (millis() - timer > waitTime){
-      waiting = false;
-    }
-  }
-  else {
-    if (newValue > loThreshold && touched == false){        // rising edge
-      touched = true;
-      newValue = -1;
-    }
-    else if (newValue <= offThreshold && touched == true){  // falling edge
-      touched = false;
-      usbMIDI.sendNoteOn(value, 0, MIDIchannel);
-      timer = millis();
-      waiting = true;
-      newValue = 0;
-    }
-    else if (newValue > offThreshold && touched == true){   // send MIDI
-      newValue = map(newValue, offThreshold, hiThreshold, outLo, outHi);
-      newValue = constrain(newValue, outLo, outHi);
-      if (newValue != value){
-        usbMIDI.sendNoteOn(value, 0, MIDIchannel); // cuz we don't want TOTAL chaos
-        usbMIDI.sendNoteOn(newValue, outHi, MIDIchannel);
-        waitTime = 127 - newValue; // not necessary. just adds flavor.
-        value = newValue;
-        timer = millis();
-        waiting = true;
-      }
-    }
-    else {newValue = -1;}
-  }
-  return newValue;
-};
-
 void MIDIcapSens::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
