@@ -1,11 +1,11 @@
-#ifndef MIDIcapSens_h
-#define MIDIcapSens_h
+#ifndef DMXcapSens_h
+#define DMXcapSens_h
 
 #include "Arduino.h"
 
-extern byte MIDIchannel;
+extern byte DMXchannel;
 
-class MIDIcapSens{
+class DMXcapSens{
     int pin;
     bool waiting;
     unsigned int waitTime;
@@ -14,13 +14,13 @@ class MIDIcapSens{
     bool touched;
     
   public:
-    MIDIcapSens();
-    MIDIcapSens(int p, byte num);
-    MIDIcapSens(int p, byte num, byte min, byte max);
-   	~MIDIcapSens();
+    DMXcapSens();
+    DMXcapSens(int p, byte num);
+    DMXcapSens(int p, byte num, byte min, byte max);
+   	~DMXcapSens();
 
     int read(); // returns 2:risingEdge, 1:fallingEdge, 0:outOfRange, -1:none
-    int send(); // calls read(), sends a MIDI value & returns the value
+    int send(); // calls read(), sends a DMX value & returns the value
     int value;
     int number;
     bool afterRelease;
@@ -33,4 +33,3 @@ class MIDIcapSens{
 };
 
 #endif
-
