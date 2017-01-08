@@ -1,9 +1,9 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          DMXcontroller - Version 1.0        //
+  //          DMXcontroller - Version 1.0           //
   //                                                //
-  // A library for creating Teensy DMX controllers //
+  // A library for creating Teensy DMX controllers  //
   ////////////////////////////////////////////////////
 
 /*  FEATURES INCLUDE:
@@ -11,7 +11,7 @@
   - momentary, latch or instantaneous buttons
   - Stable analog to DMX conversion for potentiometers and other sensors
   - Support for encoders and capacitive sensors
-  - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
+  - Min/Max output can be set (or inverted) for all DMX. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
 
    IN THE WORKS:
