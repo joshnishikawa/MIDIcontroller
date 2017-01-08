@@ -1,11 +1,11 @@
-#ifndef MIDInote_h
-#define MIDInote_h
+#ifndef DMXnote_h
+#define DMXnote_h
 
 #include "Arduino.h"
 
-extern byte MIDIchannel;
+extern byte DMXchannel;
 
-class MIDInote{
+class DMXnote{
     int pin;
     int value;
     bool invert;
@@ -19,16 +19,16 @@ class MIDInote{
     
   public:
     // default constructor
-    MIDInote();
+    DMXnote();
     
     // constructor when only pin and note number are given
-    MIDInote(int p, byte num);
+    DMXnote(int p, byte num);
 
     // constructor when pin, note number and velocity sensitivity are specified
-    MIDInote(int p, byte num, bool vel);
+    DMXnote(int p, byte num, bool vel);
 
     // destructor
-   	~MIDInote();
+   	~DMXnote();
 
     int read();
     int send();
