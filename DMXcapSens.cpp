@@ -1,9 +1,9 @@
-#include "MIDIcapSens.h"
+#include "DMXcapSens.h"
 
 // constructors
-MIDIcapSens::MIDIcapSens(){};
+DMXcapSens::DMXcapSens(){};
 
-MIDIcapSens::MIDIcapSens(int p, byte num){
+DMXcapSens::DMXcapSens(int p, byte num){
   pin = p;
   number = num;
   value = 0;
@@ -20,7 +20,7 @@ MIDIcapSens::MIDIcapSens(int p, byte num){
   touched = false;
 };
 
-MIDIcapSens::MIDIcapSens(int p, byte num, byte min, byte max){
+DMXcapSens::DMXcapSens(int p, byte num, byte min, byte max){
   pin = p;
   number = num;
   value = 0;
@@ -38,10 +38,10 @@ MIDIcapSens::MIDIcapSens(int p, byte num, byte min, byte max){
 };
 
 // destructor
-MIDIcapSens::~MIDIcapSens(){
+DMXcapSens::~DMXcapSens(){
 };
 
-int MIDIcapSens::read(){
+int DMXcapSens::read(){
   int newValue = touchRead(pin);
   if (waiting){ // Wait briefly to avoid phase shifting.
     if (millis() - timer > waitTime){
@@ -82,34 +82,34 @@ int MIDIcapSens::read(){
   return newValue;  
 };
 
-int MIDIcapSens::send(){
+int DMXcapSens::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, outHi, MIDIchannel);
+    usbMIDI.sendNoteOn(number, outHi, DMXchannel);
     value = newValue;
   }
   return newValue;
 };
 
-void MIDIcapSens::setNoteNumber(byte num){ // Set the NOTE number.
+void DMXcapSens::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
-void MIDIcapSens::setThresholds(int loT, int hiT){
+void DMXcapSens::setThresholds(int loT, int hiT){
   offThreshold = loT;
   loThreshold = loT;
   hiThreshold = hiT;
   afterRelease = false;
 };
 
-void MIDIcapSens::setThresholds(int offT, int loT, int hiT){
+void DMXcapSens::setThresholds(int offT, int loT, int hiT){
   offThreshold = offT;
   loThreshold = loT;
   hiThreshold = hiT;
   afterRelease = true;
 };
 
-void MIDIcapSens::outputRange(byte min, byte max){
+void DMXcapSens::outputRange(byte min, byte max){
   outLo = min;
   outHi = max;
 };
