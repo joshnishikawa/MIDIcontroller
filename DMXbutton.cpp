@@ -1,9 +1,9 @@
-#include "MIDIbutton.h"
+#include "DMXbutton.h"
 
 // constructors
-MIDIbutton::MIDIbutton(){};
+DMXbutton::DMXbutton(){};
 
-MIDIbutton::MIDIbutton(int p, byte num){
+DMXbutton::DMXbutton(int p, byte num){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -13,7 +13,7 @@ MIDIbutton::MIDIbutton(int p, byte num){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mod){
+DMXbutton::DMXbutton(int p, byte num, byte mod){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -23,7 +23,7 @@ MIDIbutton::MIDIbutton(int p, byte num, byte mod){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max){
+DMXbutton::DMXbutton(int p, byte num, byte min, byte max){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -33,7 +33,7 @@ MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max){
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max, byte mod){
+DMXbutton::DMXbutton(int p, byte num, byte min, byte max, byte mod){
   pinMode(p, INPUT_PULLUP);
   myButt = new Bounce(p, 50);
   number = num;
@@ -44,12 +44,12 @@ MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max, byte mod){
 };
 
 // destructor
-MIDIbutton::~MIDIbutton(){
+DMXbutton::~DMXbutton(){
   delete myButt;
 };
 
 
-int MIDIbutton::read(){
+int DMXbutton::read(){
   int newValue = -1;
   myButt->update();              // Force a status report of the Bounce object.
   if (myButt->fallingEdge()){    // If the button's been pressed,
@@ -66,26 +66,26 @@ int MIDIbutton::read(){
 /* This function will send the appropriate Control Change messages for the press
 and/or release of any MIDI button whether it's set to 'latch' 'momentary' or
 'instantaneous' mode.*/
-int MIDIbutton::send(){
+int DMXbutton::send(){
   int newValue = read();
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
-      usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
+      usbDMX.sendControlChange(number,outHi,DMXchannel); // send CC outHi,
       newValue = number;
       state = true;             // and remember the button is now on.
     }
     else{                       // If the button was latched ON,
       if (mode == 2){           // and the button's in instant mode(2),
-        usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again 
+        usbDMX.sendControlChange(number,outHi,DMXchannel); // send CC outHi again 
         newValue = number;
       }
-      else {usbMIDI.sendControlChange(number,outLo,MIDIchannel);}// else send outLo,
+      else {usbDMX.sendControlChange(number,outLo,DMXchannel);}// else send outLo,
       state = false;            // and remember the button is now off.
       newValue = outLo;
     }
   }
   else if (newValue == outLo && mode == 0){// Button in momentary mode released?
-    usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
+    usbDMX.sendControlChange(number,outLo,DMXchannel); // send CC outLo,
     state = false;                         // and remember the button is now off
   }
   else {newValue = -1;}
@@ -94,20 +94,20 @@ int MIDIbutton::send(){
 
 
 // Set the CC number.
-void MIDIbutton::setControlNumber(byte num){
+void DMXbutton::setControlNumber(byte num){
   number = num;
 };
 
 
 // Set specific min and max values.
-void MIDIbutton::outputRange(byte min, byte max){
+void DMXbutton::outputRange(byte min, byte max){
 	outLo=min;
 	outHi=max;
 };
 
 
 // Set the button mode.
-void MIDIbutton::setMode(byte mod){
+void DMXbutton::setMode(byte mod){
   mode = mod;
 };
 
