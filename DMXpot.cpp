@@ -1,9 +1,9 @@
-#include "MIDIpot.h"
+#include "DMXpot.h"
 
 // constructors
-MIDIpot::MIDIpot(){};
+DMXpot::DMXpot(){};
 
-MIDIpot::MIDIpot(int p, byte num){
+DMXpot::DMXpot(int p, byte num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -20,7 +20,7 @@ MIDIpot::MIDIpot(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte m){
+DMXpot::DMXpot(int p, byte num, byte m){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -37,7 +37,7 @@ MIDIpot::MIDIpot(int p, byte num, byte m){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
+DMXpot::DMXpot(int p, byte num, byte min, byte max){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -54,7 +54,7 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte min, byte max, byte m){
+DMXpot::DMXpot(int p, byte num, byte min, byte max, byte m){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -72,17 +72,17 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max, byte m){
 };
 
 // destructor
-MIDIpot::~MIDIpot(){
+DMXpot::~DMXpot(){
 };
 
 
 // returns new CC if there's enough change in the analog input; -1 otherwise
-int MIDIpot::read(){
+int DMXpot::read(){
   int newValue = analogRead(pin);
-  if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
+  if (newValue >= inHi && value != outHi){ // Assign hi analog to hi DMX
     newValue = outHi;
   }
-  else if (newValue <= inLo && value != outLo){ // Assign low analog to low MIDI
+  else if (newValue <= inLo && value != outLo){ // Assign low analog to low DMX
     newValue = outLo;
   }
   else if (newValue % divider == 0){ // Filter intermittent values
@@ -97,15 +97,15 @@ int MIDIpot::read(){
   return newValue;
 };
 
-int MIDIpot::send(){
+int DMXpot::send(){
   int newValue = read();
   if (mode == true && newValue > outLo && value == outLo){ // ON before main msg
-    usbMIDI.sendControlChange(12, 127, MIDIchannel);
+    usbMIDI.sendControlChange(12, 127, DMXchannel);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
+    usbMIDI.sendControlChange(number, newValue, DMXchannel);//MAIN MESSAGE
     if (mode == true && newValue == outLo && value > outLo){ //mode aft main msg
-      usbMIDI.sendControlChange(12, 0, MIDIchannel);
+      usbMIDI.sendControlChange(12, 0, DMXchannel);
     }
     value = newValue;
   }
@@ -113,13 +113,13 @@ int MIDIpot::send(){
 };
 
 
-void MIDIpot::setControlNumber(byte num){ // Set the CC number.
+void DMXpot::setControlNumber(byte num){ // Set the CC number.
   number = num;
 };
 
 // Limit the analog input to the usable range of a sensor.
 // NOTE: Stability decreases as the difference between inHi and inLo decreases.
-void MIDIpot::inputRange(uint16_t min, uint16_t max){
+void DMXpot::inputRange(uint16_t min, uint16_t max){
   inLo = min;
   inHi = max;
   // Reset the interval at which alalog signals will actually register.
@@ -128,8 +128,8 @@ void MIDIpot::inputRange(uint16_t min, uint16_t max){
 };
 
 
-// Set upper and lower limits for outgoing MIDI messages.
-void MIDIpot::outputRange(byte min, byte max){
+// Set upper and lower limits for outgoing DMX messages.
+void DMXpot::outputRange(byte min, byte max){
   outLo = min;
   outHi = max;
   // Reset the interval at which alalog signals will actually register.
