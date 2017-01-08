@@ -1,36 +1,36 @@
-#ifndef MIDIpot_h
-#define MIDIpot_h
+#ifndef DMXpot_h
+#define DMXpot_h
 
 #include "Arduino.h"
 
-extern byte MIDIchannel;
+extern byte DMXchannel;
 
-class MIDIpot{
-    int divider; // for converting from analog to MIDI resolution
+class DMXpot{
+    int divider; // for converting from analog to DMX resolution
     
   public:
     // default constructor
-    MIDIpot();
+    DMXpot();
     
     // constructor when only pin & control number are given
-    MIDIpot(int p, byte num);
+    DMXpot(int p, byte num);
     
     // " when pin, control number are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte m);
+    DMXpot(int p, byte num, byte m);
     
-    // " pin, control number, minimum & maximum outgoing MIDI values are set
-    MIDIpot(int p, byte num, byte min, byte max);
+    // " pin, control number, minimum & maximum outgoing DMX values are set
+    DMXpot(int p, byte num, byte min, byte max);
     
     // " pin, control number, min/max values are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte min, byte max, byte m);
+    DMXpot(int p, byte num, byte min, byte max, byte m);
     
     // destructor
-   	~MIDIpot();
+   	~DMXpot();
 
     int pin;
     bool invert;
-    int read(); // read input and return a MIDI value (or -1 if none)
-    int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
+    int read(); // read input and return a DMX value (or -1 if none)
+    int send(); // calls read(), sends and returns a DMX value (or -1 if none)
     byte number;
     uint16_t inLo, inHi;
     byte outLo, outHi;
