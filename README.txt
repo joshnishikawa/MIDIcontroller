@@ -1,32 +1,32 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.1.5        //
+  //          DMXcontroller - Version 1.0        //
   //                                                //
-  // A library for creating Teensy MIDI controllers //
+  // A library for creating Teensy DMX controllers //
   ////////////////////////////////////////////////////
 
 /*  FEATURES INCLUDE:
   - Velocity sensitive inputs (with Aftertouch or Poly Pressure)
   - momentary, latch or instantaneous buttons
-  - Stable analog to MIDI conversion for potentiometers and other sensors
+  - Stable analog to DMX conversion for potentiometers and other sensors
   - Support for encoders and capacitive sensors
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
 
-    IN THE WORKS:
+   IN THE WORKS:
+  - changing all MIDI to DMX 
+  - renaming some variables like myButt to less irreverant language ;)
+  - assessing if I need a certain item due to the differences between MIDI and DMX
+
+    IN THE WORKS (in the repository this is ported from):
   - Support for piezos
   - Muxing of large arrays of notes
   - More user-friendly 'rangeFinder' example
 
-	2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
-  2.1.3 - included an example of how to implement aftertouch
-  2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
-          public and private variables are better sorted
-  2.1.0 - Split read() and send() functions. MIDI channel is now user selectable
-  2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
-  2.0.5 - Added a condition to prevent many double note triggers.
-  2.0.4 - Added support for capacitive sensors (and started this version log)
+
+1.0.0 - changed all instances of 'MIDI' to 'DMX'
+  
   
 
   
@@ -50,5 +50,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-contact: monkeybiscuits@gmail.com
+contact: harryprayiv@gmail.com
 */
