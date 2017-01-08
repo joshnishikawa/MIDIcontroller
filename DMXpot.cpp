@@ -29,7 +29,7 @@ DMXpot::DMXpot(int p, byte num, byte m){
   inLo = 0;
   inHi = 1023;
   outLo = 0;
-  outHi = 127;
+  outHi = 255;
   invert = outLo > outHi;
 
   // Sets the interval at which alalog signals will actually register.
@@ -51,7 +51,7 @@ DMXpot::DMXpot(int p, byte num, byte min, byte max){
 
   // Sets the interval at which alalog signals will actually register.
   divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+  divider = divider < 1 ? 1 : divider; // Allows analog range < 255 (NOT GOOD!)
 };
 
 DMXpot::DMXpot(int p, byte num, byte min, byte max, byte m){
@@ -68,7 +68,7 @@ DMXpot::DMXpot(int p, byte num, byte min, byte max, byte m){
 
   // Sets the interval at which alalog signals will actually register.
   divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+  divider = divider < 1 ? 1 : divider; // Allows analog range < 255 (NOT GOOD!)
 };
 
 // destructor
@@ -76,7 +76,7 @@ DMXpot::~DMXpot(){
 };
 
 
-// returns new CC if there's enough change in the analog input; -1 otherwise
+// returns new Channel if there's enough change in the analog input; -1 otherwise
 int DMXpot::read(){
   int newValue = analogRead(pin);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi DMX
@@ -100,12 +100,12 @@ int DMXpot::read(){
 int DMXpot::send(){
   int newValue = read();
   if (mode == true && newValue > outLo && value == outLo){ // ON before main msg
-    usbMIDI.sendControlChange(12, 127, DMXchannel);
+    usbDMX.sendChannelChange(12, 255, DMXchannel);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, DMXchannel);//MAIN MESSAGE
+    usbDMX.sendChannelChange(number, newValue, DMXchannel);//MAIN MESSAGE
     if (mode == true && newValue == outLo && value > outLo){ //mode aft main msg
-      usbMIDI.sendControlChange(12, 0, DMXchannel);
+      usbDMX.sendChannelChange(12, 0, DMXchannel);
     }
     value = newValue;
   }
@@ -113,7 +113,7 @@ int DMXpot::send(){
 };
 
 
-void DMXpot::setControlNumber(byte num){ // Set the CC number.
+void DMXpot::setChannelNumber(byte num){ // Set the channel.
   number = num;
 };
 

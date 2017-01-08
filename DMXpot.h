@@ -12,16 +12,16 @@ class DMXpot{
     // default constructor
     DMXpot();
     
-    // constructor when only pin & control number are given
+    // constructor when only pin & Channel number are given
     DMXpot(int p, byte num);
     
-    // " when pin, control number are given and kill switch is enabled
+    // " when pin, Channel number are given and kill switch is enabled
     DMXpot(int p, byte num, byte m);
     
-    // " pin, control number, minimum & maximum outgoing DMX values are set
+    // " pin, Channel number, minimum & maximum outgoing DMX values are set
     DMXpot(int p, byte num, byte min, byte max);
     
-    // " pin, control number, min/max values are given and kill switch is enabled
+    // " pin, Channel number, min/max values are given and kill switch is enabled
     DMXpot(int p, byte num, byte min, byte max, byte m);
     
     // destructor
@@ -36,7 +36,7 @@ class DMXpot{
     byte outLo, outHi;
     byte mode;  // in case you need to kill an effect entirely
     byte value;
-    void setControlNumber(byte num);
+    void setChannelNumber(byte num);
     void inputRange(uint16_t min, uint16_t max);
     void outputRange(byte min, byte max);
 };

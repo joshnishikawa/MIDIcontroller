@@ -85,7 +85,7 @@ int DMXcapSens::read(){
 int DMXcapSens::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, outHi, DMXchannel);
+    usbDMX.sendNoteOn(number, outHi, DMXchannel);
     value = newValue;
   }
   return newValue;

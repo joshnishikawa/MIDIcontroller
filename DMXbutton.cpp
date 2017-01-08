@@ -5,7 +5,7 @@ DMXbutton::DMXbutton(){};
 
 DMXbutton::DMXbutton(int p, byte num){
   pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+  userButton = new Bounce(p, 50);
   number = num;
   outLo = 0;
   outHi = 127;
@@ -15,7 +15,7 @@ DMXbutton::DMXbutton(int p, byte num){
 
 DMXbutton::DMXbutton(int p, byte num, byte mod){
   pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+  userButton = new Bounce(p, 50);
   number = num;
   outLo = 0;
   outHi = 127;
@@ -25,7 +25,7 @@ DMXbutton::DMXbutton(int p, byte num, byte mod){
 
 DMXbutton::DMXbutton(int p, byte num, byte min, byte max){
   pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+  userButton = new Bounce(p, 50);
   number = num;
   outLo = min;
   outHi = max;
@@ -35,7 +35,7 @@ DMXbutton::DMXbutton(int p, byte num, byte min, byte max){
 
 DMXbutton::DMXbutton(int p, byte num, byte min, byte max, byte mod){
   pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+  userButton = new Bounce(p, 50);
   number = num;
   outLo = min;
   outHi = max;
@@ -45,17 +45,17 @@ DMXbutton::DMXbutton(int p, byte num, byte min, byte max, byte mod){
 
 // destructor
 DMXbutton::~DMXbutton(){
-  delete myButt;
+  delete userButton;
 };
 
 
 int DMXbutton::read(){
   int newValue = -1;
-  myButt->update();              // Force a status report of the Bounce object.
-  if (myButt->fallingEdge()){    // If the button's been pressed,
+  userButton->update();              // Force a status report of the Bounce object.
+  if (userButton->fallingEdge()){    // If the button's been pressed,
     newValue = outHi;            // return the CC value and
   }
-  else if (myButt->risingEdge()){// If the button has been released,
+  else if (userButton->risingEdge()){// If the button has been released,
     newValue = outLo;            // return the CC value and
   }
   else{newValue = -1;}
@@ -63,29 +63,29 @@ int DMXbutton::read(){
 };
 
 
-/* This function will send the appropriate Control Change messages for the press
-and/or release of any MIDI button whether it's set to 'latch' 'momentary' or
+/* This function will send the appropriate Channel Change messages for the press
+and/or release of any DMX button whether it's set to 'latch' 'momentary' or
 'instantaneous' mode.*/
 int DMXbutton::send(){
   int newValue = read();
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
-      usbDMX.sendControlChange(number,outHi,DMXchannel); // send CC outHi,
+      usbDMX.sendChannelChange(number,outHi,DMXchannel); // send CC outHi,
       newValue = number;
       state = true;             // and remember the button is now on.
     }
     else{                       // If the button was latched ON,
       if (mode == 2){           // and the button's in instant mode(2),
-        usbDMX.sendControlChange(number,outHi,DMXchannel); // send CC outHi again 
+        usbDMX.sendChannelChange(number,outHi,DMXchannel); // send CC outHi again 
         newValue = number;
       }
-      else {usbDMX.sendControlChange(number,outLo,DMXchannel);}// else send outLo,
+      else {usbDMX.sendChannelChange(number,outLo,DMXchannel);}// else send outLo,
       state = false;            // and remember the button is now off.
       newValue = outLo;
     }
   }
   else if (newValue == outLo && mode == 0){// Button in momentary mode released?
-    usbDMX.sendControlChange(number,outLo,DMXchannel); // send CC outLo,
+    usbDMX.sendChannelChange(number,outLo,DMXchannel); // send CC outLo,
     state = false;                         // and remember the button is now off
   }
   else {newValue = -1;}
@@ -94,7 +94,7 @@ int DMXbutton::send(){
 
 
 // Set the CC number.
-void DMXbutton::setControlNumber(byte num){
+void DMXbutton::setChannelNumber(byte num){
   number = num;
 };
 

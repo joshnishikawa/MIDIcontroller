@@ -45,14 +45,14 @@ int DMXenc::read(){
 int DMXenc::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, DMXchannel);
+    usbDMX.sendChannelChange(number, newValue, DMXchannel);
     value = newValue;
   }
   return newValue;
 }
 
 // Set the CC number.
-void DMXenc::setControlNumber(byte num){
+void DMXenc::setChannelNumber(byte num){
   number = num;
 };
 
