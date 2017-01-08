@@ -1,9 +1,9 @@
-#include "MIDInote.h"
+#include "DMXnote.h"
 
 // constructors
-MIDInote::MIDInote(){};
+DMXnote::DMXnote(){};
 
-MIDInote::MIDInote(int p, byte num){
+DMXnote::DMXnote(int p, byte num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -30,7 +30,7 @@ MIDInote::MIDInote(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDInote::MIDInote(int p, byte num, bool vel){
+DMXnote::DMXnote(int p, byte num, bool vel){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -58,10 +58,10 @@ MIDInote::MIDInote(int p, byte num, bool vel){
 };
 
 // destructor
-MIDInote::~MIDInote(){
+DMXnote::~DMXnote(){
 };
 
-int MIDInote::read(){
+int DMXnote::read(){
   int newValue = analogRead(pin);
   // After a note off, wait until signal hits floor to eliminate double triggers
   // on hits near the threshold & wait a few msecs to eliminate phase shift.
@@ -99,7 +99,7 @@ int MIDInote::read(){
         }
         if (micros() - timer >= 100){ // Compare hiVal & loVal for spikes.
           if (listening){ // After spike detected and peak found...
-            newValue = constrain(hiVal / divider, outLo, outHi); // assign MIDI
+            newValue = constrain(hiVal / divider, outLo, outHi); // assign DMX
             state = true;
             listening = false;
           }
@@ -133,22 +133,22 @@ int MIDInote::read(){
   return newValue;
 };
 
-int MIDInote::send(){
+int DMXnote::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, newValue, MIDIchannel);
+    usbMIDI.sendNoteOn(number, newValue, DMXchannel);
     value = newValue;
   }
   return newValue;
 };
 
-void MIDInote::setNoteNumber(byte num){ // Set the NOTE number.
+void DMXnote::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
 // Limit the analog input to the usable range of a sensor.
 // Stability decreases as the difference between inHi and inLo decreases.
-void MIDInote::inputRange(int min, int max){
+void DMXnote::inputRange(int min, int max){
   inLo = min;
   inHi = max;
   // Reset the interval at which alalog signals will actually register.
@@ -156,7 +156,7 @@ void MIDInote::inputRange(int min, int max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-void MIDInote::outputRange(byte min, byte max){ // Set min & max poly pressure
+void DMXnote::outputRange(byte min, byte max){ // Set min & max poly pressure
   outLo = min;
   outHi = max;
   invert = outLo > outHi; // Check again for reverse polarity.
@@ -165,7 +165,7 @@ void MIDInote::outputRange(byte min, byte max){ // Set min & max poly pressure
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-void MIDInote::setThreshold(int thresh){
+void DMXnote::setThreshold(int thresh){
   threshold = thresh;
 };
 
