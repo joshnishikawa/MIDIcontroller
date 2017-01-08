@@ -1,6 +1,6 @@
-#include "MIDIcontroller.h"
+#include "DMXcontroller.h"
 
-byte MIDIchannel = 5;
+byte DMXchannel = 5;
 const int FSRpin0 = A0;  // Change these to the correct ANALOG pins
 const int FSRpin1 = A1;
 const int FSRpin2 = A2;
@@ -8,13 +8,13 @@ const int FSRpin3 = A3;
 unsigned long previousMillis;
 int lastAft = 0;
 int maxValue = -1;
-MIDInote* notes[4];       // An array of pointers to your inputs
+DMXnote* notes[4];       // An array of pointers to your inputs
 
 void setup(){
-  notes[0] = new MIDInote(FSRpin0, 40, true);
-  notes[1] = new MIDInote(FSRpin1, 45, true);
-  notes[2] = new MIDInote(FSRpin2, 50, true);
-  notes[3] = new MIDInote(FSRpin3, 55, true);
+  notes[0] = new DMXnote(FSRpin0, 40, true);
+  notes[1] = new DMXnote(FSRpin1, 45, true);
+  notes[2] = new DMXnote(FSRpin2, 50, true);
+  notes[3] = new DMXnote(FSRpin3, 55, true);
 
   // Use the rangeFinder example to find the usable range of
   // your sensors and enter it here.
@@ -32,7 +32,7 @@ void loop(){
     }
   }
   if (millis() - previousMillis > 10 && maxValue >= 0 && maxValue != lastAft){
-    usbMIDI.sendAfterTouch(maxValue, MIDIchannel);
+    usbDMX.sendAfterTouch(maxValue, DMXchannel);
     previousMillis = millis();
     lastAft = maxValue;
   }
