@@ -3,38 +3,38 @@
 
 #include "Arduino.h"
 #include "Bounce.h"
+#include "Flicker.h"
+
+#define MOMENT 0
+#define LATCH 1
+#define BOTHON 2
 
 extern byte MIDIchannel;
 
-class MIDIbutton{
-    byte* MC = &MIDIchannel;
-
+class MIDIbutton: public Bounce, public Flicker{
+    bool inputType;
   public:
     // default constructor
     MIDIbutton();
 
-    // constructor when only pin & control number are given
-    MIDIbutton(int p, byte num);
-
-    // " when pin, control number & mode are given
+    // constructor for a button
     MIDIbutton(int p, byte num, byte mod);
 
-    // " pin, control number, on & off values are given
-    MIDIbutton(int p, byte num, byte min, byte max);
+    // constructor for a capacitive sensor
+    MIDIbutton(int p, byte num, byte mod, int thresh);
 
-    // " pin, control number, on/off values & mode are given
-    MIDIbutton(int p, byte num, byte min, byte max, byte mod);
- 
     // destructor
     ~MIDIbutton();
 
-    Bounce* myButt;
-    int read(); // returns 1 for fallingEdge, 0 for risingEdge or -1 if neither
+    int read(); // returns outHi for fallingEdge, outLo for risingEdge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number
     byte number;
-    byte outLo, outHi;
-    byte mode;    
-    bool state;
+    byte outLo = 0;
+    byte outHi = 127;
+    byte mode;
+    bool inputState; // refers to the actual physical state of the input
+    bool state;      // refers to the most recently sent MIDI message
+                     // e.g. a button may be latched on without being held down
     void setControlNumber(byte num);
     void setMode(byte mod);
     void outputRange(byte min, byte max);

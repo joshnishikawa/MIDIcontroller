@@ -12,18 +12,14 @@
 */
 
 byte MIDIchannel = 5;
-const int pressPin = A0; // Change this to the correct ANALOG pin
+const int pressPin = 23; // Change this to the correct ANALOG pin
 
-// Note Parameters are: pin, note number, velocity on
-MIDInote myPad(pressPin, 37, true);
+// Note Parameters are: pin, note number
+MIDIdrum myPad(pressPin, 37);
 
 void setup(){
-  // Use the rangeFinder example to find the usable range of
-  // your sensor and enter it here.
-  myPad.inputRange(300, 760);
-
   // Set the threshold where you want notes to trigger.
-  myPad.setThreshold(100);
+  myPad.setThreshold(30);
 }
 
 void loop(){

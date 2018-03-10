@@ -6,12 +6,11 @@
   find the desired upper and lower limits
   to use in the 'inputRange()' function.
 */
-int val;
 
 void setup(){}
 
 void loop(){
-  val = analogRead(18); //Change if needed
+  int val = analogRead(23); //Change if needed
   Serial.println(val);
-  delay(100);
+  delay(200);
 }

@@ -22,7 +22,7 @@ class MIDIpot{
     MIDIpot(int p, byte num, byte min, byte max);
     
     // " pin, control number, min/max values are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte min, byte max, byte m);
+    MIDIpot(int p, byte num, byte m, byte min, byte max);
     
     // destructor
    	~MIDIpot();

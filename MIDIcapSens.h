@@ -23,13 +23,14 @@ class MIDIcapSens{
     int send(); // calls read(), sends a MIDI value & returns the value
     int value;
     int number;
-    bool afterRelease;
     byte outLo, outHi;
-    int hiThreshold, loThreshold, offThreshold;
+    int upperLimit, onThreshold, offThreshold;
+    bool afterRelease;
+    bool state;
     void setNoteNumber(byte num);
     void outputRange(byte min, byte max);
-    void setThresholds(int loT, int hiT);
-    void setThresholds(int offT, int loT, int hiT);
+    void setThresholds(int offT, int onT);
+    void setThresholds(int offT, int onT, int upL);
 };
 
 #endif

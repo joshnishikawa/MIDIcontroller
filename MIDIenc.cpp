@@ -1,6 +1,5 @@
-/*FIXME after the value bottoms out alternating MIDI messages will occasionally
-  continue to be sent (0 1 0 1 0...). I think this is due to missing pulses
-  because no interrupts are used. I'm still trying to figure this out.
+/*FIXME after the value bottoms out alternating MIDI messages (0 1 0 1 0...)
+  will occasionally continue to be sent.
 */
 
 #include "MIDIenc.h"
@@ -32,13 +31,15 @@ MIDIenc::~MIDIenc(){
 
 int MIDIenc::read(){
   int newValue = -1;
-  int incdec = myKnob->read(); // Using only +1 or -1
-  if((incdec >= 1 && value < outHi) || (incdec <= -1 && value > outLo)){
-    // If turned up but not already maxed OR down but not already bottomed out
-    myKnob->write(0);           // then reset to 0
-    newValue = value + incdec;  // and return new value
+  int incdec = myKnob->read();
+  if(incdec >= 1 && value < outHi){       // If turned up but not already maxed
+    newValue = value + 1;
+  }
+  else if (incdec <= -1 && value > outLo){// If turned down but not bottomed out
+    newValue = value - 1;
   }
   else{newValue = -1;}
+  myKnob->write(0);
   return newValue;
 };
 

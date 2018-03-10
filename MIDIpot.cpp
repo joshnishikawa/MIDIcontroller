@@ -54,7 +54,7 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte min, byte max, byte m){
+MIDIpot::MIDIpot(int p, byte num, byte m, byte min, byte max){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -100,12 +100,12 @@ int MIDIpot::read(){
 int MIDIpot::send(){
   int newValue = read();
   if (mode == true && newValue > outLo && value == outLo){ // ON before main msg
-    usbMIDI.sendControlChange(12, 127, MIDIchannel);
+    usbMIDI.sendControlChange(number+1, 127, MIDIchannel);
   }
   if (newValue >= 0){
     usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
     if (mode == true && newValue == outLo && value > outLo){ //mode aft main msg
-      usbMIDI.sendControlChange(12, 0, MIDIchannel);
+      usbMIDI.sendControlChange(number+1, 0, MIDIchannel);
     }
     value = newValue;
   }

@@ -1,13 +1,13 @@
 
   ////////////////////////////////////////////////////
   //                                                //
-  //          MIDIcontroller - Version 2.1.5        //
+  //          MIDIcontroller - Version 2.2.0        //
   //                                                //
   // A library for creating Teensy MIDI controllers //
   ////////////////////////////////////////////////////
 
 /*  FEATURES INCLUDE:
-  - Velocity sensitive inputs (with Aftertouch or Poly Pressure)
+  - Velocity sensitive FSR or Piezo inputs
   - momentary, latch or instantaneous buttons
   - Stable analog to MIDI conversion for potentiometers and other sensors
   - Support for encoders and capacitive sensors
@@ -15,10 +15,13 @@
       can also be set for analog input (maintaining stability in conversion)
 
     IN THE WORKS:
-  - Support for piezos
   - Muxing of large arrays of notes
   - More user-friendly 'rangeFinder' example
 
+  2.2.0 - Added support for Piezos (Must be wired properly. See example)
+        - "MIDInote" class changed to "MIDIdrum" and optimized for FSR and Piezo
+        - Removed redundant 'velocity' variable. Just call outputRange(127, 127)
+        - Added support for using a Capacitive Touch input as a MIDIbutton
 	2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
   2.1.3 - included an example of how to implement aftertouch
   2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
@@ -50,5 +53,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-contact: monkeybiscuits@gmail.com
+contact: joshnishikawa@gmail.com
 */

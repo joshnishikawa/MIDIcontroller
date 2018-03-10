@@ -8,8 +8,8 @@ MIDIcapSens::MIDIcapSens(int p, byte num){
   number = num;
   value = 0;
   offThreshold = 1150;
-  loThreshold = 1500;
-  hiThreshold = 4500;
+  onThreshold = 1500;
+  upperLimit = 4500;
   afterRelease = false;
   outLo = 0;
   outHi = 127;
@@ -18,6 +18,7 @@ MIDIcapSens::MIDIcapSens(int p, byte num){
   timer = 0;
   hovered = false;
   touched = false;
+  state = false;
 };
 
 MIDIcapSens::MIDIcapSens(int p, byte num, byte min, byte max){
@@ -25,16 +26,17 @@ MIDIcapSens::MIDIcapSens(int p, byte num, byte min, byte max){
   number = num;
   value = 0;
   offThreshold = 1150;
-  loThreshold = 1500;
-  hiThreshold = 4500;
+  onThreshold = 1500;
+  upperLimit = 4500;
   afterRelease = false;
   outLo = min;
   outHi = max;
   waiting = false;
-  waitTime = 10; // millis
+  waitTime = 10; // milliseconds
   timer = 0;
   hovered = false;
   touched = false;
+  state = false;
 };
 
 // destructor
@@ -50,19 +52,18 @@ int MIDIcapSens::read(){
     newValue = -1;
   }
   else {
-    if (newValue >= hiThreshold && touched == false){     // rising edge
+    if (newValue >= upperLimit && touched == false){     // rising edge
       newValue = outHi;
       hovered = false;
       touched = true;
       timer = millis();
       waiting = true;
     }
-    else if (newValue < loThreshold && touched == true){  // falling edge
+    else if (newValue < onThreshold && touched == true){  // falling edge
       newValue = outLo;
       touched = false;
       if (afterRelease){
         hovered = true;
-        newValue = outLo;
       }
       else {
         newValue = 0;
@@ -95,18 +96,15 @@ void MIDIcapSens::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
-void MIDIcapSens::setThresholds(int loT, int hiT){
-  offThreshold = loT;
-  loThreshold = loT;
-  hiThreshold = hiT;
-  afterRelease = false;
+void MIDIcapSens::setThresholds(int offT, int onT){
+  offThreshold = offT;
+  onThreshold = onT;
 };
 
-void MIDIcapSens::setThresholds(int offT, int loT, int hiT){
+void MIDIcapSens::setThresholds(int offT, int onT, int upL){
   offThreshold = offT;
-  loThreshold = loT;
-  hiThreshold = hiT;
-  afterRelease = true;
+  onThreshold = onT;
+  upperLimit = upL;
 };
 
 void MIDIcapSens::outputRange(byte min, byte max){

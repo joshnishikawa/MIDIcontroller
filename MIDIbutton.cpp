@@ -1,64 +1,51 @@
 #include "MIDIbutton.h"
 
 // constructors
-MIDIbutton::MIDIbutton(){};
+MIDIbutton::MIDIbutton() : Bounce(0, 0), Flicker(0, 0){};
 
-MIDIbutton::MIDIbutton(int p, byte num){
+MIDIbutton::MIDIbutton(int p, byte num, byte mod) : Bounce(p, 10), Flicker(0, 0){
   pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+  inputType = 0; //button
   number = num;
-  outLo = 0;
-  outHi = 127;
-  mode = 0; 
-  state = false;
-};
-
-MIDIbutton::MIDIbutton(int p, byte num, byte mod){
-  pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
-  number = num;
-  outLo = 0;
-  outHi = 127;
   mode = mod; 
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max){
-  pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
+MIDIbutton::MIDIbutton(int p, byte num, byte mod, int thresh) : Bounce(0, 0), Flicker(p, thresh){
+  inputType = 1; //capacitive touch
   number = num;
-  outLo = min;
-  outHi = max;
-  mode = 0; 
-  state = false;
-};
-
-MIDIbutton::MIDIbutton(int p, byte num, byte min, byte max, byte mod){
-  pinMode(p, INPUT_PULLUP);
-  myButt = new Bounce(p, 50);
-  number = num;
-  outLo = min;
-  outHi = max;
   mode = mod; 
   state = false;
 };
 
 // destructor
-MIDIbutton::~MIDIbutton(){
-  delete myButt;
-};
+MIDIbutton::~MIDIbutton(){};
 
 
 int MIDIbutton::read(){
   int newValue = -1;
-  myButt->update();              // Force a status report of the Bounce object.
-  if (myButt->fallingEdge()){    // If the button's been pressed,
-    newValue = outHi;            // return the CC value and
+  if (inputType == 0){
+    Bounce::update();              // Force a status report of the Bounce object.
+    inputState = Bounce::state;
+    if (Bounce::fallingEdge()){    // If the button's been pressed,
+      newValue = outHi;            // return the CC value and
+    }
+    else if (Bounce::risingEdge()){// If the button has been released,
+      newValue = outLo;            // return the CC value and
+    }
+    else{newValue = -1;}
   }
-  else if (myButt->risingEdge()){// If the button has been released,
-    newValue = outLo;            // return the CC value and
+  else if (inputType == 1){
+    Flicker::update();
+    inputState = Flicker::state;
+    if (Flicker::risingEdge()){
+      newValue = outHi;
+    }
+    else if (Flicker::fallingEdge()){
+      newValue = outLo;
+    }
+    else{newValue = -1;}
   }
-  else{newValue = -1;}
   return newValue;
 };
 
@@ -101,8 +88,8 @@ void MIDIbutton::setControlNumber(byte num){
 
 // Set specific min and max values.
 void MIDIbutton::outputRange(byte min, byte max){
-	outLo=min;
-	outHi=max;
+	outLo = min;
+	outHi = max;
 };
 
 
