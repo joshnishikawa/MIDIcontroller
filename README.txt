@@ -23,7 +23,7 @@
         - Removed redundant 'velocity' variable. Just call outputRange(127, 127)
         - Added support for using a Capacitive Touch input as a MIDIbutton
         - Included 'Flicker' library (required for Capacitive Touch buttons)
-	2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
+  2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
   2.1.3 - included an example of how to implement aftertouch
   2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
           public and private variables are better sorted
