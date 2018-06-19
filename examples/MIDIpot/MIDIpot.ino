@@ -1,33 +1,20 @@
 #include "MIDIcontroller.h"
 
-/*This is an example of how to use
-  potentiometers and analog sensors.
-  The use of a photocell will be
-  demonstrated. I'ts wired like so:
- 
-  3.3v--(PHOTO CELL)---\
-                        )---Analog Pin
-  GND-------/\/\/------/
-             10k
-*/
-
 byte MIDIchannel = 5;
-const int potPin = A0;  // Change these numbers to the ANALOG
-const int sensPin = A9; // pins your pot and sensor are on.
+const int potPin = A0;  // Change this to the ANALOG pin you want to use
 
-// Pot parameters are: pin, CC number, min value, max value
-MIDIpot myPot(potPin, 22, 0, 63);
-MIDIpot mySensor(sensPin, 23);
-// MIDIpot works for various analog inputs.
-// BOTH min and max values should be omitted if using the default (0, 127)
+// Pot parameters are: pin, CC number, KILL switch enabled
+// When KILL is enabled, separate CC messages (with a different number) will be sent
+// when you turn the pot all the way down and when you start turning it up again.
+// Simply omit the "KILL" argument if you don't want that.
+MIDIpot myPot(potPin, 22, KILL);
+
+// OPTIONAL: use outputRange() to limit the min/max MIDI output values
+// mysensor.outputRange(12, 90);
 
 void setup(){
-  // Use the rangeFinder example to find the usable range of
-  // your sensor and enter it here. (not necessary for potentiometers)
-  mySensor.inputRange(350, 950);
 }
 
 void loop(){
   myPot.send();
-//  mySensor.send();
 }

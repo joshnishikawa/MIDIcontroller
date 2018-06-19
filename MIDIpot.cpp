@@ -20,7 +20,7 @@ MIDIpot::MIDIpot(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte m){
+MIDIpot::MIDIpot(int p, byte num, bool m){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -54,7 +54,7 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte m, byte min, byte max){
+MIDIpot::MIDIpot(int p, byte num, bool m, byte min, byte max){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -80,18 +80,18 @@ MIDIpot::~MIDIpot(){
 int MIDIpot::read(){
   int newValue = analogRead(pin);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
-    newValue = outHi;
+    value = outHi;
+    newValue = value;
   }
   else if (newValue <= inLo && value != outLo){ // Assign low analog to low MIDI
-    newValue = outLo;
+    value = outLo;
+    newValue = value;
   }
   else if (newValue % divider == 0){ // Filter intermittent values
     newValue = map(newValue, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
-    if (newValue == value){
-      newValue = -1;
-    }
+    newValue = newValue == value ? -1 : newValue;
   }
   else{newValue = -1;}
   return newValue;
@@ -99,12 +99,12 @@ int MIDIpot::read(){
 
 int MIDIpot::send(){
   int newValue = read();
-  if (mode == true && newValue > outLo && value == outLo){ // ON before main msg
+  if (mode == true && newValue > outLo && value == outLo){  //ON before main msg
     usbMIDI.sendControlChange(number+1, 127, MIDIchannel);
   }
   if (newValue >= 0){
     usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
-    if (mode == true && newValue == outLo && value > outLo){ //mode aft main msg
+    if (mode == true && newValue == outLo && value >= outLo){//OFF after main
       usbMIDI.sendControlChange(number+1, 0, MIDIchannel);
     }
     value = newValue;

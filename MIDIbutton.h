@@ -5,9 +5,9 @@
 #include "Bounce.h"
 #include "Flicker.h"
 
-#define MOMENT 0
+#define MOMENTARY 0
 #define LATCH 1
-#define BOTHON 2
+#define TRIGGER 2
 
 extern byte MIDIchannel;
 

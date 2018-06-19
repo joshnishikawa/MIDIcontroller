@@ -6,7 +6,7 @@
 Flicker::Flicker(uint8_t pin, int threshold){
   this->pin = pin;
   this->threshold = threshold;
-  this->offThreshold = threshold-(threshold/100*3); // to prevent multiple triggers near the threshold
+  this->offThreshold = threshold-(threshold/10); // to prevent multiple triggers near the threshold
   state = false;
 };
 
@@ -26,8 +26,7 @@ int Flicker::update()
         return stateChanged = 1;
     }
 
-     // We need to retrigger, so simulate a state change
-     
+  // We need to retrigger, so simulate a state change
 	if ( retrigger_millis && (millis() - previous_millis >= retrigger_millis) ) {
         previous_millis = millis();
 		 retrigger(0);
@@ -54,13 +53,13 @@ int Flicker::read()
 int Flicker::trigger() {
   int newValue = touchRead(pin);
   if (newValue >= threshold && !state){
-    Serial.println("uint16");
     state = true;
     previous_millis = millis();
     return 1;
   }
-  else if (newValue < offThreshold && state){
+  else if (newValue <= offThreshold && state){
     state = false;
+    previous_millis = millis();
     return 1;
   }
   else {return 0;}
@@ -73,11 +72,7 @@ bool  Flicker::risingEdge() { return stateChanged && state; }
 // The fallingEdge method is true for one scan after the triggered input goes from on-to-off. 
 bool  Flicker::fallingEdge() { return stateChanged && !state; }
 
-void Flicker::setThreshold(int onT){
-  threshold = onT;
+void Flicker::setThreshold(int T){
+  threshold = T;
 };
 
-void Flicker::setThreshold(int onT, int offT){
-  threshold = onT;
-  offThreshold = offT;
-};

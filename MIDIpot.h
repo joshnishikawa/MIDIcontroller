@@ -2,6 +2,7 @@
 #define MIDIpot_h
 
 #include "Arduino.h"
+#define KILL 1
 
 extern byte MIDIchannel;
 
@@ -16,13 +17,13 @@ class MIDIpot{
     MIDIpot(int p, byte num);
     
     // " when pin, control number are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte m);
+    MIDIpot(int p, byte num, bool m);
     
     // " pin, control number, minimum & maximum outgoing MIDI values are set
     MIDIpot(int p, byte num, byte min, byte max);
     
     // " pin, control number, min/max values are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte m, byte min, byte max);
+    MIDIpot(int p, byte num, bool m, byte min, byte max);
     
     // destructor
    	~MIDIpot();
@@ -34,7 +35,7 @@ class MIDIpot{
     byte number;
     uint16_t inLo, inHi;
     byte outLo, outHi;
-    byte mode;  // in case you need to kill an effect entirely
+    bool mode;  // in case you need to kill an effect entirely
     byte value;
     void setControlNumber(byte num);
     void inputRange(uint16_t min, uint16_t max);

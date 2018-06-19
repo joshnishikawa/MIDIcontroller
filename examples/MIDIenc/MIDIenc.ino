@@ -9,7 +9,7 @@ const int ledPin = 13;    // Set an LED to show the state of the switch.
 
 // Encoder parameters are: pin A, pin B, CC number
 MIDIenc myEnc(encPinA, encPinB, 24);
-MIDIbutton myButton(buttonPin, 25, 1); // CC #25 in latch mode
+MIDIbutton myButton(buttonPin, 25, LATCH); // CC #25 in latch mode
 
 void setup(){
   pinMode(ledPin, OUTPUT);

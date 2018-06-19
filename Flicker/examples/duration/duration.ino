@@ -1,59 +1,39 @@
-#include <Bounce.h>
+#include <Flicker.h>
 
 /*
-This example uses a mercury tilt switch to detect the orientation 
-of a robot. If you turn the bot over, it falls asleep to conserve 
-battery life.  If you have ever used a tilt switch before,
-you know they can be very "noisy" - they jump around a lot!  
-The bounce library can handle sensing when a noisy switch has 
-"settled down"  with the "duration" method that tells you how long 
-the pin has been in the current state.
+This example uses a capacitive touch input to detect a finger.
+If you hold your finger on the input for long enough,
+something will happen. The flicker library uses the "duration"
+method to determine how long a capacitive touch input has
+remained above a given threshold.
 */
 
-const uint8_t ORIENTATION_PIN = 16;
+const uint8_t TOUCH_PIN = 0;
+const uint8_t LED = 13;
+bool held = false; // Has the button been held (or released) for long enough?
 
-Bounce orientation = Bounce( ORIENTATION_PIN, 50 );
-
-int awake; // Are we awake based on our current orientation?
+// Instantiate a Flicker object with a threshold of 1300
+// YOU LIKELY NEED TO ADJUST THAT THRESHOLD.
+Flicker heldInput = Flicker(TOUCH_PIN, 1300);
 
 void setup() {
-
-  pinMode( ORIENTATION_PIN, INPUT );
-  digitalWrite( ORIENTATION_PIN, HIGH ); // Activate Pull-Up
-
-  Serial.begin(19200);
-  Serial.println( "Orientation Test " );
-  Serial.println();
-
-  awake = orientation.read();
-
-  Serial.println( awake ? "Awake!" : "Asleep!" );
-
+  pinMode(LED, OUTPUT);
 }
 
-unsigned long lastKnock = 0;
-
 void loop() {
+  heldInput.update();
 
-  orientation.update();
-
-  // has our orientation changed for more the 1/2 a second?
-  if ( orientation.read() != awake && orientation.duration() > 500 ) {
-
-    awake = orientation.read();
-
-    if ( awake ) {
-
-      Serial.println( "Waking Up!" );
-      // Do Something Here...
-
-    }
-    else {
-
-      Serial.println( "Falling Asleep" );
-      // Do Something Here...
-
-    }
+  // has our input changed for more 1/2 a second?
+  Serial.println(heldInput.duration());
+  Serial.println(heldInput.state ? "on" : "O F F");
+  if (heldInput.read() != held && heldInput.duration() > 500 ) {
+    held = !held;
   }
-
+  
+  if (held){
+    digitalWrite(LED, HIGH);
+  }
+  else{
+    digitalWrite(LED, LOW);
+  }
 }

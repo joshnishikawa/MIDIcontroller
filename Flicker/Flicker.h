@@ -52,14 +52,14 @@ public:
 	bool risingEdge();
   // The fallingEdge  method it true for one scan after the de-bounced input goes from on-to-off. 
 	bool fallingEdge();
-  void setThreshold(int onT);
-  void setThreshold(int onT, int offT);
+  void setThreshold(int T);
+
+  uint8_t state;
   
 protected:
   int trigger();
   int threshold, offThreshold;
   unsigned long retrigger_millis, previous_millis;
-  uint8_t state;
   uint8_t pin;
   uint8_t stateChanged;
 };

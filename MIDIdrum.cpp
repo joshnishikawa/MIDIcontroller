@@ -63,6 +63,15 @@ int MIDIdrum::send(){
   return newValue;
 };
 
+int MIDIdrum::send(int vel){
+  int newValue = read();
+  if (newValue >= 0){
+    constrain(vel, 1, 127);
+    usbMIDI.sendNoteOn(number, vel, MIDIchannel);
+  }
+  return newValue;
+};
+
 void MIDIdrum::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };

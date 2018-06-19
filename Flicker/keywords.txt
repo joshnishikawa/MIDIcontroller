@@ -4,6 +4,6 @@ update	 KEYWORD2
 interval	 KEYWORD2
 read	 KEYWORD2
 write	 KEYWORD2
-reflicker	 KEYWORD2
+retrigger	 KEYWORD2
 risingEdge	KEYWORD2
 fallingEdge	KEYWORD2

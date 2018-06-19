@@ -5,7 +5,6 @@
 // to a 'touch' pin will work. A layer of something non-
 // conductive between the metal and skin gives smoother response.
 
-
 byte MIDIchannel = 5;
 const int capPin = 0; // Change this to the correct TOUCH pin
 

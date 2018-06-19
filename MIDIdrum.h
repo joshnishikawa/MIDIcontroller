@@ -25,6 +25,7 @@ class MIDIdrum{
 
     int read();
     int send();
+    int send(int vel);
     byte number;
     byte outLo, outHi;
     int threshold;
@@ -34,3 +35,4 @@ class MIDIdrum{
 };
 
 #endif
+

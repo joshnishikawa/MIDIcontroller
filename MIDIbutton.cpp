@@ -28,10 +28,10 @@ int MIDIbutton::read(){
     Bounce::update();              // Force a status report of the Bounce object.
     inputState = Bounce::state;
     if (Bounce::fallingEdge()){    // If the button's been pressed,
-      newValue = outHi;            // return the CC value and
+      newValue = outHi;            // return the high CC value.
     }
     else if (Bounce::risingEdge()){// If the button has been released,
-      newValue = outLo;            // return the CC value and
+      newValue = outLo;            // return the low CC value.
     }
     else{newValue = -1;}
   }
@@ -51,29 +51,29 @@ int MIDIbutton::read(){
 
 
 /* This function will send the appropriate Control Change messages for the press
-and/or release of any MIDI button whether it's set to 'latch' 'momentary' or
-'instantaneous' mode.*/
+and/or release of any MIDI button whether it's set to 'MOMENTARY' 'LATCH' or
+'TRIGGER' mode.*/
 int MIDIbutton::send(){
   int newValue = read();
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
       usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
       newValue = number;
-      state = true;             // and remember the button is now on.
+      state = true;             // Remember the button is now on.
     }
     else{                       // If the button was latched ON,
-      if (mode == 2){           // and the button's in instant mode(2),
+      if (mode == 2){           // and the button's in TRIGGER mode(2),
         usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again 
         newValue = number;
       }
       else {usbMIDI.sendControlChange(number,outLo,MIDIchannel);}// else send outLo,
-      state = false;            // and remember the button is now off.
+      state = false;            // Remember the button is now off.
       newValue = outLo;
     }
   }
-  else if (newValue == outLo && mode == 0){// Button in momentary mode released?
+  else if (newValue == outLo && mode == 0){// Button in MOMENTARY mode released?
     usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
-    state = false;                         // and remember the button is now off
+    state = false;                         // Remember the button is now off
   }
   else {newValue = -1;}
   return newValue;
