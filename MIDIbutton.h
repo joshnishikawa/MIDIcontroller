@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "Bounce.h"
-#include "Flicker.h"
+#include "Flicker/Flicker.h"
 
 #define MOMENTARY 0
 #define LATCH 1
