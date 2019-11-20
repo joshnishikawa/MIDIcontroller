@@ -10,7 +10,7 @@ const int potPin = A0;  // Change this to the ANALOG pin you want to use
 MIDIpot myPot(potPin, 22, KILL);
 
 // OPTIONAL: use outputRange() to limit the min/max MIDI output values
-// mysensor.outputRange(12, 90);
+// myPot.outputRange(12, 90);
 
 void setup(){
 }

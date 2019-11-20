@@ -5,6 +5,8 @@
 #include "Bounce.h"
 #include "Encoder.h"
 
+#define PER_VALUE 1
+#define PER_DETENT 4
 extern byte MIDIchannel;
 
 class MIDIenc{
@@ -15,9 +17,15 @@ class MIDIenc{
     // constructor when only pins and control number are given
     MIDIenc(int a, int b, byte num);
     
-    // " when pins, control number, minimum and maximum outgoing MIDI values set
+    // " pins, control number and whether value changes PER_DETENT or PER_VALUE
+    MIDIenc(int a, int b, byte num, byte detentOrValue);
+
+    // " pins, control number, minimum and maximum outgoing MIDI values set
     MIDIenc(int a, int b, byte num, byte min, byte max);
     
+    // " pins, control number, min, max and PER_VALUE/PER_DETENT
+    MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue);
+
     // destructor
     ~MIDIenc();
 
@@ -26,6 +34,7 @@ class MIDIenc{
     byte number;
     byte value;
     byte outLo, outHi;
+    byte detentOrValue;
     Encoder *myKnob;
     void setControlNumber(byte num);
     void outputRange(byte min, byte max);

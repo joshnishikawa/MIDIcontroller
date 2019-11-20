@@ -1,28 +1,33 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-  /////////////////////////////////////
-  //                                 //
-  // MIDIcontroller - Version 2.2.5  //
-  //                                 //
-  //     A library for creating      //
-  //     Teensy MIDI controllers     //
-  /////////////////////////////////////
+ MIDIcontroller 2.3.0 - A library for creating Teensy MIDI controllers.
+ - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
-/*
-FEATURES INCLUDE:
-  - Velocity sensitive FSR or Piezo inputs
-  - momentary, latch or 'trigger' buttons
-  - Stable analog to MIDI conversion for potentiometers and other sensors
-  - Support for encoders and capacitive touch sensors
+ FEATURES INCLUDE:
+  - velocity sensitive FSR, Piezo or Capacitive Touch inputs
+  - momentary, latch or 'trigger' type MIDI buttons (also work with Cap Touch) 
+  - stable analog to MIDI conversion for potentiometers and other sensors
+  - stable Capacitive Touch to MIDI conversion for expression control
+  - support for encoders
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
-
-IN THE WORKS:
-  - replace KILL with a second user-selectable CC number
-  - add an option to allow encoders to change 1 MIDI value per detent
-  - MIDIdrum timer and waitTime should probably be fine tuned
-  - figure out how to get velocity from Capacitive Touch (wish me luck on that)
+      
+*****************************************************************************
+*** THIS LIBRARY REQUIRES THE MIDI, BOUNCE, ENCODER and FLICKER LIBRARIES ***
+*** (github.com/joshnishikawa/Flicker)                                    ***
+*****************************************************************************
 
 VERSION LOG:
+  2.3.0 - A major update to the Flicker library:
+          * thresholds for Capacitive Touch buttons are automatically detected 
+          * more stable expression control for MIDItouch(previously MIDIcapSens)
+          * MIDIdrum includes option to use velocity-sensitive Capacitive Touch
+        - Even better stabilization of analog inputs
+        - Added option for encoders to change 1 CC value per detent
+        - Made "killSwitch" user-selectable (just put any CC# instead of KILL)
+        - Added setKillSwitch(byte) to set kill CC (use OFF or 0 to disable it).
+        - Added a few visual aides
+        
   2.2.5 - Bugfixed jitter that occurred when using inputRange() with input maxed
         - Arguments for specific velocities can now be passed to velocity inputs
         - Added literals to highlight MOMENTARY, LATCH, TRIGGER and KILL modes
@@ -42,11 +47,9 @@ VERSION LOG:
   2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
   2.0.5 - Added a condition to prevent many double note triggers.
   2.0.4 - Added support for capacitive sensors (and started this version log)
-  
 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   
-***THIS LIBRARY REQUIRES THE MIDI, BOUNCE AND ENCODER LIBRARIES***
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -64,6 +67,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-contact: joshnishikawa@gmail.com
 */

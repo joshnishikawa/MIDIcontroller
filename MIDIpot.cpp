@@ -8,7 +8,7 @@ MIDIpot::MIDIpot(int p, byte num){
   pin = p;
   number = num;
   value = 0;
-  mode = 0;
+  mode = false;
   inLo = 0;
   inHi = 1023;
   outLo = 0;
@@ -20,12 +20,13 @@ MIDIpot::MIDIpot(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, bool m){
+MIDIpot::MIDIpot(int p, byte num, byte k){
   pinMode(p, INPUT);
   pin = p;
   number = num;
   value = 0;
-  mode = m;
+  mode = true;
+  killSwitch = k;
   inLo = 0;
   inHi = 1023;
   outLo = 0;
@@ -42,7 +43,7 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   pin = p;
   number = num;
   value = 0;
-  mode = 0;
+  mode = false;
   inLo = 0;
   inHi = 1023;
   outLo = min;
@@ -54,12 +55,13 @@ MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, bool m, byte min, byte max){
+MIDIpot::MIDIpot(int p, byte num, byte k, byte min, byte max){
   pinMode(p, INPUT);
   pin = p;
   number = num;
   value = 0;
-  mode = m;
+  mode = true;
+  killSwitch = k;
   inLo = 0;
   inHi = 1023;
   outLo = min;
@@ -78,7 +80,7 @@ MIDIpot::~MIDIpot(){
 
 // returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
-  int newValue = analogRead(pin);
+  int newValue = smooth(analogRead(pin), 100);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
     value = outHi;
     newValue = value;
@@ -99,13 +101,13 @@ int MIDIpot::read(){
 
 int MIDIpot::send(){
   int newValue = read();
-  if (mode == true && newValue > outLo && value == outLo){  //ON before main msg
-    usbMIDI.sendControlChange(number+1, 127, MIDIchannel);
+  if (killSwitch != 0 && newValue > outLo && value == outLo){//ON before main CC
+    usbMIDI.sendControlChange(killSwitch, 127, MIDIchannel);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
-    if (mode == true && newValue == outLo && value >= outLo){//OFF after main
-      usbMIDI.sendControlChange(number+1, 0, MIDIchannel);
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN CC MESSAGE
+    if (killSwitch != 0 && newValue == outLo && value >= outLo){//OFF after main
+      usbMIDI.sendControlChange(killSwitch, 0, MIDIchannel);
     }
     value = newValue;
   }
@@ -117,16 +119,6 @@ void MIDIpot::setControlNumber(byte num){ // Set the CC number.
   number = num;
 };
 
-// Limit the analog input to the usable range of a sensor.
-// NOTE: Stability decreases as the difference between inHi and inLo decreases.
-void MIDIpot::inputRange(uint16_t min, uint16_t max){
-  inLo = min;
-  inHi = max;
-  // Reset the interval at which alalog signals will actually register.
-  divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
-};
-
 
 // Set upper and lower limits for outgoing MIDI messages.
 void MIDIpot::outputRange(byte min, byte max){
@@ -136,5 +128,41 @@ void MIDIpot::outputRange(byte min, byte max){
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
   invert = outHi < outLo; // Check again for reverse polarity.
+};
+
+
+// Limit the analog input to the usable range of a sensor.
+void MIDIpot::inputRange(uint16_t min, uint16_t max){
+  inLo = min;
+  inHi = max;
+  // Reset the interval at which alalog signals will actually register.
+  divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
+  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+};
+
+
+void MIDIpot::setKillSwitch(byte k){
+  if(k == 0){
+    mode = false;
+  }
+  else{
+    mode = true;
+    killSwitch = k;
+  }
+};
+
+
+int MIDIpot::smooth(int value, int NR){
+  static int balancedValue = 0;
+  static int buffer = 0;
+  int difference = value - balancedValue;
+
+  buffer = value == balancedValue ? buffer/2 : buffer+difference;
+
+  if (buffer*buffer > NR*NR){ // This works better than abs(buffer) for me.
+    balancedValue = value;
+    buffer = 0;
+  }
+  return balancedValue;
 };
 

@@ -1,26 +1,44 @@
 #include "MIDIbutton.h"
 
 // constructors
-MIDIbutton::MIDIbutton() : Bounce(0, 0), Flicker(0, 0){};
+MIDIbutton::MIDIbutton() : Bounce(0, 0), TouchSwitch(0, 0){};
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mod) : Bounce(p, 10), Flicker(0, 0){
+MIDIbutton::MIDIbutton(int p, byte num, byte mod) : Bounce(p, 10), TouchSwitch(0, 0){
   pinMode(p, INPUT_PULLUP);
   inputType = 0; //button
   number = num;
-  mode = mod; 
+  this->mode = mode; 
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mod, int thresh) : Bounce(0, 0), Flicker(p, thresh){
-  inputType = 1; //capacitive touch
+MIDIbutton::MIDIbutton(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0, type){
+  if (type == 0){
+    inputType = 0;
+  }
+  else if (type == 1){
+    inputType = 1;
+    // Creating objects during setup()? Well, you needn't setThreshold() again.
+    setThreshold();
+  }
+  else{
+    inputType = 1;
+    // For backward compatability. Specifying a threshold in the constructor is 
+    // deperecated. Please use TOUCH as the argument and setThreshold(). 
+    TouchSwitch::setThreshold(type);
+  }
+
   number = num;
-  mode = mod; 
+  this->mode = mode;
   state = false;
 };
 
 // destructor
 MIDIbutton::~MIDIbutton(){};
 
+
+void MIDIbutton::setThreshold(){
+  TouchSwitch::setThreshold();
+}
 
 int MIDIbutton::read(){
   int newValue = -1;
@@ -36,12 +54,12 @@ int MIDIbutton::read(){
     else{newValue = -1;}
   }
   else if (inputType == 1){
-    Flicker::update();
-    inputState = Flicker::state;
-    if (Flicker::risingEdge()){
+    TouchSwitch::update();
+    inputState = TouchSwitch::state;
+    if (TouchSwitch::risingEdge()){
       newValue = outHi;
     }
-    else if (Flicker::fallingEdge()){
+    else if (TouchSwitch::fallingEdge()){
       newValue = outLo;
     }
     else{newValue = -1;}

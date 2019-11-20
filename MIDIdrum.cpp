@@ -3,12 +3,14 @@
 // constructors
 MIDIdrum::MIDIdrum(){};
 
-MIDIdrum::MIDIdrum(int p, byte num){
+MIDIdrum::MIDIdrum(int p, byte num): TouchVelocity(){
   pinMode(p, INPUT);
   pin = p;
   number = num;
   outLo = 1;
   outHi = 127;
+  inputType = 0; // FSR or Piezo
+  inHi = 1023;
   peak = 0;
   threshold = 12;
   state = 0;     // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
@@ -16,41 +18,78 @@ MIDIdrum::MIDIdrum(int p, byte num){
   timer = 0;
 };
 
+MIDIdrum::MIDIdrum(int p, byte num, byte type): TouchVelocity(p, 1, 127){
+  pinMode(p, INPUT);
+  pin = p;
+  number = num;
+  outLo = 1;
+  outHi = 127;
+  inputType = type; // 1 = Capacitive Touch, 0 = FSR or Piezo
+  if (inputType == 0){
+    inHi = 1023;
+    peak = 0;
+    threshold = 12;
+    state = 0;     // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
+    waitTime = 36; // millis
+    timer = 0;
+  }
+  else{
+    setThreshold(); // only works if creating objects during setup
+  }
+};
+
 // destructor
 MIDIdrum::~MIDIdrum(){
 };
 
+
 int MIDIdrum::read(){
-  int newValue = analogRead(pin);
-  if (state == 0) {
-    if (newValue > threshold) {
-      state = 1;
-      peak = newValue;
-      timer = 0;
+  int newValue;
+  if (inputType == 1){ // Handle Capacitive Touch
+    newValue = TouchVelocity::responsiveRead();
+    if (TouchVelocity::fallingEdge()){
+      newValue = 0;
     }
-    newValue = -1; //still just listening
-  }
-  else if (state == 1) {
-    if (newValue > peak) {
-      peak = newValue;
+    else if (newValue == 0){
       newValue = -1;
     }
-    else if (timer >= 10) {
-      newValue = map(peak, threshold, 1023, outLo, outHi);
-      state = 2;
-      timer = 0;
+    else{
+      // Leave the reading from TouchVelocity::responsiveRead() as is.
     }
-    else{newValue = -1;}
   }
-  else {
-    if (newValue > threshold) {
-      timer = 0; // keep resetting timer if above threshold
+  else{ // Handle FSR or Piezo
+    newValue = analogRead(pin);
+    if (state == 0) {
+      if (newValue > threshold) {
+        state = 1;
+        peak = newValue;
+        timer = 0;
+      }
+      newValue = -1; //still just listening
     }
-    else if (timer > waitTime) {
-      state = 0; // go back to idle after a certain interval below threshold
-      usbMIDI.sendNoteOn(number, 0, MIDIchannel);
+    else if (state == 1) {
+      if (newValue > peak) {
+        peak = newValue;
+        newValue = -1;
+      }
+      else if (timer >= 10){
+        newValue = map(peak, threshold, inHi, outLo, outHi);
+        state = 2;
+        timer = 0;
+      }
+      else{newValue = -1;}
     }
-    newValue = -1;
+    else {
+      if (newValue > threshold) {
+        timer = 0; // keep resetting timer if above threshold
+        newValue = -1;
+      }
+      else if (timer > waitTime) {
+        state = 0; // go back to idle after a certain interval below threshold
+        newValue = 0;
+      }
+      else{newValue = -1;}
+    }
   }
   return newValue;
 };
@@ -76,12 +115,31 @@ void MIDIdrum::setNoteNumber(byte num){ // Set the NOTE number.
   number = num;
 };
 
-void MIDIdrum::outputRange(byte min, byte max){ // Set min & max poly pressure
-  outLo = min;
-  outHi = max;
+void MIDIdrum::outputRange(byte min, byte max){ // Set min & max output values
+  if (inputType == 1){
+    TouchVelocity::setOutputRange(min, max);
+  }
+  else{
+    outLo = min;
+    outHi = max;
+  }
+};
+
+
+void MIDIdrum::setThreshold(){
+  if (inputType == 0){
+    // Do nothing if someone accidentally omits the argument for a Piezo or FSR
+  }
+  else{
+    TouchVelocity::setThreshold();
+  }
 };
 
 void MIDIdrum::setThreshold(int thresh){
-  threshold = thresh;
+  if (inputType == 1){
+    // Do nothing if someone adds a specific threshold as an argument for a
+    // Touch input. (This is not going to go the way that you think.)
+  }
+  else{threshold = thresh;}
 };
 

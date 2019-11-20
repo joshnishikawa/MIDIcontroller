@@ -1,4 +1,4 @@
-/*FIXME after the value bottoms out alternating MIDI messages (0 1 0 1 0...)
+/*FIXME: after the value bottoms out alternating MIDI messages (0 1 0 1 0...)
   will occasionally continue to be sent.
 */
 
@@ -10,6 +10,16 @@ MIDIenc::MIDIenc(){};
 MIDIenc::MIDIenc(int a, int b, byte num){
   myKnob = new Encoder(a, b);
 	number = num;
+  detentOrValue = 1; // CC changes once per encoder value
+  value = 0;
+  outLo = 0;
+  outHi = 127;
+};
+
+MIDIenc::MIDIenc(int a, int b, byte num, byte detentOrValue){
+  myKnob = new Encoder(a, b);
+	number = num;
+  this->detentOrValue = detentOrValue; // CC changes per encoder value or detent
   value = 0;
   outLo = 0;
   outHi = 127;
@@ -18,6 +28,16 @@ MIDIenc::MIDIenc(int a, int b, byte num){
 MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max){
   myKnob = new Encoder(a, b);
 	number = num;
+  detentOrValue = 1; // CC changes once per encoder value
+  value = 0;
+  outLo = min;
+  outHi = max;
+};
+
+MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue){
+  myKnob = new Encoder(a, b);
+	number = num;
+  this->detentOrValue = detentOrValue; // CC changes per encoder value or detent
   value = 0;
   outLo = min;
   outHi = max;
@@ -32,10 +52,10 @@ MIDIenc::~MIDIenc(){
 int MIDIenc::read(){
   int newValue = -1;
   int incdec = myKnob->read();
-  if(incdec >= 1 && value < outHi){       // If turned up but not already maxed
+  if(incdec >= detentOrValue && value < outHi){
     newValue = value + 1;
   }
-  else if (incdec <= -1 && value > outLo){// If turned down but not bottomed out
+  else if (incdec <= -detentOrValue && value > outLo){
     newValue = value - 1;
   }
   else{newValue = -1;}

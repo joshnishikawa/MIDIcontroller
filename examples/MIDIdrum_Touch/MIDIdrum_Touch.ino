@@ -1,29 +1,26 @@
 #include "MIDIcontroller.h"
 
-/*This example sets up a velocity sensitive input using a piezo transducer.
-
-  THE PIEZO MUST BE WIRED CORRECTLY FOR THS TO WORK AND TO PREVENT DAMAGE!
-  - The black wire of the Piezo, the anode of a diode and
-    one side of a 10k resistor should all be connected to ground.
-  - The cathode of A SECOND diode should be connected to the voltage.
-  - The red wire of the Piezo should be connected to a 470 ohm resistor.
-  - The remaining ends of BOTH resistors and BOTH diodes should be connected
-    to the same analog pin on the microcontroller.
-*/
+/*This is an example of how to set up
+  a velocity sensitive TOUCH input. */
 
 byte MIDIchannel = 5;
-const int drumPin = 23; // Change this to the correct ANALOG pin
+const int touchPin = 1; // Change this to the correct TOUCH pin
 
-// Drum Parameters are: pin, note number (See GM DRUM SOUNDS below)
-MIDIdrum myDrum(drumPin, 38);
+// 38 is the note number (See GM DRUM SOUNDS below)
+// TOUCH indicated that you're using a capacitive touch input.
+MIDIdrum myInput(touchPin, 38, TOUCH);
 
 void setup(){
+  // WARNING! For TOUCH, call setThreshold() with no argument.
+  // The threshold is calculated based on a call to
+  // touchRead() so DON'T touch the input during setup()
+  myInput.setThreshold();
 }
 
 void loop(){
-  myDrum.send();
-  //myDrum.send(64); could be used for a fixed velocity e.g. 64
+  myInput.send();
 }
+
 
 /* GM DRUM SOUNDS 
 MIDI# - NOTE - SOUND
