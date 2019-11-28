@@ -42,7 +42,7 @@ void MIDIbutton::setThreshold(){
 
 int MIDIbutton::read(){
   int newValue = -1;
-  if (inputType == 0){
+  if (inputType == 0){ // Button
     Bounce::update();              // Force a status report of the Bounce object.
     inputState = Bounce::state;
     if (Bounce::fallingEdge()){    // If the button's been pressed,
@@ -53,9 +53,9 @@ int MIDIbutton::read(){
     }
     else{newValue = -1;}
   }
-  else if (inputType == 1){
+  else if (inputType == 1){ // Capacitive Touch
     TouchSwitch::update();
-    inputState = TouchSwitch::state;
+    inputState = TouchSwitch::read();
     if (TouchSwitch::risingEdge()){
       newValue = outHi;
     }

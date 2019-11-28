@@ -9,9 +9,12 @@
 extern byte MIDIchannel;
 
 class MIDIpot{
-    int pin;
-    byte invert;
-    int divider; // for converting from analog to MIDI resolution
+    int pin = 0;
+    byte invert = false;
+    int divider = 8; // for converting from analog to MIDI resolution
+    int buffer = 0; // a container used by the smooth() function 
+    int difference = 0; // smooth() adds this to buffer 'til there's enough bias
+    int balancedValue = 0; // this remains stable until signal bias changes it
     
   public:
     // default constructor
@@ -34,14 +37,14 @@ class MIDIpot{
 
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
-    byte number;
-    uint16_t inLo = 0;
-    uint16_t inHi = 1023;
-    byte outLo = 0;
-    byte outHi = 127;
-    byte mode; // In case you need to kill an effect entirely
+    int inLo = 0;
+    int inHi = 1023;
+    int outLo = 0;
+    int outHi = 127;
+    byte number = 0;
+    byte value = 0;
+    byte mode = 0; // In case you need to kill an effect entirely
     byte killSwitch = 0; // Which CC is getting its hands dirty?
-    byte value;
     void setControlNumber(byte num);
     void outputRange(byte min, byte max);
     void inputRange(uint16_t min, uint16_t max);

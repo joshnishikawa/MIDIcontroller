@@ -14,7 +14,7 @@
 extern byte MIDIchannel;
 
 class MIDIbutton: public Bounce, public TouchSwitch{
-    byte inputType;
+    byte inputType = 0; // Bounce object by default
   public:
     // default constructor
     MIDIbutton();
@@ -35,13 +35,13 @@ class MIDIbutton: public Bounce, public TouchSwitch{
 
     int read(); // returns outHi for fallingEdge, outLo for risingEdge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number
-    byte number;
+    byte number = 0;     // redefined on instatiation
     byte outLo = 0;
     byte outHi = 127;
-    byte mode;
-    byte inputState; // refers to the actual physical state of the input
-    byte state; // refers to the most recently sent MIDI message
-                // e.g. a button may be latched on without being held down
+    byte mode = 0;       // momentary by default
+    byte inputState = 0; // refers to the actual physical state of the input
+    byte state = 0; // refers to the most recently sent MIDI message
+                    // e.g. a button may be latched on without being held down
     void setControlNumber(byte num);
     void setMode(byte mod);
     void outputRange(byte min, byte max);

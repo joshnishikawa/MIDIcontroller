@@ -9,6 +9,7 @@ MIDIpot::MIDIpot(int p, byte num){
   number = num;
   value = 0;
   mode = false;
+  killSwitch = 0;
   inLo = 0;
   inHi = 1023;
   outLo = 0;
@@ -80,7 +81,7 @@ MIDIpot::~MIDIpot(){
 
 // returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
-  int newValue = smooth(analogRead(pin), 100);
+  int newValue = this->smooth(analogRead(pin), 100);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
     value = outHi;
     newValue = value;
@@ -101,12 +102,12 @@ int MIDIpot::read(){
 
 int MIDIpot::send(){
   int newValue = read();
-  if (killSwitch != 0 && newValue > outLo && value == outLo){//ON before main CC
+  if (killSwitch != 0 && value == outLo && newValue > outLo){//ON before main CC
     usbMIDI.sendControlChange(killSwitch, 127, MIDIchannel);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN CC MESSAGE
-    if (killSwitch != 0 && newValue == outLo && value >= outLo){//OFF after main
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel); //MAIN CC MESSAGE
+    if (killSwitch != 0 && value >= outLo && newValue == outLo){//OFF after main
       usbMIDI.sendControlChange(killSwitch, 0, MIDIchannel);
     }
     value = newValue;
@@ -152,15 +153,15 @@ void MIDIpot::setKillSwitch(byte k){
 };
 
 
-int MIDIpot::smooth(int value, int NR){
-  static int balancedValue = 0;
-  static int buffer = 0;
-  int difference = value - balancedValue;
+int MIDIpot::smooth(int val, int NR){
+  buffer = 0;
+  balancedValue = 0;
+  difference = val - balancedValue;
 
-  buffer = value == balancedValue ? buffer/2 : buffer+difference;
+  buffer = val == balancedValue ? buffer/2 : buffer+difference;
 
   if (buffer*buffer > NR*NR){ // This works better than abs(buffer) for me.
-    balancedValue = value;
+    balancedValue = val;
     buffer = 0;
   }
   return balancedValue;
