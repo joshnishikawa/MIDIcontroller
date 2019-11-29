@@ -1,0 +1,3 @@
+[submodule "Flicker"]
+	path = Flicker
+	url = https://github.com/joshnishikawa/Flicker
