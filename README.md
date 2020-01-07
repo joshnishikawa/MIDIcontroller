@@ -1,6 +1,6 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
- MIDIcontroller 2.3.0 - A library for creating Teensy MIDI controllers.
+ MIDIcontroller 2.3.1 - A library for creating Teensy MIDI controllers.
  - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
  FEATURES INCLUDE:
@@ -18,10 +18,11 @@
 *****************************************************************************
 
 VERSION LOG:
+  2.3.1 - All examples updated to prevent MIDI and usbMIDI stack crashes.
   2.3.0 - A major update to the Flicker library:
-          * thresholds for Capacitive Touch buttons are automatically detected 
-          * more stable expression control for MIDItouch(previously MIDIcapSens)
-          * MIDIdrum includes option to use velocity-sensitive Capacitive Touch
+          - thresholds for Capacitive Touch buttons are automatically detected 
+          - more stable expression control for MIDItouch(previously MIDIcapSens)
+          - MIDIdrum includes option to use velocity-sensitive Capacitive Touch
         - Even better stabilization of analog inputs
         - Added option for encoders to change 1 CC value per detent
         - Made "killSwitch" user-selectable (just put any CC# instead of KILL)
@@ -67,4 +68,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/

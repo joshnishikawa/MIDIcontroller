@@ -12,4 +12,11 @@ void setup(){
 void loop(){
   myPad.send();
   aftertouch.send();
+
+
+// This prevents crashes that happen when incoming usbMIDI is ignored.
+  while(usbMIDI.read()){}
+
+// Also uncomment this if compiling for standard MIDI
+//  while(MIDI.read()){}
 }
