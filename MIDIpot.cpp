@@ -81,7 +81,7 @@ MIDIpot::~MIDIpot(){
 
 // returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
-  int newValue = this->smooth(analogRead(pin), 100);
+  int newValue = this->smooth(analogRead(pin), SMOOTHING);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
     value = outHi;
     newValue = value;
@@ -154,13 +154,10 @@ void MIDIpot::setKillSwitch(byte k){
 
 
 int MIDIpot::smooth(int val, int NR){
-  buffer = 0;
-  balancedValue = 0;
   difference = val - balancedValue;
+  buffer = val == 0 ? -NR : val == balancedValue ? buffer/2 : buffer+difference;
 
-  buffer = val == balancedValue ? buffer/2 : buffer+difference;
-
-  if (buffer*buffer > NR*NR){ // This works better than abs(buffer) for me.
+  if (buffer*buffer >= NR*NR){ // This works better than abs(buffer) for me.
     balancedValue = val;
     buffer = 0;
   }

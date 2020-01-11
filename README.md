@@ -1,6 +1,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
- MIDIcontroller 2.3.1 - A library for creating Teensy MIDI controllers.
+ MIDIcontroller 2.3.2 - A library for creating Teensy MIDI controllers.
  - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
  FEATURES INCLUDE:
@@ -18,6 +18,7 @@
 *****************************************************************************
 
 VERSION LOG:
+  2.3.2 - Fixed the broken smooth() function for analog inputs.
   2.3.1 - All examples updated to prevent MIDI and usbMIDI stack crashes.
   2.3.0 - A major update to the Flicker library:
           - thresholds for Capacitive Touch buttons are automatically detected 

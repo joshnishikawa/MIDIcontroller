@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 
+#define SMOOTHING 50 // Can be increased at the cost of some responsiveness
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
 #define OFF 0
 
