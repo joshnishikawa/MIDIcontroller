@@ -3,7 +3,7 @@
 // constructors
 MIDIbutton::MIDIbutton() : Bounce(0, 0), TouchSwitch(0, 0){};
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mod) : Bounce(p, 10), TouchSwitch(0, 0){
+MIDIbutton::MIDIbutton(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(0, 0){
   pinMode(p, INPUT_PULLUP);
   inputType = 0; //button
   number = num;
@@ -53,6 +53,7 @@ int MIDIbutton::read(){
     }
     else{newValue = -1;}
   }
+#if ! defined(__IMXRT1062__)
   else if (inputType == 1){ // Capacitive Touch
     TouchSwitch::update();
     inputState = TouchSwitch::read();
@@ -64,6 +65,7 @@ int MIDIbutton::read(){
     }
     else{newValue = -1;}
   }
+#endif
   return newValue;
 };
 

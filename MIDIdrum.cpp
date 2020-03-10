@@ -45,19 +45,7 @@ MIDIdrum::~MIDIdrum(){
 
 int MIDIdrum::read(){
   int newValue;
-  if (inputType == 1){ // Handle Capacitive Touch
-    newValue = TouchVelocity::responsiveRead();
-    if (TouchVelocity::fallingEdge()){
-      newValue = 0;
-    }
-    else if (newValue == 0){
-      newValue = -1;
-    }
-    else{
-      // Leave the reading from TouchVelocity::responsiveRead() as is.
-    }
-  }
-  else{ // Handle FSR or Piezo
+  if (inputType != 1){ // Handle FSR or Piezo
     newValue = analogRead(pin);
     if (state == 0) {
       if (newValue > threshold) {
@@ -91,6 +79,20 @@ int MIDIdrum::read(){
       else{newValue = -1;}
     }
   }
+#if ! defined(__IMXRT1062__)
+  else { // Handle Capacitive Touch
+    newValue = TouchVelocity::responsiveRead();
+    if (TouchVelocity::fallingEdge()){
+      newValue = 0;
+    }
+    else if (newValue == 0){
+      newValue = -1;
+    }
+    else{
+      // Leave the reading from TouchVelocity::responsiveRead() as is.
+    }
+  }
+#endif
   return newValue;
 };
 
