@@ -13,7 +13,7 @@
       can also be set for analog input (maintaining stability in conversion)
       
 *****************************************************************************
-*** THIS LIBRARY REQUIRES THE MIDI, BOUNCE, ENCODER and FLICKER LIBRARIES ***
+*** THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker ***
 *** (github.com/joshnishikawa/Flicker)                                    ***
 *****************************************************************************
 
