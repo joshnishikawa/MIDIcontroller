@@ -1,6 +1,6 @@
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
- MIDIcontroller 2.3.2 - A library for creating Teensy MIDI controllers.
+ MIDIcontroller 2.3.3 - A library for creating Teensy MIDI controllers.
  - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
  FEATURES INCLUDE:
@@ -12,12 +12,13 @@
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
       
-*****************************************************************************
-*** THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker ***
-*** (github.com/joshnishikawa/Flicker)                                    ***
-*****************************************************************************
+*************************************************************************
+*** THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker
+*** (github.com/joshnishikawa/Flicker)
+*************************************************************************
 
 VERSION LOG:
+  2.3.3 – Made waitTime for MIDIdrum user-selectable.
   2.3.2 - Fixed the broken smooth() function for analog inputs.
   2.3.1 - All examples updated to prevent MIDI and usbMIDI stack crashes.
   2.3.0 - A major update to the Flicker library:
@@ -50,7 +51,7 @@ VERSION LOG:
   2.0.5 - Added a condition to prevent many double note triggers.
   2.0.4 - Added support for capacitive sensors (and started this version log)
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
