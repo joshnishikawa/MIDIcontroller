@@ -38,11 +38,12 @@ class MIDIdrum: public TouchVelocity{
     byte number;
     byte outLo = 1;
     byte outHi = 127;
-    int threshold;
+    unsigned int threshold;
     void setNoteNumber(byte num);
     void outputRange(byte min, byte max);
     void setThreshold();
-    void setThreshold(int thresh);
+    void setThreshold(unsigned int thresh);
+    void setWaitTime(unsigned int time);
 };
 
 #endif

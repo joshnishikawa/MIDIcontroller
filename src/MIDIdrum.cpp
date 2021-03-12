@@ -137,7 +137,7 @@ void MIDIdrum::setThreshold(){
   }
 };
 
-void MIDIdrum::setThreshold(int thresh){
+void MIDIdrum::setThreshold(unsigned int thresh){
   if (inputType == 1){
     // Do nothing if someone adds a specific threshold as an argument for a
     // Touch input. (This is not going to go the way that you think.)
@@ -145,3 +145,6 @@ void MIDIdrum::setThreshold(int thresh){
   else{threshold = thresh;}
 };
 
+void MIDIdrum::setWaitTime(unsigned int time){
+  waitTime = time;
+};
