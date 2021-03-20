@@ -1,5 +1,5 @@
 #include "Bounce.h"
-int analogPin = 20; // Change to the ANALOG pin you want to use.
+int analogPin = A0; // Change to the ANALOG pin you want to use.
 int touchPin = 22;  // Change to the TOUCH pin you want to use.
 Bounce reset = Bounce(12, 50); // You can assign a button to reset the values.
 int newHiA;

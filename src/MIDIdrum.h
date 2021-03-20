@@ -44,6 +44,7 @@ class MIDIdrum: public TouchVelocity{
     void setThreshold();
     void setThreshold(unsigned int thresh);
     void setWaitTime(unsigned int time);
+    void inputRange(uint16_t thresh, uint16_t max);
 };
 
 #endif

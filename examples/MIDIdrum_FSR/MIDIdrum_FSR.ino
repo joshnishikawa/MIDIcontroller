@@ -12,14 +12,15 @@
 */
 
 byte MIDIchannel = 5;
-const int pressPin = 23; // Change this to the correct ANALOG pin
+const int pressPin = A0; // Change this to the correct ANALOG pin
 
 // Note Parameters are: pin, note number
 MIDIdrum myPad(pressPin, 37);
 
 void setup(){
   // Set the threshold where you want notes to trigger.
-  myPad.setThreshold(30);
+  // And the analog reading that will trigger the maximum velocity.
+  myPad.inputRange(12, 720);
 }
 
 void loop(){

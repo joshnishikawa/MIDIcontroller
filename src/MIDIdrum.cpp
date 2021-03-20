@@ -61,7 +61,7 @@ int MIDIdrum::read(){
         newValue = -1;
       }
       else if (timer >= 10){
-        newValue = map(peak, threshold, inHi, outLo, outHi);
+        newValue = newValue >= inHi ? outHi : map(peak,threshold,inHi,outLo,outHi);
         state = 2;
         timer = 0;
       }
@@ -127,6 +127,11 @@ void MIDIdrum::outputRange(byte min, byte max){ // Set min & max output values
   }
 };
 
+// Limit the analog input to the usable range of a sensor.
+void MIDIdrum::inputRange(uint16_t thresh, uint16_t max){
+  threshold = thresh;
+  inHi = max;
+};
 
 void MIDIdrum::setThreshold(){
   if (inputType == 0){
