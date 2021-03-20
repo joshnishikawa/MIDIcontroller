@@ -1,6 +1,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
- MIDIcontroller 2.3.3 - A library for creating Teensy MIDI controllers.
+ MIDIcontroller 2.3.4 - A library for creating Teensy MIDI controllers.
  - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
  FEATURES INCLUDE:
@@ -18,7 +18,10 @@
 *************************************************************************
 
 VERSION LOG:
-  2.3.3 – Made waitTime for MIDIdrum user-selectable.
+  2.3.4 - Added inputRange() to MIDIdrum.
+        - Added an example for muxed input.
+        - Fixed a bug preventing MIDIdrum from sending velocity 127.
+  2.3.3 - Made waitTime for MIDIdrum user-selectable.
   2.3.2 - Fixed the broken smooth() function for analog inputs.
   2.3.1 - All examples updated to prevent MIDI and usbMIDI stack crashes.
   2.3.0 - A major update to the Flicker library:
