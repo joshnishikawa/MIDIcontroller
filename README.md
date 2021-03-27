@@ -1,7 +1,6 @@
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
- MIDIcontroller 2.3.4 - A library for creating Teensy MIDI controllers.
- - by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
+# MIDIcontroller 2.3.4
+### A library for creating Teensy MIDI controllers.
+###### by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
 
  FEATURES INCLUDE:
   - velocity sensitive FSR, Piezo or Capacitive Touch inputs
@@ -11,11 +10,10 @@
   - support for encoders
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
-      
-*************************************************************************
-*** THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker
-*** (github.com/joshnishikawa/Flicker)
-*************************************************************************
+___
+***THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker***
+(github.com/joshnishikawa/Flicker)
+___
 
 VERSION LOG:
   2.3.4 - Added inputRange() to MIDIdrum.
@@ -53,9 +51,8 @@ VERSION LOG:
   2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
   2.0.5 - Added a condition to prevent many double note triggers.
   2.0.4 - Added support for capacitive sensors (and started this version log)
+___  
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
