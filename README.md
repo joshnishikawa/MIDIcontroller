@@ -1,6 +1,6 @@
 # MIDIcontroller 2.3.4
 ### A library for creating Teensy MIDI controllers.
-###### by Josh Nishikawa (github.com/joshnishikawa/MIDIcontroller)
+###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
  FEATURES INCLUDE:
   - velocity sensitive FSR, Piezo or Capacitive Touch inputs
@@ -12,10 +12,10 @@
       can also be set for analog input (maintaining stability in conversion)
 ___
 ***THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker***
-(github.com/joshnishikawa/Flicker)
+<github.com/joshnishikawa/Flicker>
 ___
 
-**VERSION LOG:**
+### VERSION LOG:
 2.3.4 
 - Added inputRange() to MIDIdrum.
 - Added an example for muxed input.
