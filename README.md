@@ -15,42 +15,55 @@ ___
 (github.com/joshnishikawa/Flicker)
 ___
 
-VERSION LOG:
-  2.3.4 - Added inputRange() to MIDIdrum.
-        - Added an example for muxed input.
-        - Fixed a bug preventing MIDIdrum from sending velocity 127.
-  2.3.3 - Made waitTime for MIDIdrum user-selectable.
-  2.3.2 - Fixed the broken smooth() function for analog inputs.
-  2.3.1 - All examples updated to prevent MIDI and usbMIDI stack crashes.
-  2.3.0 - A major update to the Flicker library:
-          - thresholds for Capacitive Touch buttons are automatically detected 
-          - more stable expression control for MIDItouch(previously MIDIcapSens)
-          - MIDIdrum includes option to use velocity-sensitive Capacitive Touch
-        - Even better stabilization of analog inputs
-        - Added option for encoders to change 1 CC value per detent
-        - Made "killSwitch" user-selectable (just put any CC# instead of KILL)
-        - Added setKillSwitch(byte) to set kill CC (use OFF or 0 to disable it).
-        - Added a few visual aides
-        
-  2.2.5 - Bugfixed jitter that occurred when using inputRange() with input maxed
-        - Arguments for specific velocities can now be passed to velocity inputs
-        - Added literals to highlight MOMENTARY, LATCH, TRIGGER and KILL modes
-        - Long overdue completion of the "Flicker" library (for Cap Touch input)
-        - Made separate examples for 'pot' and 'sensor' (to avoid confusion)
-        
-  2.2.0 - Added support for Piezos (Must be wired properly. See example)
-        - "MIDInote" class changed to "MIDIdrum" and optimized for FSR and Piezo
-        - Removed redundant 'velocity' variable. Just call outputRange(127, 127)
-        - Added support for using a Capacitive Touch input as a MIDIbutton
-        - Included 'Flicker' library (required for Capacitive Touch buttons)
-  2.1.5 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
-  2.1.3 - included an example of how to implement aftertouch
-  2.1.2 - many variables changed to 'byte' or 'uint16_t' for easy storage
-          public and private variables are better sorted
-  2.1.0 - Split read() and send() functions. MIDI channel is now user selectable
-  2.0.6 - Fixed a bug preventing poly CC to return to zero after note off.
-  2.0.5 - Added a condition to prevent many double note triggers.
-  2.0.4 - Added support for capacitive sensors (and started this version log)
+**VERSION LOG:**
+2.3.4 
+- Added inputRange() to MIDIdrum.
+- Added an example for muxed input.
+- Fixed a bug preventing MIDIdrum from sending velocity 127.
+
+2.3.3 
+- Made waitTime for MIDIdrum user-selectable.
+4.3.2 
+- Fixed the broken smooth() function for analog inputs.
+2.3.1 
+- All examples updated to prevent MIDI and usbMIDI stack crashes.
+2.3.0 
+- A major update to the Flicker library:
+    - thresholds for Capacitive Touch buttons are automatically detected 
+    - more stable expression control for MIDItouch(previously MIDIcapSens)
+    - MIDIdrum includes option to use velocity-sensitive Capacitive Touch
+- Even better stabilization of analog inputs
+- Added option for encoders to change 1 CC value per detent
+- Made "killSwitch" user-selectable (just put any CC# instead of KILL)
+- Added setKillSwitch(byte) to set kill CC (use OFF or 0 to disable it).
+- Added a few visual aides
+2.2.5 
+- Bugfixed jitter that occurred when using inputRange() with input maxed
+- Arguments for specific velocities can now be passed to velocity inputs
+- Added literals to highlight MOMENTARY, LATCH, TRIGGER and KILL modes
+- Long overdue completion of the "Flicker" library (for Cap Touch input)
+- Made separate examples for 'pot' and 'sensor' (to avoid confusion)
+2.2.0 
+- Added support for Piezos (Must be wired properly. See example)
+- "MIDInote" class changed to "MIDIdrum" and optimized for FSR and Piezo
+- Removed redundant 'velocity' variable. Just call outputRange(127, 127)
+- Added support for using a Capacitive Touch input as a MIDIbutton
+- Included 'Flicker' library (required for Capacitive Touch buttons)
+2.1.5 
+- got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
+4.1.3 
+- included an example of how to implement aftertouch
+6.1.2 
+- many variables changed to 'byte' or 'uint16_t' for easy storage
+- public and private variables are better sorted
+2.1.0 
+- Split read() and send() functions. MIDI channel is now user selectable
+2.0.6 
+- Fixed a bug preventing poly CC to return to zero after note off.
+4.0.5 
+- Added a condition to prevent many double note triggers.
+6.0.4 
+- Added support for capacitive sensors (and started this version log)
 ___  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
