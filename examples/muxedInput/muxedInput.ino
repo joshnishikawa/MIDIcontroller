@@ -19,6 +19,8 @@ void setup(){
   for(int i=0; i<8; i++){ // change to i<16 if using MUX-16
     Pots[i] = new MIDIpot(mux_input_pin, 12+i);
     // CC 12~ are probably safe to use but you can use any CC number you like.
+
+    Pots[i]->inputRange(15, 1000); // helps reach the full output range
   }
 }
 

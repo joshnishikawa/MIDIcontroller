@@ -1,4 +1,4 @@
-# MIDIcontroller 2.3.4
+# MIDIcontroller 2.4.0
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,6 +16,10 @@ ___
 ___
 
 ### VERSION LOG:
+2.4.0
+- The .4. is for the added inputRange() and setWaitTime() functions
+- This update also (actually) fixes that MIDIdrum bug preventing high velocity
+
 2.3.4 
 - Added inputRange() to MIDIdrum.
 - Added an example for muxed input.

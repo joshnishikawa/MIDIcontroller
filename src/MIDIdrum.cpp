@@ -61,6 +61,7 @@ int MIDIdrum::read(){
         newValue = -1;
       }
       else if (timer >= 10){
+        newValue = constrain(peak, threshold, inHi);
         newValue = newValue >= inHi ? outHi : map(peak,threshold,inHi,outLo,outHi);
         state = 2;
         timer = 0;
