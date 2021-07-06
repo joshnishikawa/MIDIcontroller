@@ -1,4 +1,4 @@
-# MIDIcontroller 2.4.0
+# MIDIcontroller 2.4.1
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -11,11 +11,14 @@
   - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
       can also be set for analog input (maintaining stability in conversion)
 ___
-***THIS LIBRARY REQUIRES - MIDI Library, Bounce2, Encoder, Flicker***
+***THIS LIBRARY REQUIRES - MIDI Library, Bounce, Encoder, Flicker***
 <github.com/joshnishikawa/Flicker>
 ___
 
 ### VERSION LOG:
+2.4.1 
+- Bounce (not Bounce2) is listed as a dependency.
+
 2.4.0
 - The .4. is for the added inputRange() and setWaitTime() functions
 - This update also (actually) fixes that MIDIdrum bug preventing high velocity
@@ -68,7 +71,7 @@ ___
 - Added a condition to prevent many double note triggers.
 6.0.4 
 - Added support for capacitive sensors (and started this version log)
-___  
+___
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -76,10 +79,10 @@ in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-  
+
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-  
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
