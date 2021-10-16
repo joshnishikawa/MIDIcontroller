@@ -58,18 +58,18 @@ ___
 - Included 'Flicker' library (required for Capacitive Touch buttons)
 2.1.5 
 - got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
-4.1.3 
+2.1.3 
 - included an example of how to implement aftertouch
-6.1.2 
+2.1.2 
 - many variables changed to 'byte' or 'uint16_t' for easy storage
 - public and private variables are better sorted
 2.1.0 
 - Split read() and send() functions. MIDI channel is now user selectable
 2.0.6 
 - Fixed a bug preventing poly CC to return to zero after note off.
-4.0.5 
+2.0.5 
 - Added a condition to prevent many double note triggers.
-6.0.4 
+2.0.4 
 - Added support for capacitive sensors (and started this version log)
 ___
 
