@@ -1,4 +1,4 @@
-# MIDIcontroller 2.4.1
+# MIDIcontroller 2.4.2
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,6 +16,9 @@ ___
 ___
 
 ### VERSION LOG:
+2.4.2 
+- Fixed a bug preventing PER_DETENT from working on encoders.
+
 2.4.1 
 - Bounce (not Bounce2) is listed as a dependency.
 

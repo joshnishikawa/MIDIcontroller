@@ -1,7 +1,3 @@
-/*FIXME: after the value bottoms out alternating MIDI messages (0 1 0 1 0...)
-  will occasionally continue to be sent.
-*/
-
 #include "MIDIenc.h"
 
 // constructors
