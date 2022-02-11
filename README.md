@@ -1,4 +1,4 @@
-# MIDIcontroller 2.4.3
+# MIDIcontroller v2.4.3
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,8 +16,11 @@ ___
 ___
 
 ### VERSION LOG:
-2.4.3
-- Fixed it again (hopefully without breaking anything else this time).
+v2.4.3
+- Fixed the PER_DETENT bug (again).
+- Made PER_DETENT the default since it works cleaner and is probably more useful
+- Added a write(int) function to the MIDIenc class that will set it to a
+    specific value and immediately send a MIDI message for that CC at that value
 
 2.4.2 
 - Fixed a bug preventing PER_DETENT from working on encoders.
