@@ -48,15 +48,23 @@ MIDIenc::~MIDIenc(){
 int MIDIenc::read(){
   int newValue = -1;
   int incdec = myKnob->read();
-  if(incdec >= detentOrValue && value < outHi){
-    newValue = value + 1;
+
+  if (incdec >= detentOrValue){
+    if (value < outHi){
+      newValue = value + 1;
+    }
     myKnob->write(0);
   }
-  else if (incdec <= -detentOrValue && value > outLo){
-    newValue = value - 1;
+  else if (incdec <= -detentOrValue){
+    if (value > outLo){
+      newValue = value - 1;
+    }
     myKnob->write(0);
   }
-  else{newValue = -1;}
+  else{    
+    newValue = -1;
+  }
+
   return newValue;
 };
 
