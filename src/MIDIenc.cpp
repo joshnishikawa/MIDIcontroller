@@ -6,7 +6,7 @@ MIDIenc::MIDIenc(){};
 MIDIenc::MIDIenc(int a, int b, byte num){
   myKnob = new Encoder(a, b);
 	number = num;
-  detentOrValue = 1; // CC changes once per encoder value
+  detentOrValue = 4; // CC changes once per detent
   value = 0;
   outLo = 0;
   outHi = 127;
@@ -24,7 +24,7 @@ MIDIenc::MIDIenc(int a, int b, byte num, byte detentOrValue){
 MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max){
   myKnob = new Encoder(a, b);
 	number = num;
-  detentOrValue = 1; // CC changes once per encoder value
+  detentOrValue = 4; // CC changes once per detent
   value = 0;
   outLo = min;
   outHi = max;
@@ -76,6 +76,12 @@ int MIDIenc::send(){
   }
   return newValue;
 }
+
+// Manually set the value.
+void MIDIenc::write(byte val){
+  value = val;
+  usbMIDI.sendControlChange(number, value, MIDIchannel);
+};
 
 // Set the CC number.
 void MIDIenc::setControlNumber(byte num){

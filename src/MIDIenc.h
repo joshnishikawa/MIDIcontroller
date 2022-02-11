@@ -36,6 +36,7 @@ class MIDIenc{
     byte outLo, outHi;
     byte detentOrValue;
     Encoder *myKnob;
+    void write(byte val);
     void setControlNumber(byte num);
     void outputRange(byte min, byte max);
 };
