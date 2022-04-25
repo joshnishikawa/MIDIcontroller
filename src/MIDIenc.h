@@ -31,6 +31,7 @@ class MIDIenc{
 
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
+    int send(bool force); // forces MIDI output regardless of input
     byte number;
     byte value;
     byte outLo, outHi;

@@ -6,6 +6,7 @@
 #define SMOOTHING 50 // Can be increased at the cost of some responsiveness
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
 #define OFF 0
+#define FORCE true
 
 extern byte MIDIchannel;
 
@@ -37,7 +38,8 @@ class MIDIpot{
    	~MIDIpot();
 
     int read(); // read input and return a MIDI value (or -1 if none)
-    int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
+    int send(); //calls read(), sends/returns MIDI val (or -1 if none)
+    int send(bool force); // forces MIDI output regardless of input
     int inLo = 0;
     int inHi = 1023;
     int outLo = 0;

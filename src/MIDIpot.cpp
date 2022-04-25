@@ -100,11 +100,13 @@ int MIDIpot::read(){
   return newValue;
 };
 
+
 int MIDIpot::send(){
   int newValue = read();
   if (killSwitch != 0 && value == outLo && newValue > outLo){//ON before main CC
     usbMIDI.sendControlChange(killSwitch, 127, MIDIchannel);
   }
+
   if (newValue >= 0){
     usbMIDI.sendControlChange(number, newValue, MIDIchannel); //MAIN CC MESSAGE
     if (killSwitch != 0 && value >= outLo && newValue == outLo){//OFF after main
@@ -114,6 +116,21 @@ int MIDIpot::send(){
   }
   return newValue;
 };
+
+
+int MIDIpot::send(bool force){
+  if (force){
+    balancedValue = analogRead(pin);
+
+    int newValue = map(balancedValue, inLo, inHi, outLo, outHi);
+    newValue = invert ? constrain(newValue, outHi, outLo)
+                      : constrain(newValue, outLo, outHi);
+
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
+    return newValue;
+  }
+  else{ return -1; }
+}
 
 
 void MIDIpot::setControlNumber(byte num){ // Set the CC number.

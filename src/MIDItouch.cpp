@@ -82,6 +82,14 @@ int MIDItouch::send(){
 };
 
 
+int MIDItouch::send(bool force){
+  if (force){
+    int newValue = TouchVariable::read();
+    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
+  }
+}
+
+
 void MIDItouch::setControlNumber(byte num){ // Set the NOTE number.
   number = num;
 };

@@ -2,7 +2,7 @@
 #define MIDIcontroller_h
 
 #include <Arduino.h>
-#include "MIDIbutton.h"
+#include "MIDIswitch.h"
 #include "MIDIpot.h"
 #include "MIDIenc.h"
 #include "MIDItouch.h"

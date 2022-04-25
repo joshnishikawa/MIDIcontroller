@@ -35,6 +35,7 @@ class MIDItouch: public TouchVariable{
 
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
+    int send(bool force); // forces MIDI output regardless of input
     byte number;
     byte mode; // In case you need to kill an effect entirely
     byte killSwitch = 0; // Which CC is getting its hands dirty?
@@ -52,7 +53,7 @@ class MIDItouch: public TouchVariable{
 };
 
 
-// MIDIcapSens() is deprecated. Pleas use MIDItouch()
+// MIDIcapSens() is deprecated. Please use MIDItouch()
 // MIDIcapSens() only continues to be included here for backward compatibility.
 class MIDIcapSens: public MIDItouch{
   public:

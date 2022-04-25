@@ -1,4 +1,4 @@
-# MIDIcontroller v2.4.3
+# MIDIcontroller v2.5.3
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,6 +16,14 @@ ___
 ___
 
 ### VERSION LOG:
+v2.5.3
+- 'MIDIswitch' now preferred over 'MIDIbutton' ( 'MIDIbutton' still works ).
+- Added a send(FORCE) function to allow event-based sending of current CC value.
+    This works for MIDIswitch, MIDIpot, MIDIenc and MIDItouch. This allows
+    'bulk send' to be implemented. WARNING! In the main loop, just use send()
+
+- MIDIswitch default of MOMENTARY works now. use MIDIswitch(pin, CC)
+
 v2.4.3
 - Fixed the PER_DETENT bug (again).
 - Made PER_DETENT the default since it works cleaner and is probably more useful

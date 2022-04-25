@@ -1,15 +1,19 @@
 #include "MIDIcontroller.h"
 byte MIDIchannel = 5;
-const int latchPin = 10; //any digital pin
+const int touchPin = 17; //any Capacitive Touch capable pin
 const int ledPin = 13;   //Set an LED to show the state of a latch button.
 
 // MOMENTARY buttons are the default. LATCH or TRIGGER may also be set
-MIDIbutton myInput(latchPin, 21, LATCH); // Control Change #21
+MIDIswitch myInput(touchPin, 15, TRIGGER, TOUCH);// CC #15, capacitive touch
 
 void setup(){
   pinMode(ledPin, OUTPUT);
-}
 
+  // WARNING! if you setThreshold with no argument,
+  // the threshold is calculated based on a call to
+  // touchRead() so DON'T touch the input during setup()
+  myInput.setThreshold();
+}
 void loop(){
   myInput.send();
   digitalWrite(ledPin, myInput.state);

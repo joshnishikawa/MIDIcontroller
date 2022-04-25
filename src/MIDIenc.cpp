@@ -77,6 +77,16 @@ int MIDIenc::send(){
   return newValue;
 }
 
+
+int MIDIenc::send(bool force){
+  if (force){
+    usbMIDI.sendControlChange(number, value, MIDIchannel);
+    return value;
+  }
+  else{ return -1; }
+}
+
+
 // Manually set the value.
 void MIDIenc::write(byte val){
   value = val;

@@ -1,9 +1,17 @@
-#include "MIDIbutton.h"
+#include "MIDIswitch.h"
 
 // constructors
-MIDIbutton::MIDIbutton() : Bounce(0, 0), TouchSwitch(0, 0){};
+MIDIswitch::MIDIswitch() : Bounce(0, 0), TouchSwitch(0, 0){};
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(0, 0){
+MIDIswitch::MIDIswitch(int p, byte num) : Bounce(p, 10), TouchSwitch(0, 0){
+  pinMode(p, INPUT_PULLUP);
+  inputType = 0; //button
+  number = num;
+  mode = 0; // momentary
+  state = false;
+};
+
+MIDIswitch::MIDIswitch(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(0, 0){
   pinMode(p, INPUT_PULLUP);
   inputType = 0; //button
   number = num;
@@ -11,7 +19,7 @@ MIDIbutton::MIDIbutton(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(
   state = false;
 };
 
-MIDIbutton::MIDIbutton(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0, type){
+MIDIswitch::MIDIswitch(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0, type){
   if (type == 0){
     inputType = 0;
   }
@@ -23,7 +31,7 @@ MIDIbutton::MIDIbutton(int p, byte num, byte mode, int type) : Bounce(0, 0), Tou
   else{
     inputType = 1;
     // For backward compatability. Specifying a threshold in the constructor is 
-    // deperecated. Please use TOUCH as the argument and setThreshold(). 
+    // deprecated. Please use TOUCH as the argument and setThreshold(). 
     TouchSwitch::setThreshold(type);
   }
 
@@ -33,14 +41,14 @@ MIDIbutton::MIDIbutton(int p, byte num, byte mode, int type) : Bounce(0, 0), Tou
 };
 
 // destructor
-MIDIbutton::~MIDIbutton(){};
+MIDIswitch::~MIDIswitch(){};
 
 
-void MIDIbutton::setThreshold(){
+void MIDIswitch::setThreshold(){
   TouchSwitch::setThreshold();
 }
 
-int MIDIbutton::read(){
+int MIDIswitch::read(){
   int newValue = -1;
   if (inputType == 0){ // Button
     Bounce::update();              // Force a status report of the Bounce object.
@@ -73,7 +81,7 @@ int MIDIbutton::read(){
 /* This function will send the appropriate Control Change messages for the press
 and/or release of any MIDI button whether it's set to 'MOMENTARY' 'LATCH' or
 'TRIGGER' mode.*/
-int MIDIbutton::send(){
+int MIDIswitch::send(){
   int newValue = read();
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
@@ -100,21 +108,35 @@ int MIDIbutton::send(){
 };
 
 
+int MIDIswitch::send(bool force){
+  if (force){
+    if (state){
+      usbMIDI.sendControlChange(number,outHi,MIDIchannel);
+      return outHi;
+    } else {
+      usbMIDI.sendControlChange(number,outLo,MIDIchannel);
+      return outLo;
+    }
+  } 
+  else { return -1; }
+}
+
+
 // Set the CC number.
-void MIDIbutton::setControlNumber(byte num){
+void MIDIswitch::setControlNumber(byte num){
   number = num;
 };
 
 
 // Set specific min and max values.
-void MIDIbutton::outputRange(byte min, byte max){
+void MIDIswitch::outputRange(byte min, byte max){
 	outLo = min;
 	outHi = max;
 };
 
 
 // Set the button mode.
-void MIDIbutton::setMode(byte mod){
+void MIDIswitch::setMode(byte mod){
   mode = mod;
 };
 
