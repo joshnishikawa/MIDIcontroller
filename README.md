@@ -16,6 +16,7 @@ ___
 ___
 
 ### VERSION LOG:
+
 2.5.4
 - Dependency for deprecated Bounce library changed to Bounce2. This allows the 
     library to be installed via the Arduino IDE2 library manager.
