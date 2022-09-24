@@ -1,4 +1,4 @@
-# MIDIcontroller v2.5.3
+# MIDIcontroller 2.5.4
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,7 +16,12 @@ ___
 ___
 
 ### VERSION LOG:
-v2.5.3
+2.5.4
+- Dependency for deprecated Bounce library changed to Bounce2. This allows the 
+    library to be installed via the Arduino IDE2 library manager.
+- Other bugfixes.
+
+2.5.3
 - 'MIDIswitch' now preferred over 'MIDIbutton' ( 'MIDIbutton' still works ).
 - Added a send(FORCE) function to allow event-based sending of current CC value.
     This works for MIDIswitch, MIDIpot, MIDIenc and MIDItouch. This allows
@@ -24,7 +29,7 @@ v2.5.3
 
 - MIDIswitch default of MOMENTARY works now. use MIDIswitch(pin, CC)
 
-v2.4.3
+2.4.3
 - Fixed the PER_DETENT bug (again).
 - Made PER_DETENT the default since it works cleaner and is probably more useful
 - Added a write(int) function to the MIDIenc class that will set it to a

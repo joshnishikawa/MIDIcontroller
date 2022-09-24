@@ -14,7 +14,7 @@ class MIDIdrum: public TouchVelocity{
     int pin;
     byte inputType;
     int newValue;
-    int peak;
+    unsigned int peak;
     int state;  // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
     unsigned int waitTime;
     elapsedMillis timer;
@@ -38,6 +38,7 @@ class MIDIdrum: public TouchVelocity{
     byte number;
     byte outLo = 1;
     byte outHi = 127;
+    unsigned int inHi = 1023;
     unsigned int threshold;
     void setNoteNumber(byte num);
     void outputRange(byte min, byte max);

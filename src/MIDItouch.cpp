@@ -83,10 +83,11 @@ int MIDItouch::send(){
 
 
 int MIDItouch::send(bool force){
+  int newValue = TouchVariable::read();
   if (force){
-    int newValue = TouchVariable::read();
     usbMIDI.sendControlChange(number, newValue, MIDIchannel);
   }
+  return newValue;
 }
 
 

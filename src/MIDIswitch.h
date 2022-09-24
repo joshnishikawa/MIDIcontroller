@@ -35,6 +35,7 @@ class MIDIswitch: public Bounce, public TouchSwitch{
     // input is NOT being touched and automatically calculates a threshold
     // using a call to touchRead(). Use in setup().
     void setThreshold();
+    void setThreshold(int threshold);
 
     int read(); // returns outHi for fallingEdge, outLo for risingEdge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number

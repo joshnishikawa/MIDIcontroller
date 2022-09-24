@@ -48,6 +48,10 @@ void MIDIswitch::setThreshold(){
   TouchSwitch::setThreshold();
 }
 
+void MIDIswitch::setThreshold(int threshold){
+  TouchSwitch::setThreshold(threshold);
+}
+
 int MIDIswitch::read(){
   int newValue = -1;
   if (inputType == 0){ // Button

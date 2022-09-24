@@ -44,7 +44,7 @@ MIDIdrum::~MIDIdrum(){
 
 
 int MIDIdrum::read(){
-  int newValue;
+  unsigned int newValue;
   if (inputType != 1){ // Handle FSR or Piezo
     newValue = analogRead(pin);
     if (state == 0) {
