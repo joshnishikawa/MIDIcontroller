@@ -1,4 +1,4 @@
-# MIDIcontroller 2.5.4
+# MIDIcontroller 2.5.5
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,6 +16,9 @@ ___
 ___
 
 ### VERSION LOG:
+
+2.5.5
+- Bugfix: "unsigned int = -1" == oops!
 
 2.5.4
 - Dependency for deprecated Bounce library changed to Bounce2. This allows the 
