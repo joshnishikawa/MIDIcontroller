@@ -2,7 +2,7 @@
 #define MIDIswitch_h
 
 #include "Arduino.h"
-#include "Bounce.h"
+#include "Bounce2.h"
 #include "Flicker.h"
 
 #define MOMENTARY 0
