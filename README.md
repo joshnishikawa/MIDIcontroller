@@ -1,4 +1,4 @@
-# MIDIcontroller 2.5.5
+# MIDIcontroller 2.5.6
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -17,13 +17,11 @@ ___
 
 ### VERSION LOG:
 
-2.5.5
-- Bugfix: "unsigned int = -1" == oops!
-
-2.5.4
+2.5.6
 - Dependency for deprecated Bounce library changed to Bounce2. This allows the 
     library to be installed via the Arduino IDE2 library manager.
-- Other bugfixes.
+- Bugfix: "unsigned int = -1" == oops!
+- Other bugfixes
 
 2.5.3
 - 'MIDIswitch' now preferred over 'MIDIbutton' ( 'MIDIbutton' still works ).
