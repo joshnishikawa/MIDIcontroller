@@ -2,7 +2,7 @@
 #define MIDIenc_h
 
 #include "Arduino.h"
-#include "Bounce.h"
+#include "Bounce2.h"
 #include "Encoder.h"
 
 #define PER_VALUE 1
