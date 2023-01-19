@@ -7,14 +7,16 @@ MIDIdrum::MIDIdrum(int p, byte num): TouchVelocity(){
   pinMode(p, INPUT);
   pin = p;
   number = num;
+  inputType = 0; // FSR or Piezo
   outLo = 1;
   outHi = 127;
-  inputType = 0; // FSR or Piezo
-  inHi = 1023;
-  peak = 0;
   threshold = 12;
-  state = 0;     // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
-  waitTime = 36; // millis
+  inHi = 1023;
+  sens = 1.0;
+  isOn = false;
+  peak = 0;
+  state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
+  waitTime = 3; // millis
   timer = 0;
 };
 
@@ -26,11 +28,13 @@ MIDIdrum::MIDIdrum(int p, byte num, byte type): TouchVelocity(p, 1, 127){
   outHi = 127;
   inputType = type; // 1 = Capacitive Touch, 0 = FSR or Piezo
   if (inputType == 0){
-    inHi = 1023;
-    peak = 0;
     threshold = 12;
-    state = 0;     // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
-    waitTime = 36; // millis
+    inHi = 1023;
+    sens = 1.0;
+    peak = 0;
+    isOn = false;
+    state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
+    waitTime = 3; // millis
     timer = 0;
   }
   else{
@@ -45,41 +49,66 @@ MIDIdrum::~MIDIdrum(){
 
 int MIDIdrum::read(){
   int newValue;
-  if (inputType != 1){ // Handle FSR or Piezo
+
+  if (inputType == 0){ // Handle FSR or Piezo
     newValue = analogRead(pin);
-    if (state == 0) {
-      if (newValue > threshold) {
-        state = 1;
-        peak = newValue;
-        timer = 0;
-      }
-      newValue = -1; //still just listening
-    }
-    else if (state == 1) {
-      if (newValue > peak) {
-        peak = newValue;
+    int range = inHi - threshold;
+    int upperThreshold = inHi - ( range * sens );
+
+    switch (state){
+      case 1:
+        // test for velocity
+        if (timer < 1 && newValue >= upperThreshold){
+          peak = newValue > peak ? newValue : peak;
+          state = 2;
+        }
+        else if (timer >= 1){
+          state = 3;
+        }
         newValue = -1;
-      }
-      else if (timer >= 10){
-        newValue = constrain(peak, threshold, inHi);
-        newValue = newValue >= inHi ? outHi : map(peak,threshold,inHi,outLo,outHi);
-        state = 2;
-        timer = 0;
-      }
-      else{newValue = -1;}
-    }
-    else {
-      if (newValue > threshold) {
-        timer = 0; // keep resetting timer if above threshold
-        newValue = -1;
-      }
-      else if (timer > waitTime) {
-        state = 0; // go back to idle after a certain interval below threshold
-        newValue = 0;
-      }
-      else{newValue = -1;}
+        break;
+
+      case 2:
+        // look for peak
+        if (newValue > peak) {
+          peak = newValue;
+          newValue = -1;
+        }
+        else if (timer >= 10){
+          newValue = constrain(peak, upperThreshold, inHi);
+          newValue = newValue >= inHi ? outHi : map(peak,upperThreshold,inHi,outLo,outHi);
+          isOn = true;
+          peak = 0;
+          state = 3;
+          timer = 0;
+        }
+        else{newValue = -1;}
+        break;
+
+      case 3:
+        if (newValue > threshold) {
+          timer = 0; // keep resetting timer if above threshold
+          newValue = -1;
+        }
+        else if (timer > waitTime) {
+          state = 0; // go back to idle after a certain interval below threshold
+          newValue = isOn ? 0 : -1;
+          isOn = false;
+        }
+        else{newValue = -1;}
+        break;
+
+      default:
+        // idle: search for threshold crossing
+        if (newValue >= threshold) {
+          state = 1;
+          timer = 0;
+        }
+        newValue = -1; //still just listening
+        break;
     }
   }
+
 #if ! defined(__IMXRT1062__)
   else { // Handle Capacitive Touch
     newValue = TouchVelocity::responsiveRead();
@@ -153,4 +182,14 @@ void MIDIdrum::setThreshold(unsigned int thresh){
 
 void MIDIdrum::setWaitTime(unsigned int time){
   waitTime = time;
+};
+
+void MIDIdrum::sensitivity(uint8_t s){
+  if (inputType == 1){
+    // FIXME: Figure out how to set sensitivity for touch inputs.
+  }
+  else{
+    s = constrain(s, 1, 100);
+    sens = float(s) / 100.0;
+  }
 };

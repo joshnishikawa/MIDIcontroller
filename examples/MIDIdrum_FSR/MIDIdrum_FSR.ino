@@ -21,6 +21,8 @@ void setup(){
   // Set the threshold where you want notes to trigger.
   // And the analog reading that will trigger the maximum velocity.
   myPad.inputRange(12, 720);
+
+  myPad.sensitivity(99); // Omit this to trigger MIDI even without hitting the pad.
 }
 
 void loop(){

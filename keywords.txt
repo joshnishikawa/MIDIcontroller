@@ -15,6 +15,7 @@ outputRange	KEYWORD2
 setThreshold	KEYWORD2
 setThresholds	KEYWORD2
 setWaitTime	KEYWORD2
+sensitivity	KEYWORD2
 
 MOMENTARY	LITERAL1
 LATCH	LITERAL1
