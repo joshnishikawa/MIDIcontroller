@@ -1,4 +1,4 @@
-# MIDIcontroller 2.6.5
+# MIDIcontroller 2.6.6
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -20,6 +20,7 @@ ___
 - Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
     Lower numbers require more higher velocity to trigger MIDI. 100 is default 
     and driggers even if pressed very slowly. 99 requires at least a light tap.
+    (thanks @digitalelements)
 
 2.5.5
 - Dependency for deprecated Bounce library changed to Bounce2. This allows the 

@@ -57,10 +57,10 @@ int MIDIswitch::read(){
   if (inputType == 0){ // Button
     Bounce::update();              // Force a status report of the Bounce object.
     inputState = Bounce::state;
-    if (Bounce::fallingEdge()){    // If the button's been pressed,
+    if (Bounce::fell()){    // If the button's been pressed,
       newValue = outHi;            // return the high CC value.
     }
-    else if (Bounce::risingEdge()){// If the button has been released,
+    else if (Bounce::rose()){// If the button has been released,
       newValue = outLo;            // return the low CC value.
     }
     else{newValue = -1;}
@@ -69,10 +69,10 @@ int MIDIswitch::read(){
   else if (inputType == 1){ // Capacitive Touch
     TouchSwitch::update();
     inputState = TouchSwitch::read();
-    if (TouchSwitch::risingEdge()){
+    if (TouchSwitch::rose()){
       newValue = outHi;
     }
-    else if (TouchSwitch::fallingEdge()){
+    else if (TouchSwitch::fell()){
       newValue = outLo;
     }
     else{newValue = -1;}

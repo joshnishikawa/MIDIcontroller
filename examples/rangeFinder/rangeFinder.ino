@@ -25,7 +25,7 @@ void setup(){
 
 void loop(){
   reset.update();
-  if(reset.risingEdge()){
+  if(reset.rose()){
     setReset();
   }
   int newVal = analogRead(analogPin);

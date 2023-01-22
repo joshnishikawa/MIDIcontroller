@@ -14,7 +14,7 @@ class MIDIdrum: public TouchVelocity{
     int pin;
     byte inputType;
     int newValue;
-    unsigned int peak;
+    int peak;
     float sens;
     int state;  // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
     bool isOn;
