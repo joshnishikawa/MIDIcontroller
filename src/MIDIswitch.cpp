@@ -19,22 +19,14 @@ MIDIswitch::MIDIswitch(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(
   state = false;
 };
 
-MIDIswitch::MIDIswitch(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0, type){
-  if (type == 0){
-    inputType = 0;
-  }
-  else if (type == 1){
-    inputType = 1;
-    // Creating objects during setup()? Well, you needn't setThreshold() again.
-    setThreshold();
+MIDIswitch::MIDIswitch(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0){
+  if (type == TOUCH){
+    inputType = 1; //touch
   }
   else{
-    inputType = 1;
-    // For backward compatability. Specifying a threshold in the constructor is 
-    // deprecated. Please use TOUCH as the argument and setThreshold(). 
-    TouchSwitch::setThreshold(type);
+    inputType = 0; //button
+    pinMode(p, INPUT_PULLUP);
   }
-
   number = num;
   this->mode = mode;
   state = false;
