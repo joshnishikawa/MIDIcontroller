@@ -46,26 +46,21 @@ MIDIenc::~MIDIenc(){
 
 
 int MIDIenc::read(){
-  int newValue = -1;
   int incdec = myKnob->read();
 
-  if (incdec >= detentOrValue){
-    if (value < outHi){
-      newValue = value + 1;
-    }
+  if (incdec >= detentOrValue && value < outHi){
     myKnob->write(0);
+    value += 1;
+    return value;
   }
-  else if (incdec <= -detentOrValue){
-    if (value > outLo){
-      newValue = value - 1;
-    }
+  else if (incdec <= -detentOrValue && value > outLo){
     myKnob->write(0);
+    value -= 1;
+    return value;
   }
-  else{    
-    newValue = -1;
+  else{
+    return -1;
   }
-
-  return newValue;
 };
 
 int MIDIenc::send(){
@@ -90,7 +85,6 @@ int MIDIenc::send(bool force){
 // Manually set the value.
 void MIDIenc::write(byte val){
   value = val;
-  usbMIDI.sendControlChange(number, value, MIDIchannel);
 };
 
 // Set the CC number.
