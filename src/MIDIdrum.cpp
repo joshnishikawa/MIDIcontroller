@@ -25,9 +25,7 @@ MIDIdrum::~MIDIdrum(){
 
 
 int MIDIdrum::read(){
-  int newValue = -1;
-
-  newValue = analogRead(pin);
+  int newValue = analogRead(pin);
   int range = inHi - threshold;
   int upperThreshold = inHi - ( range * sens );
 
@@ -41,14 +39,14 @@ int MIDIdrum::read(){
       else if (timer >= 1){
         state = 3;
       }
-      newValue = -1;
+      return -1;
       break;
 
     case 2:
       // look for peak
       if (newValue > peak) {
         peak = newValue;
-        newValue = -1;
+        return -1;
       }
       else if (timer >= 10){
         newValue = constrain(peak, upperThreshold, inHi);
@@ -57,21 +55,27 @@ int MIDIdrum::read(){
         peak = 0;
         state = 3;
         timer = 0;
+        return newValue;
+      } 
+      else { 
+        return -1; 
       }
-      else{newValue = -1;}
       break;
 
     case 3:
       if (newValue > threshold) {
         timer = 0; // keep resetting timer if above threshold
-        newValue = -1;
+        return -1;
       }
       else if (timer > waitTime) {
         state = 0; // go back to idle after a certain interval below threshold
         newValue = isOn ? 0 : -1;
         isOn = false;
+        return newValue;
       }
-      else{newValue = -1;}
+      else{
+        return -1;
+      }
       break;
 
     default:
@@ -80,10 +84,9 @@ int MIDIdrum::read(){
         state = 1;
         timer = 0;
       }
-      newValue = -1; //still just listening
+      return -1; //still just listening
       break;
   }
-  return newValue;
 };
 
 int MIDIdrum::send(){

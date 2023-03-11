@@ -84,20 +84,19 @@ int MIDIpot::read(){
   int newValue = this->smooth(analogRead(pin), SMOOTHING);
   if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
     value = outHi;
-    newValue = value;
+    return value;
   }
   else if (newValue <= inLo && value != outLo){ // Assign low analog to low MIDI
     value = outLo;
-    newValue = value;
+    return value;
   }
   else if (newValue % divider == 0){ // Filter intermittent values
     newValue = map(newValue, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
-    newValue = newValue == value ? -1 : newValue;
+    return newValue == value ? -1 : newValue;
   }
-  else{newValue = -1;}
-  return newValue;
+  else{ return -1; }
 };
 
 

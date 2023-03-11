@@ -45,32 +45,30 @@ void MIDIswitch::setThreshold(int threshold){
 }
 
 int MIDIswitch::read(){
-  int newValue = -1;
   if (inputType == 0){ // Button
     Bounce::update();              // Force a status report of the Bounce object.
     inputState = Bounce::state;
     if (Bounce::fell()){    // If the button's been pressed,
-      newValue = outHi;            // return the high CC value.
+      return outHi;            // return the high CC value.
     }
     else if (Bounce::rose()){// If the button has been released,
-      newValue = outLo;            // return the low CC value.
+      return outLo;            // return the low CC value.
     }
-    else{newValue = -1;}
+    else{ return -1; }
   }
 #if ! defined(__IMXRT1062__)
   else if (inputType == 1){ // Capacitive Touch
     TouchSwitch::update();
     inputState = TouchSwitch::read();
     if (TouchSwitch::rose()){
-      newValue = outHi;
+      return outHi;
     }
     else if (TouchSwitch::fell()){
-      newValue = outLo;
+      return outLo;
     }
-    else{newValue = -1;}
+    else{ return -1; }
   }
 #endif
-  return newValue;
 };
 
 

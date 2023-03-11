@@ -50,19 +50,19 @@ int MIDItouch::read(){
   int newValue = TouchVariable::read();
   if (newValue == outHi && value != outHi){
     value = outHi;
-    newValue = value;
+    return value;
   }
   else if (newValue == outLo && value != outLo){
     value = outLo;
-    newValue = value;
+    return value;
   }
-  else if(newValue == value){
-      newValue = -1;
+  else if (newValue == value){
+    return -1;
   }
   else{
-     value = newValue; 
+    value = newValue;
+    return value;
   }
-  return newValue;
 };
 
 

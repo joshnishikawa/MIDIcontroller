@@ -1,4 +1,4 @@
-# MIDIcontroller 2.6.6
+# MIDIcontroller 2.6.7
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
