@@ -1,6 +1,6 @@
 #include "Bounce2.h"
 int analogPin = A0; // Change to the ANALOG pin you want to use.
-int resetPin = 19   // You can assign a button to reset the values.
+int resetPin = 19;   // You can assign a button to reset the values.
 Bounce reset = Bounce(resetPin, 50);
 int hi;
 int lo;

@@ -26,8 +26,7 @@ MIDIdrum::~MIDIdrum(){
 
 int MIDIdrum::read(){
   int newValue = analogRead(pin);
-  int range = inHi - threshold;
-  int upperThreshold = inHi - ( range * sens );
+  int upperThreshold = threshold + 10;
 
   switch (state){
     case 1:
@@ -128,9 +127,4 @@ void MIDIdrum::setThreshold(unsigned int thresh){
 
 void MIDIdrum::setWaitTime(unsigned int time){
   waitTime = time;
-};
-
-void MIDIdrum::sensitivity(uint8_t s){
-  s = constrain(s, 1, 100);
-  sens = float(s) / 100.0;
 };
