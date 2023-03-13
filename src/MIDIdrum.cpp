@@ -9,13 +9,16 @@ MIDIdrum::MIDIdrum(int p, byte num){
   number = num;
   outLo = 1;
   outHi = 127;
+
   threshold = 12;
+  sens = 10; // 90% sensitive by default
+  upperThreshold = threshold + sens;
+
   inHi = 1023;
-  sens = 1.0;
   isOn = false;
   peak = 0;
   state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
-  waitTime = 3; // millis
+  waitTime = 30; // millis
   timer = 0;
 };
 
@@ -26,16 +29,15 @@ MIDIdrum::~MIDIdrum(){
 
 int MIDIdrum::read(){
   int newValue = analogRead(pin);
-  int upperThreshold = threshold + 10;
 
   switch (state){
     case 1:
       // test for velocity
-      if (timer < 1 && newValue >= upperThreshold){
-        peak = newValue > peak ? newValue : peak;
+      if (timer < 2 && newValue >= upperThreshold){
+        peak = newValue;
         state = 2;
       }
-      else if (timer >= 1){
+      else if (timer >= 2){
         state = 3;
       }
       return -1;
@@ -127,4 +129,14 @@ void MIDIdrum::setThreshold(unsigned int thresh){
 
 void MIDIdrum::setWaitTime(unsigned int time){
   waitTime = time;
+};
+
+void MIDIdrum::sensitivity(uint8_t s){
+  // sensitivity(100) should be thought of as 100% sensitive meaning that notes
+  // will always sound regardless of velocity. 0 would mean that there needs to
+  // be enough velocity to reach an analog reading 100 above the threshold
+  // within 2ms of the threshold crossing.
+  s = constrain(s, 0, 100);
+  sens = 100 - s;
+  upperThreshold = threshold + sens;
 };

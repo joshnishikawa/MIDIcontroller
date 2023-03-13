@@ -33,7 +33,7 @@ class MIDIdrum{
     byte outLo = 1;
     byte outHi = 127;
     unsigned int inHi = 1023;
-    unsigned int threshold;
+    unsigned int threshold, upperThreshold;
     void setNoteNumber(byte num);
     void outputRange(byte min, byte max);
     void setThreshold(unsigned int thresh);
