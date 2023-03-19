@@ -2,13 +2,13 @@
 
 byte MIDIchannel = 0;
 const byte switchPin = 2;
-const byte encoderPinA = 25;
-const byte encoderPinB = 24; 
+const byte encPinA = 25;
+const byte encPinB = 24; 
 const byte padPin = 14;
 
-MIDIenc myEnc(encPinA, encPinB, PROGRAM_CHANGE, 56, 79); //wind instruments only
-MIDIdrum myPad(padPin, 3);                            // CC #3 not actually used
-MIDIswitch mySwitch(switchPin, 3, TRIGGER);           // CC #3 not actually used
+MIDIenc myEnc(encPinA, encPinB, PROGRAM_CHANGE);
+MIDIdrum myPad(padPin, 3);                      // CC #3 not actually used
+MIDIswitch mySwitch(switchPin, 3, TRIGGER);     // CC #3 not actually used
 
 
 void setup() {
