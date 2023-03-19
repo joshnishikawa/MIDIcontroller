@@ -1,6 +1,13 @@
+/*
+  This sketch is here for convenience. Use it to determine the usable analog
+  range of a sensor or pot. It will print the highest and lowest values it sees.
+  Use that info to set the input range or threshold for objects in your sketch.
+*/
+
 #include "Bounce2.h"
+
 int analogPin = A0; // Change to the ANALOG pin you want to use.
-int resetPin = 19;   // You can assign a button to reset the values.
+int resetPin = 19;  // You can assign a button to reset the values.
 Bounce reset = Bounce(resetPin, 50);
 int hi;
 int lo;

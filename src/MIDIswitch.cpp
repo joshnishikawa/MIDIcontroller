@@ -3,7 +3,7 @@
 // constructors
 MIDIswitch::MIDIswitch() : Bounce(0, 0), TouchSwitch(0, 0){};
 
-MIDIswitch::MIDIswitch(int p, byte num) : Bounce(p, 10), TouchSwitch(0, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10), TouchSwitch(0, 0){
   pinMode(p, INPUT_PULLUP);
   inputType = 0; //button
   number = num;
@@ -11,15 +11,30 @@ MIDIswitch::MIDIswitch(int p, byte num) : Bounce(p, 10), TouchSwitch(0, 0){
   state = false;
 };
 
-MIDIswitch::MIDIswitch(int p, byte num, byte mode) : Bounce(p, 10), TouchSwitch(0, 0){
-  pinMode(p, INPUT_PULLUP);
-  inputType = 0; //button
+MIDIswitch::MIDIswitch(int p, uint8_t num, byte mode) : Bounce(p, 10), TouchSwitch(p, 0){
   number = num;
-  this->mode = mode; 
   state = false;
+  switch (num){
+    case START:
+    case STOP:
+    case CONTINUE:
+    case CLOCK:
+    case SYSTEM_RESET:
+      this->mode = 0; //momentary
+      inputType = mode; // HACK: allows overloading this constructor to send real time messages via touch inputs
+      if (inputType == BINARY){
+        pinMode(p, INPUT_PULLUP);
+      }
+      break;
+    
+    default:
+      pinMode(p, INPUT_PULLUP);
+      this->mode = mode; 
+      inputType = 0; //button
+  }
 };
 
-MIDIswitch::MIDIswitch(int p, byte num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num, byte mode, int type) : Bounce(0, 0), TouchSwitch(p, 0){
   if (type == TOUCH){
     inputType = 1; //touch
   }
@@ -72,32 +87,48 @@ int MIDIswitch::read(){
 };
 
 
+
 /* This function will send the appropriate Control Change messages for the press
 and/or release of any MIDI button whether it's set to 'MOMENTARY' 'LATCH' or
 'TRIGGER' mode.*/
 int MIDIswitch::send(){
   int newValue = read();
-  if (newValue == outHi){       // If the button's been pressed,
-    if (state == false){        // and if it was latched OFF,
-      usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
-      newValue = number;
-      state = true;             // Remember the button is now on.
-    }
-    else{                       // If the button was latched ON,
-      if (mode == 2){           // and the button's in TRIGGER mode(2),
-        usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again 
+
+  switch (number){
+    case START:
+    case STOP:
+    case CONTINUE:
+    case CLOCK:
+    case SYSTEM_RESET:
+      if (newValue == outHi){
+        usbMIDI.sendRealTime(number);
         newValue = number;
       }
-      else {usbMIDI.sendControlChange(number,outLo,MIDIchannel);}// else send outLo,
-      state = false;            // Remember the button is now off.
-      newValue = outLo;
-    }
+      break;
+
+    default:
+      if (newValue == outHi){       // If the button's been pressed,
+        if (state == false){        // and if it was latched OFF,
+          usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
+          newValue = number;
+          state = true;             // Remember the button is now on.
+        }
+        else{                       // If the button was latched ON,
+          if (mode == 2){           // and the button's in TRIGGER mode(2),
+            usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again 
+            newValue = number;
+          }
+          else {usbMIDI.sendControlChange(number,outLo,MIDIchannel);}// else send outLo,
+          state = false;            // Remember the button is now off.
+          newValue = outLo;
+        }
+      }
+      else if (newValue == outLo && mode == 0){// Button in MOMENTARY mode released?
+        usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
+        state = false;                         // Remember the button is now off
+      }
+      else {newValue = -1;}
   }
-  else if (newValue == outLo && mode == 0){// Button in MOMENTARY mode released?
-    usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
-    state = false;                         // Remember the button is now off
-  }
-  else {newValue = -1;}
   return newValue;
 };
 
@@ -124,13 +155,13 @@ void MIDIswitch::setControlNumber(byte num){
 
 // Set specific min and max values.
 void MIDIswitch::outputRange(byte min, byte max){
-	outLo = min;
-	outHi = max;
+	outLo = constrain(min, 0, 127);
+	outHi = constrain(max, 0, 127);
 };
 
 
 // Set the button mode.
 void MIDIswitch::setMode(byte mod){
-  mode = mod;
+  mode = constrain(mod, 0, 2);
 };
 

@@ -10,7 +10,7 @@ class MIDIdrum{
     int pin;
     int newValue;
     int peak;
-    float sens;
+    int sensitivity;
     int state;  // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock
     bool isOn;
     unsigned int waitTime;
@@ -20,8 +20,11 @@ class MIDIdrum{
     // default constructor
     MIDIdrum();
     
-    // constructor with pin and note number for a piezo or FSR
+    // constructor with pin and note number only.
     MIDIdrum(int p, byte num);
+
+    // constructor with pin, note number and sensitivity.
+    MIDIdrum(int p, byte num, byte sens);
 
     // destructor
    	~MIDIdrum();
@@ -35,11 +38,11 @@ class MIDIdrum{
     unsigned int inHi = 1023;
     unsigned int threshold, upperThreshold;
     void setNoteNumber(byte num);
-    void outputRange(byte min, byte max);
     void setThreshold(unsigned int thresh);
-    void setWaitTime(unsigned int time);
     void inputRange(uint16_t thresh, uint16_t max);
-    void sensitivity(uint8_t sens);
+    void setSensitivity(uint8_t sens);
+    void setWaitTime(unsigned int time);
+    void outputRange(byte min, byte max);
 };
 
 #endif

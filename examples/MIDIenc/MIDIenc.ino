@@ -2,27 +2,32 @@
 
 byte MIDIchannel = 5;
 
-const int encPinA = 20;   // Change these numbers to
-const int encPinB = 21;   // the two pins your encoder is on.
-const int buttonPin = 19; // Many encoders feature a push switch.
-const int ledPin = 13;    // Set an LED to show the state of the switch.
+const int encPinA = 24;   // Change these numbers to
+const int encPinB = 25;   // the two pins your encoder is on.
 
-// Encoder parameters are: pin A, pin B, CC number
-// You can also add min AND max output 
-// and/or PER_DETENT as a final argument.
-// adding PER_VALUE will increase or decrease the CC value quicker and dirtier
+/* Encoder parameters are: 
+      1)  pin A (required)
+      2)  pin B (required)
+      3)  a CC number ( 0 ~ 119 ) 
+          OR a channel mode number ( 120 ~ 127 ) 
+          OR PROGRAM_CHANGE to send program changes
+          (required)
+      4)  PER_VALUE or PER_DETENT (optional, PER_DETENT is default) 
+ */
+
 MIDIenc myEnc(encPinA, encPinB, 24);
-
-MIDIbutton myButton(buttonPin, 25, LATCH); // CC #25 in latch mode
+// MIDIenc myEnc(encPinA, encPinB, 24, PER_VALUE); // Faster but not for use with detented encoders.
+// MIDIenc myEnc(encPinA, encPinB, PROGRAM_CHANGE); // Send program change instead of CC# 
 
 void setup(){
-  pinMode(ledPin, OUTPUT);
+  // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
+  // myEnc.write(64); // Initialize the encoder to 64
+  // myEnc.outputRange(127, 0); // Reverse the direction of the encoder
+  // myEnc.outputRange(56, 79); // Restrict CC value or program change # to 56 ~ 79
 }
 
 void loop(){
   myEnc.send();
-  myButton.send();
-  digitalWrite(ledPin, myButton.state);
 
 
 // This prevents crashes that happen when incoming usbMIDI is ignored.

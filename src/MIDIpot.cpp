@@ -39,41 +39,6 @@ MIDIpot::MIDIpot(int p, byte num, byte k){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte min, byte max){
-  pinMode(p, INPUT);
-  pin = p;
-  number = num;
-  value = 0;
-  mode = false;
-  inLo = 0;
-  inHi = 1023;
-  outLo = min;
-  outHi = max;
-  invert = outHi < outLo;
-
-  // Sets the interval at which alalog signals will actually register.
-  divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
-};
-
-MIDIpot::MIDIpot(int p, byte num, byte k, byte min, byte max){
-  pinMode(p, INPUT);
-  pin = p;
-  number = num;
-  value = 0;
-  mode = true;
-  killSwitch = k;
-  inLo = 0;
-  inHi = 1023;
-  outLo = min;
-  outHi = max;
-  invert = outHi < outLo;
-
-  // Sets the interval at which alalog signals will actually register.
-  divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
-};
-
 // destructor
 MIDIpot::~MIDIpot(){
 };
@@ -139,19 +104,19 @@ void MIDIpot::setControlNumber(byte num){ // Set the CC number.
 
 // Set upper and lower limits for outgoing MIDI messages.
 void MIDIpot::outputRange(byte min, byte max){
-  outLo = min;
-  outHi = max;
+  outLo = constrain(min, 0, 127);
+  outHi = constrain(max, 0, 127);
   // Reset the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
-  invert = outHi < outLo; // Check again for reverse polarity.
+  invert = outHi < outLo;              // Check again for reverse polarity.
 };
 
 
 // Limit the analog input to the usable range of a sensor.
 void MIDIpot::inputRange(uint16_t min, uint16_t max){
-  inLo = min;
-  inHi = max;
+  inLo = constrain(min, 0, 1023);
+  inHi = constrain(max, 0, 1023);
   // Reset the interval at which alalog signals will actually register.
   divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
@@ -164,7 +129,7 @@ void MIDIpot::setKillSwitch(byte k){
   }
   else{
     mode = true;
-    killSwitch = k;
+    killSwitch = constrain(k, 1, 127);
   }
 };
 

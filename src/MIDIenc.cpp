@@ -21,24 +21,6 @@ MIDIenc::MIDIenc(int a, int b, byte num, byte detentOrValue){
   outHi = 127;
 };
 
-MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max){
-  myKnob = new Encoder(a, b);
-	number = num;
-  detentOrValue = 4; // CC changes once per detent
-  value = 0;
-  outLo = min;
-  outHi = max;
-};
-
-MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue){
-  myKnob = new Encoder(a, b);
-	number = num;
-  this->detentOrValue = detentOrValue; // CC changes per encoder value or detent
-  value = 0;
-  outLo = min;
-  outHi = max;
-};
-
 // destructor
 MIDIenc::~MIDIenc(){
   delete myKnob;
@@ -71,8 +53,13 @@ int MIDIenc::read(){
 int MIDIenc::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
     value = newValue;
+    if (number == PROGRAM_CHANGE){
+      usbMIDI.sendProgramChange(value, MIDIchannel);
+    }
+    else{
+      usbMIDI.sendControlChange(number, newValue, MIDIchannel);
+    }
   }
   return newValue;
 }
@@ -89,7 +76,7 @@ int MIDIenc::send(bool force){
 
 // Manually set the value.
 void MIDIenc::write(byte val){
-  value = val;
+  value = constrain(val, outLo, outHi);
 };
 
 // Set the CC number.
@@ -99,6 +86,6 @@ void MIDIenc::setControlNumber(byte num){
 
 // Set upper and lower limits for outgoing MIDI messages.
 void MIDIenc::outputRange(byte min, byte max){
-  outLo = min;
-  outHi = max;
+  outLo = constrain(min, 0, 127);
+  outHi = constrain(max, 0, 127);
 };

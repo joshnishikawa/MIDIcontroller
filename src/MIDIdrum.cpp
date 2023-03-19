@@ -11,14 +11,37 @@ MIDIdrum::MIDIdrum(int p, byte num){
   outHi = 127;
 
   threshold = 12;
-  sens = 10; // 90% sensitive by default
-  upperThreshold = threshold + sens;
+  sensitivity = 10; // 90% sensitive by default
+  upperThreshold = threshold + sensitivity;
 
   inHi = 1023;
   isOn = false;
   peak = 0;
   state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
-  waitTime = 30; // millis
+  waitTime = 0; // millis
+  timer = 0;
+};
+
+MIDIdrum::MIDIdrum(int p, byte num, byte sens){
+  pinMode(p, INPUT);
+  pin = p;
+  number = num;
+  outLo = 0;
+  outHi = 127;
+
+  threshold = 10;
+  sens = constrain(sens, 0, 100);
+  sensitivity = 100 - sens;
+  upperThreshold = threshold + sensitivity;
+
+  sensitivity = 10; // 90% sensitive by default
+  upperThreshold = threshold + sensitivity;
+
+  inHi = 1023;
+  isOn = false;
+  peak = 0;
+  state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
+  waitTime = 0; // millis
   timer = 0;
 };
 
@@ -112,31 +135,31 @@ void MIDIdrum::setNoteNumber(byte num){ // Set the NOTE number.
 };
 
 void MIDIdrum::outputRange(byte min, byte max){ // Set min & max output values
-  outLo = min;
-  outHi = max;
+  outLo = constrain(min, 0, 127);
+  outHi = constrain(max, 0, 127);
 };
 
 // Limit the analog input to the usable range of a sensor.
 void MIDIdrum::inputRange(uint16_t thresh, uint16_t max){
-  threshold = thresh;
-  inHi = max;
+  threshold = constrain(thresh, 0, 1023);
+  inHi = constrain(max, 0, 1023);
 };
 
 
 void MIDIdrum::setThreshold(unsigned int thresh){
-  threshold = thresh;
+  threshold = constrain(thresh, 0, 1023);
 };
 
 void MIDIdrum::setWaitTime(unsigned int time){
   waitTime = time;
 };
 
-void MIDIdrum::sensitivity(uint8_t s){
+void MIDIdrum::setSensitivity(uint8_t sens){
   // sensitivity(100) should be thought of as 100% sensitive meaning that notes
   // will always sound regardless of velocity. 0 would mean that there needs to
   // be enough velocity to reach an analog reading 100 above the threshold
   // within 2ms of the threshold crossing.
-  s = constrain(s, 0, 100);
-  sens = 100 - s;
-  upperThreshold = threshold + sens;
+  sens = constrain(sens, 0, 100);
+  sensitivity = 100 - sens;
+  upperThreshold = threshold + sensitivity;
 };

@@ -8,6 +8,8 @@
 #include "MIDItouch.h"
 #include "MIDIdrum.h"
 
+#define FORCE true
+
 // Bounce, Encoder and Flicker libraries are also required
 // github.com/joshnishikawa/Flicker
 

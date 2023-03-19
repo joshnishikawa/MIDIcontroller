@@ -1,4 +1,11 @@
+/*
+  This sketch is here for convenience. Use it to determine the usable range of a
+  capacitive touch sensor. It will print the highest and lowest values it sees.
+  Use that info to set the input range or threshold for objects in your sketch.
+*/
+
 #include "Bounce2.h"
+
 int touchPin = 22; // Change to the TOUCH pin you want to use.
 int resetPin = 19; // you can set a pin to reset hi/lo
 Bounce reset = Bounce(resetPin, 50);

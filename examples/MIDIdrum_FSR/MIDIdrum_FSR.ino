@@ -1,5 +1,3 @@
-#include "MIDIcontroller.h"
-
 /*This is an example of how to set up
   a velocity sensitive input using a
   force sensitive resistor.
@@ -11,22 +9,30 @@
               10k
 */
 
+#include "MIDIcontroller.h"
+
 byte MIDIchannel = 5;
 const int pressPin = A0; // Change this to the correct ANALOG pin
 
-// Note Parameters are: pin, note number
+/* MIDIdrum parameters are:
+      1) pin (required)
+      2) note number (required)
+      3) sensitivity (optional 1 ~ 100. 90 is default. Higher is more sensitive)
+*/
+
 MIDIdrum myPad(pressPin, 37);
+// MIDIdrum myPad(pressPin, 37, 100); // Trigger even without hit (any contact)
 
 void setup(){
-  // Set the threshold where you want notes to trigger.
-  // And the analog reading that will trigger the maximum velocity.
-  myPad.inputRange(12, 720);
-
-  myPad.sensitivity(99); // Omit this to trigger MIDI even without hitting the pad.
+  // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
+  // myPad.inputRange(12, 720);  // Specify the usable analog range for the FSR
+  // myPad.outputRange(20, 120); // Map input to send only velocities 20 ~ 120
+  // myPad.setWaitTime(30);      //'debounce' 30ms before allowing next trigger
 }
 
 void loop(){
   myPad.send();
+  //myPad.send(64); could be used for a fixed velocity e.g. 64
 
 
 // This prevents crashes that happen when incoming usbMIDI is ignored.

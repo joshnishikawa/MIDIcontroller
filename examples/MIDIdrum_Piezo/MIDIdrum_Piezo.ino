@@ -1,5 +1,3 @@
-#include "MIDIcontroller.h"
-
 /*This example sets up a velocity sensitive input using a piezo transducer.
 
   THE PIEZO MUST BE WIRED CORRECTLY FOR THS TO WORK AND TO PREVENT DAMAGE!
@@ -9,15 +7,29 @@
   - The red wire of the Piezo should be connected to a 470 ohm resistor.
   - The remaining ends of BOTH resistors and BOTH diodes should be connected
     to the same analog pin on the microcontroller.
+
+    *See PiezoSchematic.jpg for a diagram.
 */
+
+#include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
 const int drumPin = 23; // Change this to the correct ANALOG pin
 
-// Drum Parameters are: pin, note number (See GM DRUM SOUNDS below)
+/* MIDIdrum parameters are:
+      1) pin (required)
+      2) note number (required)
+      3) sensitivity (optional 1 ~ 100. 90 is default. Higher is more sensitive)
+*/
+
 MIDIdrum myDrum(drumPin, 38);
+// MIDIdrum myDrum(drumPin, 38, 100); // Trigger even without hit (any contact)
 
 void setup(){
+  // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
+  // myDrum.inputRange(12, 720);  // Specify the usable analog range for the FSR
+  // myDrum.outputRange(20, 120); // Map input to send only velocities 20 ~ 120
+  // myDrum.setWaitTime(30);      //'debounce' 30ms before allowing next trigger
 }
 
 void loop(){

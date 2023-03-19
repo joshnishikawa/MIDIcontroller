@@ -22,24 +22,6 @@ MIDItouch::MIDItouch(int p, byte num, byte k) : TouchVariable(p, 0, 127){
   invert = outLo > outHi;
 };
 
-MIDItouch::MIDItouch(int p, byte num, byte min, byte max) : TouchVariable(p, min, max){
-  pin = p;
-  inputRange(); // only works if creating objects during setup
-  number = num;
-  value = 0;
-  mode = false; // no killSwitch
-  invert = outHi < outLo;
-};
-
-MIDItouch::MIDItouch(int p, byte num, byte k, byte min, byte max) : TouchVariable(p, min, max){
-  pin = p;
-  inputRange(); // only works if creating objects during setup
-  number = num;
-  value = 0;
-  mode = true;
-  killSwitch = k;
-  invert = outHi < outLo;
-};
 
 // destructor
 MIDItouch::~MIDItouch(){
@@ -117,6 +99,6 @@ void MIDItouch::setKillSwitch(byte k){
   }
   else{
     mode = true;
-    killSwitch = k;
+    killSwitch = constrain(k, 1, 127);
   }
 };

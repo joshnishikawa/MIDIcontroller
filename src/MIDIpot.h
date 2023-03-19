@@ -6,7 +6,6 @@
 #define SMOOTHING 50 // Can be increased at the cost of some responsiveness
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
 #define OFF 0
-#define FORCE true
 
 extern byte MIDIchannel;
 
@@ -27,12 +26,6 @@ class MIDIpot{
     
     // " when pin, control number are given and kill switch is enabled
     MIDIpot(int p, byte num, byte k);
-    
-    // " pin, control number, minimum & maximum outgoing MIDI values are set
-    MIDIpot(int p, byte num, byte min, byte max);
-    
-    // " pin, control number, kill switch enabled and min/max values are given
-    MIDIpot(int p, byte num, byte k, byte min, byte max);
     
     // destructor
    	~MIDIpot();

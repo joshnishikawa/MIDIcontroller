@@ -1,4 +1,4 @@
-# MIDIcontroller 2.6.8
+# MIDIcontroller 2.8.8
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,17 +16,24 @@ ___
 ___
 
 ### VERSION LOG:
-2.6.8
+2.8.8
 - Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
     Lower numbers require more higher velocity to trigger MIDI. 100 is default 
     and driggers even if pressed very slowly. 99 requires at least a light tap.
-    (thanks @digitalelements)
+- MIDIenc can now take PROGRAM_CHANGE as an argument. This allows the encoder
+    to send program change messages instead of CC messages. 
+- MIDIswitch can now take START, STOP, CONTINUE, CLOCK or SYSTEM_RESET as an
+    argument. This allows the switch to send those messages instead of CC.
+
+    (thanks @digitalelements for suggestions and testing all of the above)
+
 - MIDIenc.read() now updates the value of the encoder. This allows the value
-    to be set without actually sending MIDI.
+    to be changed without actually sending MIDI.
 - MIDIdrum using TOUCH is deprecated. It's still doable but just too unstable
     and too niche for this library. Use Flicker instead.
-- Split _analogRange and _touchRange into separate utilities.
-- 
+- Split analogRange and touchRange into separate utilities.
+- Bugfix: MIDIenc.value initialized to outLo when user-specified.
+
 2.5.5
 - Dependency for deprecated Bounce library changed to Bounce2. This allows the 
     library to be installed via the Arduino IDE2 library manager.

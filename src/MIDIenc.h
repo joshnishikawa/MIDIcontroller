@@ -7,6 +7,8 @@
 
 #define PER_VALUE 1
 #define PER_DETENT 4
+#define PROGRAM_CHANGE 0xC0
+
 extern byte MIDIchannel;
 
 class MIDIenc{
@@ -19,12 +21,6 @@ class MIDIenc{
     
     // " pins, control number and whether value changes PER_DETENT or PER_VALUE
     MIDIenc(int a, int b, byte num, byte detentOrValue);
-
-    // " pins, control number, minimum and maximum outgoing MIDI values set
-    MIDIenc(int a, int b, byte num, byte min, byte max);
-    
-    // " pins, control number, min, max and PER_VALUE/PER_DETENT
-    MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue);
 
     // destructor
     ~MIDIenc();

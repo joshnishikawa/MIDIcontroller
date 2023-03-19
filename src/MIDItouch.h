@@ -24,12 +24,6 @@ class MIDItouch: public TouchVariable{
     // " when pin, control number are given and kill switch is enabled
     MIDItouch(int p, byte num, byte k);
     
-    // " pin, control number, minimum & maximum outgoing MIDI values are set
-    MIDItouch(int p, byte num, byte min, byte max);
-    
-    // " pin, control number, kill switch is enabled & min/max values are given
-    MIDItouch(int p, byte num, byte k, byte min, byte max);
-
     // deconstructor
    	~MIDItouch();
 
