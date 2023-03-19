@@ -13,7 +13,7 @@ MIDIswitch mySwitch(switchPin, 3, TRIGGER);           // CC #3 not actually used
 
 void setup() {
   myPad.inputRange(12, 720);
-  myPad.sensitivity(99);
+  myPad.setSensitivity(99);
 }
 
 

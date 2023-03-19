@@ -46,19 +46,4 @@ class MIDItouch: public TouchVariable{
     void setKillSwitch(byte k);
 };
 
-
-// MIDIcapSens() is deprecated. Please use MIDItouch()
-// MIDIcapSens() only continues to be included here for backward compatibility.
-class MIDIcapSens: public MIDItouch{
-  public:
-  MIDIcapSens() : MIDItouch(){}
-  MIDIcapSens(int p, byte num) : MIDItouch(p, num){}
-  MIDIcapSens(int p, byte num, byte m) : MIDItouch(p, num, m){}
-  MIDIcapSens(int p, byte num, byte min, byte max)
-    : MIDItouch(p, num, min, max){}
-  MIDIcapSens(int p, byte num, byte min, byte max, byte m)
-    : MIDItouch(p, num, min, max, m){}
-};
-
 #endif
-

@@ -1,4 +1,4 @@
-# MIDIcontroller 2.8.8
+# MIDIcontroller 3.8.8
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,7 +16,13 @@ ___
 ___
 
 ### VERSION LOG:
-2.8.8
+3.8.8 MAJOR RELEASE WITH BREAKING CHANGES:
+- MIDIbutton is now completely deprecated. Use MIDIswitch instead.
+- MIDIcapSense is now completely deprecated. Use MIDItouch instead.
+- MIDIdrum using TOUCH is deprecated. It's still doable but just too unstable
+    and too niche for this library. Use Flicker instead.
+
+  OTHER CHANGES:
 - Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
     Lower numbers require more higher velocity to trigger MIDI. 100 is default 
     and driggers even if pressed very slowly. 99 requires at least a light tap.
@@ -29,8 +35,6 @@ ___
 
 - MIDIenc.read() now updates the value of the encoder. This allows the value
     to be changed without actually sending MIDI.
-- MIDIdrum using TOUCH is deprecated. It's still doable but just too unstable
-    and too niche for this library. Use Flicker instead.
 - Split analogRange and touchRange into separate utilities.
 - Bugfix: MIDIenc.value initialized to outLo when user-specified.
 

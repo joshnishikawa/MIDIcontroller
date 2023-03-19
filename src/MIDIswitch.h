@@ -59,18 +59,4 @@ class MIDIswitch: public Bounce, public TouchSwitch{
     void outputRange(byte min, byte max);
 };
 
-
-// MIDIbutton() is deprecated. Please use MIDIswitch() because 'switch' is a 
-// more inclusive term for the various types of binary inputs.
-// MIDIbutton() only continues to be included here for backward compatibility.
-class MIDIbutton: public MIDIswitch{
-  public:
-  MIDIbutton() : MIDIswitch(){}
-  MIDIbutton(int p, byte num) : MIDIswitch(p, num){};
-  MIDIbutton(int p, byte num, byte mode) : MIDIswitch(p, num, mode){};
-  MIDIbutton(int p, byte num, byte mode, int type) : MIDIswitch(p, num, mode, type){};
-};
-
-
 #endif
-
