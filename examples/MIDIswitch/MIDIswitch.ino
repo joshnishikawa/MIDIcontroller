@@ -16,7 +16,10 @@ const int ledPin = 13;   //Set an LED to show the state of a latch button.
 
 /* MIDIswitch parameters are:
       1) pin (required)
-      2) CC number (required)
+      2)  a CC number ( 0 ~ 119 ) 
+          OR a channel mode number ( 120 ~ 127 ) 
+          OR one of: START, STOP, CONTINUE, CLOCK, SYSTEM_RESET
+          (required)
       3) MOMENTARY, LATCH or TRIGGER (optional, MOMENTARY is default)
       4) BINARY or TOUCH (optional, BINARY is default)
 */
@@ -24,6 +27,7 @@ const int ledPin = 13;   //Set an LED to show the state of a latch button.
 MIDIswitch myInput(latchPin, 21); // Momentary button for CC# 21
 // MIDIswitch myInput(latchPin, 21, LATCH); // will latch on and off
 // MIDIswitch myInput(latchPin, 21, LATCH, TOUCH); // use a capacitive touch sensor instead of a switch
+// MIDIswitch myInput(latchPin, START); // will send start messages
 
 void setup(){
   pinMode(ledPin, OUTPUT);
