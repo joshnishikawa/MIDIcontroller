@@ -17,10 +17,12 @@ ___
 
 ### VERSION LOG:
 3.8.8 MAJOR RELEASE WITH BREAKING CHANGES:
+- Min and Max output is no longer set when constructing objects.
+    use outputRange(min, max) instead.
 - MIDIbutton is now completely deprecated. Use MIDIswitch instead.
 - MIDIcapSense is now completely deprecated. Use MIDItouch instead.
 - MIDIdrum using TOUCH is deprecated. It's still doable but just too unstable
-    and too niche for this library. Use Flicker instead.
+    and too niche for this library. Use the Flicker library instead.
 
   OTHER CHANGES:
 - Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
