@@ -1,12 +1,24 @@
-/*This is an example of how to set up
-  a velocity sensitive input using a
-  force sensitive resistor.
-  It's wired like so:
+/*
+  This example sets up a velocity sensitive input using a force-sensitive 
+  resistor (FSR) or a Piezo transducer. Only the wiring differs.
+
+  AN FSR SHOULD BE WIRED LIKE SO:
  
-  3.3v--(FORCE RESISTOR)---\
-                            )---Analog Pin
-  GND--------/\/\/---------/
+  3.3v-----(FSR)-----\
+                      )---Analog Pin
+  GND------/\/\/-----/
               10k
+
+  THE PIEZO IS DIFFERENT AND MUST BE WIRED CORRECTLY TO WORK AND PREVENT DAMAGE!
+
+  - The black wire of the Piezo, the anode of a diode and
+    one side of a 10k resistor should all be connected to ground.
+  - The cathode of A SECOND diode should be connected to the voltage.
+  - The red wire of the Piezo should be connected to a 470 ohm resistor.
+  - The remaining ends of BOTH resistors and BOTH diodes should be connected
+    to the same analog pin on the microcontroller.
+
+    *See PiezoSchematic.jpg for a diagram.
 */
 
 #include "MIDIcontroller.h"

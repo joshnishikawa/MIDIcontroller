@@ -21,10 +21,10 @@ class MIDIdrum{
     MIDIdrum();
     
     // constructor with pin and note number only.
-    MIDIdrum(int p, byte num);
+    MIDIdrum(int p, uint8_t num);
 
     // constructor with pin, note number and sensitivity.
-    MIDIdrum(int p, byte num, byte sens);
+    MIDIdrum(int p, uint8_t num, uint8_t sens);
 
     // destructor
    	~MIDIdrum();
@@ -32,17 +32,17 @@ class MIDIdrum{
     int read();
     int send();
     int send(int vel);
-    byte number;
-    byte outLo = 1;
-    byte outHi = 127;
+    uint8_t number;
+    uint8_t outLo = 1;
+    uint8_t outHi = 127;
     unsigned int inHi = 1023;
     unsigned int threshold, upperThreshold;
-    void setNoteNumber(byte num);
+    void setNoteNumber(uint8_t num);
     void setThreshold(unsigned int thresh);
     void inputRange(uint16_t thresh, uint16_t max);
     void setSensitivity(uint8_t sens);
     void setWaitTime(unsigned int time);
-    void outputRange(byte min, byte max);
+    void outputRange(uint8_t min, uint8_t max);
 };
 
 #endif

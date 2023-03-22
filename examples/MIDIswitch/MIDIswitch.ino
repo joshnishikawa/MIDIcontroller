@@ -1,36 +1,39 @@
 /*
   This example allows any type of switch to be used to send MIDI messages.
-  MOMENTARY, LATCH or TRIGGER may be specified (MOMENTARY is default)
-  MOMENTARY: Sends ON message when connection is made, OFF when connection is broken.
-  LATCH: Sends alternating ON OFF messages each time a connection is made.
-  TRIGGER: Sends an ON *and* OFF message each time a connection is made.
-
   A capacititive touch sensor may also be used.
 */
 
 #include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
-const int latchPin = 10; //any digital pin
+const int switchPin = 10; //any digital pin
 const int ledPin = 13;   //Set an LED to show the state of a latch button.
 
 /* MIDIswitch parameters are:
       1) pin (required)
-      2)  a CC number ( 0 ~ 119 ) 
-          OR a channel mode number ( 120 ~ 127 ) 
-          OR one of: START, STOP, CONTINUE, CLOCK, SYSTEM_RESET
+      2)  a Control Change / Channel Mode number: 0 ~ 127
+          OR a Real Time message: START, STOP, CONTINUE, CLOCK, SYSTEM_RESET
           (required)
-      3) MOMENTARY, LATCH or TRIGGER (optional, MOMENTARY is default)
-      4) BINARY or TOUCH (optional, BINARY is default)
+      3) MOMENTARY, LATCH or TRIGGER
+          MOMENTARY: Sends ON messages when connection is made, OFF when broken.
+          LATCH: Sends alternating ON OFF messages each time a connection is made.
+          TRIGGER: Sends ON messages each time a connection is made but no OFF messages.
+          (optional, CC default is MOMENTARY, Real Time default is TRIGGER)
+      4) BINARY or TOUCH
+          (optional, BINARY is default, TOUCH is for capacitive touch sensors)
 */
 
-MIDIswitch myInput(latchPin, 21); // Momentary button for CC# 21
-// MIDIswitch myInput(latchPin, 21, LATCH); // will latch on and off
-// MIDIswitch myInput(latchPin, 21, LATCH, TOUCH); // use a capacitive touch sensor instead of a switch
-// MIDIswitch myInput(latchPin, START); // will send start messages
+MIDIswitch myInput(switchPin, 21); // Momentary button for CC# 21
+// MIDIswitch myInput(switchPin, 21, LATCH);        // will latch on and off
+// MIDIswitch myInput(switchPin, 21, LATCH, TOUCH); // use a capacitive touch sensor instead of a switch
+// MIDIswitch myInput(switchPin, START);            // will send start messages
 
 void setup(){
   pinMode(ledPin, OUTPUT);
+
+  // YOU MUST UNCOMMENT ONE OF THE FOLLOWING 2 LINES TO USE A TOUCH SENSOR
+  // myInput.inputRange(); // WARNING! If you touch the input during setup(), it won't work!
+  // myInput.inputRange(70, 2100); // OR use the 'findTouchRange' example to find values to specify here
 
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myInput.setControlNumber(22); // change CC#

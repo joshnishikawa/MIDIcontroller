@@ -3,7 +3,7 @@
 // constructors
 MIDIdrum::MIDIdrum(){};
 
-MIDIdrum::MIDIdrum(int p, byte num){
+MIDIdrum::MIDIdrum(int p, uint8_t num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -22,7 +22,7 @@ MIDIdrum::MIDIdrum(int p, byte num){
   timer = 0;
 };
 
-MIDIdrum::MIDIdrum(int p, byte num, byte sens){
+MIDIdrum::MIDIdrum(int p, uint8_t num, uint8_t sens){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -130,11 +130,11 @@ int MIDIdrum::send(int vel){
   return newValue;
 };
 
-void MIDIdrum::setNoteNumber(byte num){ // Set the NOTE number.
+void MIDIdrum::setNoteNumber(uint8_t num){ // Set the NOTE number.
   number = num;
 };
 
-void MIDIdrum::outputRange(byte min, byte max){ // Set min & max output values
+void MIDIdrum::outputRange(uint8_t min, uint8_t max){ // Set min & max output values
   outLo = constrain(min, 0, 127);
   outHi = constrain(max, 0, 127);
 };
@@ -144,7 +144,6 @@ void MIDIdrum::inputRange(uint16_t thresh, uint16_t max){
   threshold = constrain(thresh, 0, 1023);
   inHi = constrain(max, 0, 1023);
 };
-
 
 void MIDIdrum::setThreshold(unsigned int thresh){
   threshold = constrain(thresh, 0, 1023);

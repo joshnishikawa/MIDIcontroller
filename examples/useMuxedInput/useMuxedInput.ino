@@ -8,7 +8,7 @@ const int selector_pin_c = 2;
 //const int selector_pin_d = 3; // uncomment only if using MUX-16
 
 const int mux_input_pin = A0; // Change this to the ANALOG pin you want to use
-MIDIpot* Pots[8]; // allocate space for pots
+MIDIpot* Pots[8]; // change to Pots[16] if using MUX-16
 
 void setup(){
   pinMode(selector_pin_a, OUTPUT);

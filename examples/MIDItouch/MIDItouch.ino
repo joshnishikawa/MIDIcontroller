@@ -21,11 +21,9 @@ MIDItouch myInput(touchPin, 60);
                                   // CC# 9 ON is sent when threshold is breached.
 
 void setup(){
-  // WARNING! if you use inputRange() with no arguments,
-  // the input range is calculated based on a call to
-  // touchRead() so DON'T touch the input during setup()
-  myInput.inputRange();
+  myInput.inputRange(); // WARNING! If you touch the input during setup(), it won't work.
   // myInput.inputRange(70, 2100); // OR use the 'findTouchRange' example to find values to specify here
+
   // myInput.outputRange(20, 120); // Restrict output to 20 ~ 120
 }
 

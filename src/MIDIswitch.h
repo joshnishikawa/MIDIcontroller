@@ -9,8 +9,8 @@
 #define LATCH 1
 #define TRIGGER 2
 
-#define BINARY 0
-#define TOUCH 1
+#define BINARY 3
+#define TOUCH 4
 
 #define START 0xFA
 #define STOP 0xFC
@@ -21,7 +21,8 @@
 extern byte MIDIchannel;
 
 class MIDIswitch: public Bounce, public TouchSwitch{
-    byte inputType = 0; // Bounce object by default
+    uint8_t inputType = BINARY; // Bounce object by default
+    bool realTime = false;
   public:
     // default constructor
     MIDIswitch();
@@ -29,11 +30,12 @@ class MIDIswitch: public Bounce, public TouchSwitch{
     // constructor for a switch with the default mode of MONENTARY
     MIDIswitch(int p, uint8_t num);
 
-    // constructor for a switch with MONENTARY, LATCH or TRIGGER specified
-    MIDIswitch(int p, uint8_t num, byte mode);
+    // 'x' could be BINARY, TOUCH, MONENTARY, LATCH or TRIGGER
+    MIDIswitch(int p, uint8_t num, uint8_t x);
 
-    // constructor for a capacitive sensor
-    MIDIswitch(int p, uint8_t num, byte mode, int type);
+    // constructor for specifying mode (MOMENTARY, LATCH, TRIGGER)
+    // and type (BINARY, TOUCH)
+    MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t);
 
     // destructor
     ~MIDIswitch();
@@ -46,14 +48,14 @@ class MIDIswitch: public Bounce, public TouchSwitch{
 
     int read(); // return outHi for falling edge, outLo for rising edge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number
-    int send(bool force);// forces MIDI output regardless of input
-    byte number = 0;     // redefined on instatiation
-    byte outLo = 0;
-    byte outHi = 127;
-    byte mode = 0;       // momentary by default
-    byte inputState = 0; // refers to the actual physical state of the input
-    byte state = 0;      // refers to the most recently sent MIDI message
-                         // e.g. a switch may be latched on when not held down
+    int send(bool force);   // forces MIDI output regardless of input
+    uint8_t number = 0;     // redefined on instatiation
+    uint8_t outLo = 0;
+    uint8_t outHi = 127;
+    uint8_t mode = MOMENTARY;       // momentary by default
+    uint8_t inputState = 0; // refers to the actual physical state of the input
+    bool state = false;     // refers to the most recently sent MIDI message
+                            //e.g. a switch may be latched on when not held down
     void setControlNumber(byte num);
     void setMode(byte mod);
     void outputRange(byte min, byte max);

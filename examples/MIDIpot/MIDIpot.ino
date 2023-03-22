@@ -1,10 +1,16 @@
 /*
-  This example is for a potentiometer. It should be wired like so:
- 
-  3.3v---(POT)---\
-                  )---Analog Pin
-  GND----/\/\/---/
-          10k
+  This example is for a potentiometer (POT) or any variable resistor (SENSOR)
+  such as a photo cell, FSR, flex resistor, thermistor etc.
+                 _________
+         3.3v___|         |
+   Analog Pin___|   10k   |
+          GND___|   POT   |
+                |_________|
+
+  3.3v---(SENSOR)---\
+                     )---Analog Pin
+  GND------/\/\/----/
+            10k
 */
 
 #include "MIDIcontroller.h"

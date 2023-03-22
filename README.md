@@ -1,4 +1,4 @@
-# MIDIcontroller 3.8.8
+# MIDIcontroller 3.1.0
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,7 +16,7 @@ ___
 ___
 
 ### VERSION LOG:
-3.8.8 MAJOR RELEASE WITH BREAKING CHANGES:
+3.1.0 MAJOR RELEASE WITH BREAKING CHANGES:
 - Min and Max output is no longer set when constructing objects.
     use outputRange(min, max) instead.
 - MIDIbutton is now completely deprecated. Use MIDIswitch instead.
@@ -32,6 +32,7 @@ ___
     to send program change messages instead of CC messages. 
 - MIDIswitch can now take START, STOP, CONTINUE, CLOCK or SYSTEM_RESET as an
     argument. This allows the switch to send those messages instead of CC.
+- Better examples
 
     (thanks @digitalelements for suggestions and testing all of the above)
 
