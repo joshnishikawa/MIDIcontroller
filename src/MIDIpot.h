@@ -11,21 +11,21 @@ extern byte MIDIchannel;
 
 class MIDIpot{
     int pin = 0;
-    byte invert = false;
+    bool invert = false;
     int divider = 8; // for converting from analog to MIDI resolution
     int buffer = 0; // a container used by the smooth() function 
     int difference = 0; // smooth() adds this to buffer 'til there's enough bias
-    int balancedValue = 0; // this remains stable until signal bias changes it
+    uint16_t balancedValue = 0; // remains stable until signal bias changes it
     
   public:
     // default constructor
     MIDIpot();
     
     // constructor when only pin & control number are given
-    MIDIpot(int p, byte num);
+    MIDIpot(int p, uint8_t num);
     
     // " when pin, control number are given and kill switch is enabled
-    MIDIpot(int p, byte num, byte k);
+    MIDIpot(int p, uint8_t num, uint8_t k);
     
     // destructor
    	~MIDIpot();
@@ -33,18 +33,18 @@ class MIDIpot{
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); //calls read(), sends/returns MIDI val (or -1 if none)
     int send(bool force); // forces MIDI output regardless of input
-    int inLo = 0;
-    int inHi = 1023;
-    int outLo = 0;
-    int outHi = 127;
-    byte number = 0;
-    byte value = 0;
-    byte mode = 0; // In case you need to kill an effect entirely
-    byte killSwitch = 0; // Which CC is getting its hands dirty?
-    void setControlNumber(byte num);
-    void outputRange(byte min, byte max);
+    uint16_t inLo = 0;
+    uint16_t inHi = 1023;
+    uint8_t outLo = 0;
+    uint8_t outHi = 127;
+    uint8_t number = 0;
+    uint8_t value = 0;
+    uint8_t mode = 0; // In case you need to kill an effect entirely
+    uint8_t killSwitch = 0; // Which CC is getting its hands dirty?
+    void setControlNumber(uint8_t num);
+    void outputRange(uint8_t min, uint8_t max);
     void inputRange(uint16_t min, uint16_t max);
-    void setKillSwitch(byte k);
+    void setKillSwitch(uint8_t k);
     int smooth(int value, int NR); // smoothes the values of analogRead()
 };
 

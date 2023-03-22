@@ -8,7 +8,6 @@ extern byte MIDIchannel;
 
 class MIDIdrum{
     int pin;
-    int newValue;
     int peak;
     int sensitivity;
     int state;  // 0 = idle, 1 = looking for peak, 2 = ignoring aftershock

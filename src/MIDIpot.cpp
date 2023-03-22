@@ -3,7 +3,7 @@
 // constructors
 MIDIpot::MIDIpot(){};
 
-MIDIpot::MIDIpot(int p, byte num){
+MIDIpot::MIDIpot(int p, uint8_t num){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -21,7 +21,7 @@ MIDIpot::MIDIpot(int p, byte num){
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
 
-MIDIpot::MIDIpot(int p, byte num, byte k){
+MIDIpot::MIDIpot(int p, uint8_t num, uint8_t k){
   pinMode(p, INPUT);
   pin = p;
   number = num;
@@ -86,7 +86,7 @@ int MIDIpot::send(bool force){
   if (force){
     balancedValue = analogRead(pin);
 
-    int newValue = map(balancedValue, inLo, inHi, outLo, outHi);
+    uint8_t newValue = map(balancedValue, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
 
@@ -97,13 +97,13 @@ int MIDIpot::send(bool force){
 }
 
 
-void MIDIpot::setControlNumber(byte num){ // Set the CC number.
+void MIDIpot::setControlNumber(uint8_t num){ // Set the CC number.
   number = num;
 };
 
 
 // Set upper and lower limits for outgoing MIDI messages.
-void MIDIpot::outputRange(byte min, byte max){
+void MIDIpot::outputRange(uint8_t min, uint8_t max){
   outLo = constrain(min, 0, 127);
   outHi = constrain(max, 0, 127);
   // Reset the interval at which alalog signals will actually register.
@@ -123,7 +123,7 @@ void MIDIpot::inputRange(uint16_t min, uint16_t max){
 };
 
 
-void MIDIpot::setKillSwitch(byte k){
+void MIDIpot::setKillSwitch(uint8_t k){
   if(k == 0){
     mode = false;
   }

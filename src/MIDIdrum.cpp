@@ -51,7 +51,7 @@ MIDIdrum::~MIDIdrum(){
 
 
 int MIDIdrum::read(){
-  int newValue = analogRead(pin);
+  uint16_t newValue = analogRead(pin);
 
   switch (state){
     case 1:
