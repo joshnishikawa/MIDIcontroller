@@ -96,6 +96,7 @@ void MIDIswitch::setThreshold(int threshold){
   TouchSwitch::setThreshold(threshold);
 }
 
+
 int MIDIswitch::read(){
   if (inputType == BINARY){
     Bounce::update();          // Force a status report of the Bounce object.
@@ -169,7 +170,8 @@ int MIDIswitch::send(bool force){
       else usbMIDI.sendControlChange(number,outHi,MIDIchannel);
       return outHi;
     } else {
-      if (!realTime) usbMIDI.sendControlChange(number,outLo,MIDIchannel);
+      if (realTime) usbMIDI.sendRealTime(outHi); // ignore state for Real Time
+      else usbMIDI.sendControlChange(number,outLo,MIDIchannel);
       return outLo;
     }
   } 

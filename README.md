@@ -3,7 +3,7 @@
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
  FEATURES INCLUDE:
-  - velocity sensitive FSR, Piezo or Capacitive Touch inputs
+  - velocity sensitive FSR or Piezo inputs
   - momentary, latch or 'trigger' type MIDI buttons (also work with Cap Touch) 
   - stable analog to MIDI conversion for potentiometers and other sensors
   - stable Capacitive Touch to MIDI conversion for expression control

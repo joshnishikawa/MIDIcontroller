@@ -49,10 +49,11 @@ class MIDIswitch: public Bounce, public TouchSwitch{
     int read(); // return outHi for falling edge, outLo for rising edge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number
     int send(bool force);   // forces MIDI output regardless of input
+    void write(bool s);     // sets the state of a LATCH input
     uint8_t number = 0;     // redefined on instatiation
     uint8_t outLo = 0;
     uint8_t outHi = 127;
-    uint8_t mode = MOMENTARY;       // momentary by default
+    uint8_t mode = MOMENTARY; // momentary by default
     uint8_t inputState = 0; // refers to the actual physical state of the input
     bool state = false;     // refers to the most recently sent MIDI message
                             //e.g. a switch may be latched on when not held down
