@@ -1,4 +1,4 @@
-# MIDIcontroller 3.1.0
+# MIDIcontroller 3.1.1
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,7 +16,7 @@ ___
 ___
 
 ### VERSION LOG:
-3.1.0 MAJOR RELEASE WITH BREAKING CHANGES:
+3.1.1 MAJOR RELEASE WITH BREAKING CHANGES:
 - Min and Max output is no longer set when constructing objects.
     use outputRange(min, max) instead.
 - MIDIbutton is now completely deprecated. Use MIDIswitch instead.
