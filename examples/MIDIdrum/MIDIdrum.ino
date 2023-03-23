@@ -39,6 +39,7 @@ void setup(){
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myPad.inputRange(12, 720);  // Specify the usable analog range for the FSR
   // myPad.outputRange(20, 120); // Map input to send only velocities 20 ~ 120
+  // myPad.setSensitivity(100);  // 100% triggers even without hit (any contact)
   // myPad.setWaitTime(30);      //'debounce' 30ms before allowing next trigger
 }
 
