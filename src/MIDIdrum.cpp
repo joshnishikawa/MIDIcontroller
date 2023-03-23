@@ -93,9 +93,10 @@ int MIDIdrum::read(){
       }
       else if (timer > waitTime) {
         state = 0; // go back to idle after a certain interval below threshold
-        newValue = isOn ? 0 : -1;
-        isOn = false;
-        return newValue;
+        if (isOn){
+          isOn = false;
+          return 0;
+        } else return -1;
       }
       else{
         return -1;
