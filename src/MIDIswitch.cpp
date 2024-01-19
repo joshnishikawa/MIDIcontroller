@@ -3,7 +3,7 @@
 // constructors
 MIDIswitch::MIDIswitch() : Bounce(0, 0), TouchSwitch(0, 0){};
 
-MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10), TouchSwitch(0, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
   pinMode(p, INPUT_PULLUP);
   number = num;
 
