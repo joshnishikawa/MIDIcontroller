@@ -6,8 +6,8 @@
 
 #include "Bounce2.h"
 
-int touchPin = 22; // Change to the TOUCH pin you want to use.
-int resetPin = 19; // you can set a pin to reset hi/lo
+int touchPin = 23; // Change to the TOUCH pin you want to use.
+int resetPin = 2; // you can set a pin to reset hi/lo
 Bounce reset = Bounce(resetPin, 50);
 int hi;
 int lo;
@@ -30,7 +30,12 @@ void loop(){
     setReset();
   }
 
-  int newVal = touchRead(touchPin);
+  int newVal = touchRead(17);
+  newVal = touchRead(18);
+  newVal = touchRead(19);
+  newVal = touchRead(22);
+
+  newVal = touchRead(touchPin);
   if (newVal > hi){
     hi = newVal;
     Serial.print("High: "); Serial.print(hi); Serial.print("\t");

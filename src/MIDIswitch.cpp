@@ -1,7 +1,7 @@
 #include "MIDIswitch.h"
 
 // constructors
-MIDIswitch::MIDIswitch() : Bounce(0, 0), TouchSwitch(0, 0){};
+MIDIswitch::MIDIswitch() : Bounce(0, 0){};
 
 MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
   pinMode(p, INPUT_PULLUP);
@@ -20,8 +20,12 @@ MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
   }
 }
 
-
+#if ! defined(__IMXRT1062__)
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10), TouchSwitch(p, 0){
+#else
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
+#endif
+
   number = num;
 
   switch (num){
@@ -49,7 +53,12 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10), TouchSwit
 }
 
 
+#if ! defined(__IMXRT1062__)
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(0, 0), TouchSwitch(p, 0){
+#else
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10){
+#endif
+
   number = num;
 
   switch (num){
@@ -88,6 +97,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(0, 0),
 MIDIswitch::~MIDIswitch(){};
 
 
+#if ! defined(__IMXRT1062__)
 void MIDIswitch::setThreshold(){
   TouchSwitch::setThreshold();
 }
@@ -95,7 +105,7 @@ void MIDIswitch::setThreshold(){
 void MIDIswitch::setThreshold(int threshold){
   TouchSwitch::setThreshold(threshold);
 }
-
+#endif
 
 int MIDIswitch::read(){
   if (inputType == BINARY){

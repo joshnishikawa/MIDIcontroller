@@ -5,8 +5,10 @@
 #include "MIDIswitch.h"
 #include "MIDIpot.h"
 #include "MIDIenc.h"
-#include "MIDItouch.h"
 #include "MIDIdrum.h"
+#if ! defined(__IMXRT1062__)
+  #include "MIDItouch.h"
+#endif
 
 #define FORCE true
 

@@ -2,7 +2,10 @@
 #define MIDIdrum_h
 
 #include "Arduino.h"
-#include "Flicker.h"
+
+#if ! defined(__IMXRT1062__)
+  #include "Flicker.h"
+#endif
 
 extern byte MIDIchannel;
 

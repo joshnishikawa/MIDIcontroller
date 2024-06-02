@@ -3,7 +3,10 @@
 
 #include "Arduino.h"
 #include "Bounce2.h"
-#include "Flicker.h"
+
+#if ! defined(__IMXRT1062__)
+  #include "Flicker.h"
+#endif
 
 #define MOMENTARY 0
 #define LATCH 1
@@ -20,7 +23,11 @@
 
 extern byte MIDIchannel;
 
+#if ! defined(__IMXRT1062__)
 class MIDIswitch: public Bounce, public TouchSwitch{
+#else
+class MIDIswitch: public Bounce{
+#endif
     uint8_t inputType = BINARY; // Bounce object by default
     bool realTime = false;
   public:
@@ -40,11 +47,13 @@ class MIDIswitch: public Bounce, public TouchSwitch{
     // destructor
     ~MIDIswitch();
 
+#if ! defined(__IMXRT1062__)
     // setThreshold() is only used for Capacitive Touch inputs. It assumes the
     // input is NOT being touched and automatically calculates a threshold
     // using a call to touchRead(). Use in setup().
     void setThreshold();
     void setThreshold(int threshold);
+#endif
 
     int read(); // return outHi for falling edge, outLo for rising edge, else -1
     int send(); // calls read(), sends a MIDI value & returns the control number
