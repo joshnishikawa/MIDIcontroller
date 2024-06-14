@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "Bounce2.h"
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
   #include "Flicker.h"
 #endif
 
@@ -23,7 +23,7 @@
 
 extern byte MIDIchannel;
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
 class MIDIswitch: public Bounce, public TouchSwitch{
 #else
 class MIDIswitch: public Bounce{
@@ -47,7 +47,7 @@ class MIDIswitch: public Bounce{
     // destructor
     ~MIDIswitch();
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
     // setThreshold() is only used for Capacitive Touch inputs. It assumes the
     // input is NOT being touched and automatically calculates a threshold
     // using a call to touchRead(). Use in setup().

@@ -3,10 +3,6 @@
 
 #include "Arduino.h"
 
-#if ! defined(__IMXRT1062__)
-  #include "Flicker.h"
-#endif
-
 extern byte MIDIchannel;
 
 class MIDIdrum{

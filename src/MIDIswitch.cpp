@@ -20,7 +20,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
   }
 }
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10), TouchSwitch(p, 0){
 #else
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
@@ -53,7 +53,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
 }
 
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(0, 0), TouchSwitch(p, 0){
 #else
 MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10){
@@ -97,7 +97,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10)
 MIDIswitch::~MIDIswitch(){};
 
 
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
 void MIDIswitch::setThreshold(){
   TouchSwitch::setThreshold();
 }
@@ -119,7 +119,7 @@ int MIDIswitch::read(){
     }
     else{ return -1; }
   }
-#if ! defined(__IMXRT1062__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
   else if (inputType == TOUCH){
     TouchSwitch::update();
     inputState = TouchSwitch::read();
