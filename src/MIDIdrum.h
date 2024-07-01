@@ -2,6 +2,7 @@
 #define MIDIdrum_h
 
 #include "Arduino.h"
+#include "elapsedMillis.h"
 
 extern byte MIDIchannel;
 
