@@ -26,7 +26,7 @@ ___
 
   OTHER CHANGES:
 - Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
-    Lower numbers require more higher velocity to trigger MIDI. 100 is default 
+    Lower numbers require higher velocity to trigger MIDI. 100 is default 
     and triggers even if pressed very slowly. 99 requires at least a light tap.
 - MIDIenc can now take PROGRAM_CHANGE as an argument. This allows the encoder
     to send program change messages instead of CC messages. 
