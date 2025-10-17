@@ -44,7 +44,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
     case TOUCH:
       inputType = TOUCH;
       break;
-    case MOMENTARY: case LATCH: case TRIGGER:
+    case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
       mode = x;
       break;
   }
@@ -72,7 +72,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10)
   }
 
   switch (m){
-    case MOMENTARY: case LATCH: case TRIGGER:
+    case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
       mode = m;
       break;
     case BINARY: case TOUCH:
@@ -81,7 +81,7 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10)
   }
 
   switch (t){
-    case MOMENTARY: case LATCH: case TRIGGER:
+    case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
       mode = t;
       break;
     case BINARY: case TOUCH:
@@ -146,25 +146,33 @@ int MIDIswitch::send(){
   if (newValue == outHi){       // If the button's been pressed,
     if (state == false){        // and if it was latched OFF,
       if (realTime) usbMIDI.sendRealTime(outHi);
+      else if (mode == NOTE || mode == DRUM) usbMIDI.sendNoteOn(number, outHi, MIDIchannel);
       else usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
       state = true;             // Remember the button is now on.
       return realTime ? 1 : number;
     }
     else{                       // If the button was latched ON,
-      if (mode == TRIGGER){     // and the button's in TRIGGER mode,
+      if (mode == TRIGGER || mode == DRUM){     // and the button's in TRIGGER mode,
         if (realTime) usbMIDI.sendRealTime(outHi);
+        else if (mode == DRUM) usbMIDI.sendNoteOn(number, outHi, MIDIchannel);
         else usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi again
         return realTime ? 1 : number;
       }
       else {
-        if (!realTime) usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
+        if (!realTime) {
+          if (mode == NOTE) usbMIDI.sendNoteOn(number, outLo, MIDIchannel);
+          else usbMIDI.sendControlChange(number,outLo,MIDIchannel);
+        } // send CC outLo,
         state = false;            // Remember the button is now off.
         return outLo;
       }
     }
   }
-  else if (newValue == outLo && mode == MOMENTARY){ // MOMENTARY released?
-    if (!realTime) usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
+  else if (newValue == outLo && (mode == MOMENTARY || mode == NOTE)){ // MOMENTARY released?
+    if (!realTime) {
+      if (mode == NOTE) usbMIDI.sendNoteOn(number, outLo, MIDIchannel);
+      else usbMIDI.sendControlChange(number,outLo,MIDIchannel); // send CC outLo,
+    }
     state = false;                         // Remember the button is now off
     return outLo;
   }

@@ -15,6 +15,9 @@
 #define BINARY 3
 #define TOUCH 4
 
+#define NOTE 5
+#define DRUM 6
+
 #define START 0xFA
 #define STOP 0xFC
 #define CONTINUE 0xFB
@@ -34,10 +37,10 @@ class MIDIswitch: public Bounce{
     // default constructor
     MIDIswitch();
 
-    // constructor for a switch with the default mode of MONENTARY
+    // constructor for a switch with the default mode of MOMENTARY
     MIDIswitch(int p, uint8_t num);
 
-    // 'x' could be BINARY, TOUCH, MONENTARY, LATCH or TRIGGER
+    // 'x' could be BINARY, TOUCH, MOMENTARY, LATCH or TRIGGER
     MIDIswitch(int p, uint8_t num, uint8_t x);
 
     // constructor for specifying mode (MOMENTARY, LATCH, TRIGGER)

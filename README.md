@@ -1,4 +1,4 @@
-# MIDIcontroller 3.1.4
+# MIDIcontroller 3.2.4
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 
@@ -16,6 +16,11 @@ ___
 ___
 
 ### VERSION LOG:
+3.2.4
+- MIDIswitch can now take NOTE or DRUM as an argument. NOTE allows the switch
+  to send Note On/Off messages instead of Control Change messages. DRUM sends 
+  only Note On (use only on drum pads).
+
 3.1.3 MAJOR RELEASE WITH BREAKING CHANGES:
 - Min and Max output is no longer set when constructing objects.
     use outputRange(min, max) instead.
