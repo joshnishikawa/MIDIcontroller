@@ -177,7 +177,7 @@ int MIDIswitch::send(){
     state = false;                         // Remember the button is now off
     return outLo;
   }
-  else if (state == true && timer > 50){
+  else if (state == true && mode == DRUM && timer > 50){
     state = false;
     return -1;
   }
