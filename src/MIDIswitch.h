@@ -33,6 +33,7 @@ class MIDIswitch: public Bounce{
 #endif
     uint8_t inputType = BINARY; // Bounce object by default
     bool realTime = false;
+    elapsedMillis timer;
   public:
     // default constructor
     MIDIswitch();

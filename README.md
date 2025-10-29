@@ -1,4 +1,4 @@
-# MIDIcontroller 3.2.4
+# MIDIcontroller 3.2.5
 ### A library for creating Teensy MIDI controllers.
 ###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
 

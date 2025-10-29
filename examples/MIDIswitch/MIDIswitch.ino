@@ -27,7 +27,7 @@ MIDIswitch myInput(switchPin, 21); // Momentary button for CC# 21
 // MIDIswitch myInput(switchPin, 21, LATCH);        // will latch on and off
 // MIDIswitch myInput(switchPin, 21, LATCH, TOUCH); // use a capacitive touch sensor instead of a switch
 // MIDIswitch myInput(switchPin, START);            // will send start messages
-// MIDIswitch myInput(switchPin, 38, NOTE);         // will send notes not CC
+// MIDIswitch myInput(switchPin, 38, NOTE);           // will send note messages
 
 void setup(){
   pinMode(ledPin, OUTPUT);

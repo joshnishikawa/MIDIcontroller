@@ -148,6 +148,7 @@ int MIDIswitch::send(){
       if (realTime) usbMIDI.sendRealTime(outHi);
       else if (mode == NOTE || mode == DRUM) usbMIDI.sendNoteOn(number, outHi, MIDIchannel);
       else usbMIDI.sendControlChange(number,outHi,MIDIchannel); // send CC outHi,
+      timer = 0;
       state = true;             // Remember the button is now on.
       return realTime ? 1 : number;
     }
@@ -176,7 +177,10 @@ int MIDIswitch::send(){
     state = false;                         // Remember the button is now off
     return outLo;
   }
-
+  else if (state == true && timer > 50){
+    state = false;
+    return -1;
+  }
   else return -1;
 };
 
