@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "elapsedMillis.h"
+#include "MIDItransport.h"
 
 extern byte MIDIchannel;
 
@@ -31,11 +32,18 @@ class MIDIdrum{
     int read();
     int send();
     int send(int vel);
+    void setChannel(byte chan, byte cable = 0, byte iface = MIDI_INTERFACE_USB);
+
     uint8_t number;
     uint8_t outLo = 1;
     uint8_t outHi = 127;
     unsigned int inHi = 1023;
     unsigned int threshold, upperThreshold;
+
+    byte channel = 0; // 0 = global MIDIchannel
+    byte cable = 0;
+    byte interface = MIDI_INTERFACE_USB;
+
     void setNoteNumber(uint8_t num);
     void setThreshold(unsigned int thresh);
     void inputRange(uint16_t thresh, uint16_t max);
@@ -45,4 +53,3 @@ class MIDIdrum{
 };
 
 #endif
-

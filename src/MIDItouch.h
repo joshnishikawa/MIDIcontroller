@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Flicker.h"
+#include "MIDItransport.h"
 
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
 #define OFF 0
@@ -30,10 +31,17 @@ class MIDItouch: public TouchVariable{
     int read(); // read input and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends and returns a MIDI value (or -1 if none)
     int send(bool force); // forces MIDI output regardless of input
+    void setChannel(byte chan, byte cable = 0, byte iface = MIDI_INTERFACE_USB);
+
     byte number;
     byte mode; // In case you need to kill an effect entirely
     byte killSwitch = 0; // Which CC is getting its hands dirty?
     byte value;
+
+    byte channel = 0; // 0 = global MIDIchannel
+    byte cable = 0;
+    byte interface = MIDI_INTERFACE_USB;
+
     void setControlNumber(byte num);
     void outputRange(byte min, byte max);
     

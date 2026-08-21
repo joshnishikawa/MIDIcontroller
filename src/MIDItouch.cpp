@@ -22,11 +22,9 @@ MIDItouch::MIDItouch(int p, byte num, byte k) : TouchVariable(p, 0, 127){
   invert = outLo > outHi;
 };
 
-
 // destructor
 MIDItouch::~MIDItouch(){
 };
-
 
 int MIDItouch::read(){
   int newValue = TouchVariable::read();
@@ -47,31 +45,37 @@ int MIDItouch::read(){
   }
 };
 
-
 int MIDItouch::send(){
   int newValue = read();
-  if (mode && newValue > outLo && value == outLo){  //ON before main msg
-    usbMIDI.sendControlChange(killSwitch, 127, MIDIchannel);
+  uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
+
+  if (mode && newValue > outLo && value == outLo){ // ON before main msg
+    MIDI_send(MIDI_CONTROL_CHANGE, killSwitch, 127, targetChan, cable, interface);
   }
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);//MAIN MESSAGE
-    if (mode && newValue == outLo && value >= outLo){//OFF after main
-      usbMIDI.sendControlChange(killSwitch, 0, MIDIchannel);
+    MIDI_send(MIDI_CONTROL_CHANGE, number, newValue, targetChan, cable, interface); // MAIN MESSAGE
+    if (mode && newValue == outLo && value >= outLo){ // OFF after main
+      MIDI_send(MIDI_CONTROL_CHANGE, killSwitch, 0, targetChan, cable, interface);
     }
     value = newValue;
   }
   return newValue;
 };
 
-
 int MIDItouch::send(bool force){
   int newValue = TouchVariable::read();
   if (force){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
+    uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
+    MIDI_send(MIDI_CONTROL_CHANGE, number, newValue, targetChan, cable, interface);
   }
   return newValue;
 }
 
+void MIDItouch::setChannel(byte chan, byte cable, byte iface){
+  this->channel = chan;
+  this->cable = cable;
+  this->interface = iface;
+}
 
 void MIDItouch::setControlNumber(byte num){ // Set the NOTE number.
   number = num;
@@ -83,11 +87,11 @@ void MIDItouch::outputRange(byte min, byte max){
   outHi = max; // inherited from TouchVariable
 };
 
-
+// Use inputRange() with no arguments during setup()
+// To calculate the range automatically using a call to touchRead()
 void MIDItouch::inputRange(){
   TouchVariable::setInputRange();
 };
-
 
 void MIDItouch::inputRange(uint16_t min, uint16_t max){
   TouchVariable::setInputRange(min, max);

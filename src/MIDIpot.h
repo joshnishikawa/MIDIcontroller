@@ -2,6 +2,7 @@
 #define MIDIpot_h
 
 #include "Arduino.h"
+#include "MIDItransport.h"
 
 #define SMOOTHING 50 // Can be increased at the cost of some responsiveness
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
@@ -31,8 +32,10 @@ class MIDIpot{
    	~MIDIpot();
 
     int read(); // read input and return a MIDI value (or -1 if none)
-    int send(); //calls read(), sends/returns MIDI val (or -1 if none)
+    int send(); // calls read(), sends/returns MIDI val (or -1 if none)
     int send(bool force); // forces MIDI output regardless of input
+    void setChannel(byte chan, byte cable = 0, byte iface = MIDI_INTERFACE_USB);
+
     uint16_t inLo = 0;
     uint16_t inHi = 1023;
     uint8_t outLo = 0;
@@ -41,6 +44,11 @@ class MIDIpot{
     uint8_t value = 0;
     uint8_t mode = 0; // In case you need to kill an effect entirely
     uint8_t killSwitch = 0; // Which CC is getting its hands dirty?
+
+    byte channel = 0; // 0 = global MIDIchannel
+    byte cable = 0;
+    byte interface = MIDI_INTERFACE_USB;
+
     void setControlNumber(uint8_t num);
     void outputRange(uint8_t min, uint8_t max);
     void inputRange(uint16_t min, uint16_t max);

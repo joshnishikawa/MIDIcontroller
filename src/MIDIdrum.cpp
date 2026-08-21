@@ -34,9 +34,6 @@ MIDIdrum::MIDIdrum(int p, uint8_t num, uint8_t sens){
   sensitivity = 100 - sens;
   upperThreshold = threshold + sensitivity;
 
-  sensitivity = 10; // 90% sensitive by default
-  upperThreshold = threshold + sensitivity;
-
   inHi = 1023;
   isOn = false;
   peak = 0;
@@ -48,7 +45,6 @@ MIDIdrum::MIDIdrum(int p, uint8_t num, uint8_t sens){
 // destructor
 MIDIdrum::~MIDIdrum(){
 };
-
 
 int MIDIdrum::read(){
   int newValue = analogRead(pin);
@@ -64,7 +60,6 @@ int MIDIdrum::read(){
         state = 3;
       }
       return -1;
-      break;
 
     case 2:
       // look for peak
@@ -74,7 +69,7 @@ int MIDIdrum::read(){
       }
       else if (timer >= 10){
         newValue = constrain(peak, upperThreshold, inHi);
-        newValue = newValue >= inHi ? outHi : map(peak,upperThreshold,inHi,outLo,outHi);
+        newValue = newValue >= inHi ? outHi : map(peak, upperThreshold, inHi, outLo, outHi);
         isOn = true;
         peak = 0;
         state = 3;
@@ -84,7 +79,6 @@ int MIDIdrum::read(){
       else { 
         return -1; 
       }
-      break;
 
     case 3:
       if (newValue > threshold) {
@@ -101,7 +95,6 @@ int MIDIdrum::read(){
       else{
         return -1;
       }
-      break;
 
     default:
       // idle: search for threshold crossing
@@ -110,14 +103,14 @@ int MIDIdrum::read(){
         timer = 0;
       }
       return -1; //still just listening
-      break;
   }
 };
 
 int MIDIdrum::send(){
   int newValue = read();
   if (newValue >= 0){
-    usbMIDI.sendNoteOn(number, newValue, MIDIchannel);
+    uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
+    MIDI_send(MIDI_NOTE_ON, number, newValue, targetChan, cable, interface);
   }
   return newValue;
 };
@@ -125,11 +118,18 @@ int MIDIdrum::send(){
 int MIDIdrum::send(int vel){
   int newValue = read();
   if (newValue >= 0){
-    constrain(vel, 1, 127);
-    usbMIDI.sendNoteOn(number, vel, MIDIchannel);
+    uint8_t v = constrain(vel, 1, 127);
+    uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
+    MIDI_send(MIDI_NOTE_ON, number, v, targetChan, cable, interface);
   }
   return newValue;
 };
+
+void MIDIdrum::setChannel(byte chan, byte cable, byte iface){
+  this->channel = chan;
+  this->cable = cable;
+  this->interface = iface;
+}
 
 void MIDIdrum::setNoteNumber(uint8_t num){ // Set the NOTE number.
   number = num;

@@ -43,7 +43,6 @@ MIDIpot::MIDIpot(int p, uint8_t num, uint8_t k){
 MIDIpot::~MIDIpot(){
 };
 
-
 // returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
   int newValue = this->smooth(analogRead(pin), SMOOTHING);
@@ -64,43 +63,47 @@ int MIDIpot::read(){
   else{ return -1; }
 };
 
-
 int MIDIpot::send(){
   int newValue = read();
-  if (killSwitch != 0 && value == outLo && newValue > outLo){//ON before main CC
-    usbMIDI.sendControlChange(killSwitch, 127, MIDIchannel);
+  uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
+
+  if (killSwitch != 0 && value == outLo && newValue > outLo){ // ON before main CC
+    MIDI_send(MIDI_CONTROL_CHANGE, killSwitch, 127, targetChan, cable, interface);
   }
 
   if (newValue >= 0){
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel); //MAIN CC MESSAGE
-    if (killSwitch != 0 && value >= outLo && newValue == outLo){//OFF after main
-      usbMIDI.sendControlChange(killSwitch, 0, MIDIchannel);
+    MIDI_send(MIDI_CONTROL_CHANGE, number, newValue, targetChan, cable, interface); // MAIN CC MESSAGE
+    if (killSwitch != 0 && value >= outLo && newValue == outLo){ // OFF after main
+      MIDI_send(MIDI_CONTROL_CHANGE, killSwitch, 0, targetChan, cable, interface);
     }
     value = newValue;
   }
   return newValue;
 };
 
-
 int MIDIpot::send(bool force){
   if (force){
     balancedValue = analogRead(pin);
-
+    uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
     uint8_t newValue = map(balancedValue, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
 
-    usbMIDI.sendControlChange(number, newValue, MIDIchannel);
+    MIDI_send(MIDI_CONTROL_CHANGE, number, newValue, targetChan, cable, interface);
     return newValue;
   }
   else{ return -1; }
 }
 
+void MIDIpot::setChannel(byte chan, byte cable, byte iface){
+  this->channel = chan;
+  this->cable = cable;
+  this->interface = iface;
+}
 
 void MIDIpot::setControlNumber(uint8_t num){ // Set the CC number.
   number = num;
 };
-
 
 // Set upper and lower limits for outgoing MIDI messages.
 void MIDIpot::outputRange(uint8_t min, uint8_t max){
@@ -112,7 +115,6 @@ void MIDIpot::outputRange(uint8_t min, uint8_t max){
   invert = outHi < outLo;              // Check again for reverse polarity.
 };
 
-
 // Limit the analog input to the usable range of a sensor.
 void MIDIpot::inputRange(uint16_t min, uint16_t max){
   inLo = constrain(min, 0, 1023);
@@ -121,7 +123,6 @@ void MIDIpot::inputRange(uint16_t min, uint16_t max){
   divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
   divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
 };
-
 
 void MIDIpot::setKillSwitch(uint8_t k){
   if(k == 0){
@@ -133,7 +134,6 @@ void MIDIpot::setKillSwitch(uint8_t k){
   }
 };
 
-
 int MIDIpot::smooth(int val, int NR){
   difference = val - balancedValue;
   buffer = val == 0 ? -NR : val == balancedValue ? buffer/2 : buffer+difference;
@@ -144,4 +144,3 @@ int MIDIpot::smooth(int val, int NR){
   }
   return balancedValue;
 };
-

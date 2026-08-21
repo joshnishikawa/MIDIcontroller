@@ -2,14 +2,16 @@
 #define MIDIcontroller_h
 
 #include <Arduino.h>
+#include "MIDItransport.h"
 #include "MIDIswitch.h"
 #include "MIDIpot.h"
 #include "MIDIenc.h"
+#include "MIDIencMulti.h"
 #include "MIDIdrum.h"
 
-// Include the MIDItouch class only if the board has capacitive touch pins
+// Include the MIDItouch class only if the board has capacitive touch pins:
 //            Teensy 3.6                Teensy 3.2                Teensy 3.0                Teensy LC
-#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__)
+#if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__) || defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   #include "MIDItouch.h"
 #endif
 

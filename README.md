@@ -1,158 +1,111 @@
-# MIDIcontroller 3.2.5
-### A library for creating Teensy MIDI controllers.
-###### by Josh Nishikawa <github.com/joshnishikawa/MIDIcontroller>
+# MIDIcontroller 3.3.0
+### A cross-platform library for building USB, Serial DIN, and Multi-Interface MIDI controllers.
+###### by Josh Nishikawa <https://github.com/joshnishikawa/MIDIcontroller>
 
- FEATURES INCLUDE:
-  - velocity sensitive FSR or Piezo inputs
-  - momentary, latch or 'trigger' type MIDI buttons (also work with Cap Touch) 
-  - stable analog to MIDI conversion for potentiometers and other sensors
-  - stable Capacitive Touch to MIDI conversion for expression control
-  - support for encoders
-  - Min/Max output can be set (or inverted) for all MIDI. Min/Max input
-      can also be set for analog input (maintaining stability in conversion)
-___
-***THIS LIBRARY REQUIRES - MIDI Library, Bounce, Encoder, Flicker***
-<github.com/joshnishikawa/Flicker>
-___
+---
 
-### VERSION LOG:
-3.2.4
-- MIDIswitch can now take NOTE or DRUM as an argument. NOTE allows the switch
-  to send Note On/Off messages instead of Control Change messages. DRUM sends 
-  only Note On (use only on drum pads).
+## Features
+- **Cross-Platform Compatibility**: Native performance on **Teensy** (all models) with automatic compatibility across **ESP32, ESP32-S3, RP2040, Arduino AVR (Uno/Mega/Leonardo/Micro), SAMD, and STM32**.
+- **Multi-Interface Routing & Virtual Cables**:
+  - `MIDI_INTERFACE_USB` (0): Native USB-MIDI with virtual cable support (Cables 0–15 for `usbMIDIx4` / `usbMIDIx16`).
+  - `MIDI_INTERFACE_SERIAL` (1): Hardware 5-pin DIN / 3.5mm Serial MIDI.
+  - `MIDI_INTERFACE_HOST` (2): USB Host MIDI.
+  - `MIDI_INTERFACE_DEBUG` (3): Formatted Serial Monitor debug output.
+- **Flexible Controls**:
+  - **`MIDIswitch` / `MIDIbutton`**: Momentary, latch, trigger, or Note On/Off buttons (works with physical buttons and capacitive touch).
+  - **`MIDIpot`**: Stable analog-to-MIDI potentiometer/fader conversion with noise filtering and optional kill-switch.
+  - **`MIDIenc` & `MIDIencMulti`**: Continuous CC encoders and multi-mode relative jogwheels (1-CC and 2-CC modes) with sub-detent filtering and shift states.
+  - **`MIDIdrum`**: Velocity-sensitive FSR or Piezo drum trigger inputs with peak detection.
+  - **`MIDItouch`**: Capacitive touch ribbon/slider expression control.
+- **Per-Control Configuration**:
+  - Assign individual channels, virtual cables, and output interfaces per control via `.setChannel(chan, cable, iface)`.
+  - Customize button message types via `.setOnMessage(type, data1, data2)` and `.setOffMessage(...)`.
 
-3.1.3 MAJOR RELEASE WITH BREAKING CHANGES:
-- Min and Max output is no longer set when constructing objects.
-    use outputRange(min, max) instead.
-- MIDIbutton is now completely deprecated. Use MIDIswitch instead.
-- MIDIcapSense is now completely deprecated. Use MIDItouch instead.
-- MIDIdrum using TOUCH is deprecated. It's still doable but just too unstable
-    and too niche for this library. Use the Flicker library instead.
+---
 
-  OTHER CHANGES:
-- Added sensitivity(int) function to MIDIdrum. Takes a number between 1 and 100.
-    Lower numbers require higher velocity to trigger MIDI. 100 is default 
-    and triggers even if pressed very slowly. 99 requires at least a light tap.
-- MIDIenc can now take PROGRAM_CHANGE as an argument. This allows the encoder
-    to send program change messages instead of CC messages. 
-- MIDIswitch can now take START, STOP, CONTINUE, CLOCK or SYSTEM_RESET as an
-    argument. This allows the switch to send those messages instead of CC.
-- Better examples
-- Made inclusion of Flicker library optional. Some boards don't to Cap Touch.
+## Requirements & Dependencies
+- **[MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library)** (47effects)
+- **[Bounce2](https://github.com/thomasfredericks/Bounce2)**
+- **[Encoder](https://github.com/PaulStoffregen/Encoder)**
+- **[Flicker](https://github.com/joshnishikawa/Flicker)** (Required only if using capacitive touch pins on supported hardware)
 
-    (thanks @digitalelements for suggestions and testing all of the above)
+---
 
-- MIDIenc.read() now updates the value of the encoder. This allows the value
-    to be changed without actually sending MIDI.
-- Split analogRange and touchRange into separate utilities.
-- Bugfix: MIDIenc.value initialized to outLo when user-specified.
+## Reference Charts
 
-2.5.5
-- Dependency for deprecated Bounce library changed to Bounce2. This allows the 
-    library to be installed via the Arduino IDE2 library manager.
-- Bugfix: "unsigned int = -1" == oops!
-- Other bugfixes
+### Standard MIDI Continuous Controller (CC) Map
+| CC Number | Description / Typical Assignment |
+| :--- | :--- |
+| **0** | Bank Select (MSB) |
+| **1** | Modulation Wheel |
+| **2** | Breath Controller |
+| **4** | Foot Controller |
+| **5** | Portamento Time |
+| **7** | Channel Volume (Main Volume) |
+| **8** | Balance |
+| **10** | Pan Position |
+| **11** | Expression Controller |
+| **16–19** | General Purpose Sliders 1–4 |
+| **64** | Sustain / Damper Pedal (On/Off) |
+| **65** | Portamento (On/Off) |
+| **66** | Sostenuto (On/Off) |
+| **67** | Soft Pedal (On/Off) |
+| **68** | Legato Footswitch |
+| **70** | Sound Variation |
+| **71** | Resonance / Timbre |
+| **72** | Release Time |
+| **73** | Attack Time |
+| **74** | Brightness / Filter Cutoff |
+| **80–83** | General Purpose Buttons 1–4 (On/Off) |
+| **91** | Reverb Send Level |
+| **92** | Tremolo Level |
+| **93** | Chorus Send Level |
+| **120** | All Sound Off |
+| **121** | Reset All Controllers |
+| **123** | All Notes Off |
 
-2.5.3
-- 'MIDIswitch' now preferred over 'MIDIbutton' ( 'MIDIbutton' still works ).
-- Added a send(FORCE) function to allow event-based sending of current CC value.
-    This works for MIDIswitch, MIDIpot, MIDIenc and MIDItouch. This allows
-    'bulk send' to be implemented. WARNING! In the main loop, just use send()
+---
 
-- MIDIswitch default of MOMENTARY works now. use MIDIswitch(pin, CC)
+### General MIDI Percussion / Drum Map (Channel 10)
+| Note # | Key | Instrument Name | Note # | Key | Instrument Name |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **35** | B0 | Acoustic Bass Drum | **51** | D#2 | Ride Cymbal 1 |
+| **36** | C1 | Bass Drum 1 | **52** | E2 | Chinese Cymbal |
+| **37** | C#1 | Side Stick | **53** | F2 | Ride Bell |
+| **38** | D1 | Acoustic Snare | **54** | F#2 | Tambourine |
+| **39** | D#1 | Hand Clap | **55** | G2 | Splash Cymbal |
+| **40** | E1 | Electric Snare | **56** | G#2 | Cowbell |
+| **41** | F1 | Low Floor Tom | **57** | A2 | Crash Cymbal 2 |
+| **42** | F#1 | Closed Hi-Hat | **58** | A#2 | Vibraslap |
+| **43** | G1 | High Floor Tom | **59** | B2 | Ride Cymbal 2 |
+| **44** | G#1 | Pedal Hi-Hat | **60** | C3 | Hi Bongo |
+| **45** | A1 | Low Tom | **61** | C#3 | Low Bongo |
+| **46** | A#1 | Open Hi-Hat | **62** | D3 | Mute Hi Conga |
+| **47** | B1 | Low-Mid Tom | **63** | D#3 | Open Hi Conga |
+| **48** | C2 | Hi-Mid Tom | **64** | E3 | Low Conga |
+| **49** | C#2 | Crash Cymbal 1 | **65** | F3 | High Timbale |
+| **50** | D2 | High Tom | **66** | F#3 | Low Timbale |
 
-2.4.3
-- Fixed the PER_DETENT bug (again).
-- Made PER_DETENT the default since it works cleaner and is probably more useful
-- Added a write(int) function to the MIDIenc class that will set it to a
-    specific value and immediately send a MIDI message for that CC at that value
+---
 
-2.4.2 
-- Fixed a bug preventing PER_DETENT from working on encoders.
+## Acknowledgements & Community Credits
+Special thanks to the contributors whose forks and ideas helped shape this release:
+- **[JukkaPVK](https://github.com/JukkaPVK)**: Created the `MIDIencMulti` multipurpose encoder class, detent accumulator bugfix, and shifted CC concepts.
+- **[PatternAgents](https://github.com/PatternAgents) (Tom Moxon)**: Designed the multi-interface routing architecture (USB/Serial/Host/Debug), virtual USB cable support, and per-instance channel/message configuration.
+- **[Drc3p0](https://github.com/Drc3p0)**: Early multi-interface explorations and the General MIDI drum note and Standard CC reference tables.
 
-2.4.1 
-- Bounce (not Bounce2) is listed as a dependency.
+---
 
-2.4.0
-- The .4. is for the added inputRange() and setWaitTime() functions
-- This update also (actually) fixes that MIDIdrum bug preventing high velocity
+## Version Log
+### 3.3.0
+- **Cross-Platform Support**: Added universal architecture support for Teensy, ESP32, ESP32-S3, RP2040, Arduino AVR, SAMD, and STM32.
+- **Multi-Interface Routing**: Added `MIDItransport` routing engine supporting USB, Serial DIN (`Serial1`), USB Host, and Serial Monitor Debug (`MIDI_INTERFACE_DEBUG`).
+- **`MIDIencMulti` Component**: Added multi-mode encoder supporting absolute CC, 1-CC relative jogwheel, 2-CC relative jogwheel, and shift states.
+- **Encoder Detent Bugfix**: Resolved accumulator clearing bug so `PER_DETENT = 4` stepping functions smoothly.
+- **Per-Control Configuration**: Added `.setChannel(chan, cable, iface)` across all controls, plus `.setOnMessage()` and `.setOffMessage()` for buttons.
+- **Reference Documentation**: Added Standard MIDI CC and General MIDI Drum Map reference tables.
 
-2.3.4 
-- Added inputRange() to MIDIdrum.
-- Added an example for muxed input.
-- Fixed a bug preventing MIDIdrum from sending velocity 127.
+---
 
-2.3.3 
-- Made waitTime for MIDIdrum user-selectable.
-
-2.3.2 
-- Fixed the broken smooth() function for analog inputs.
-
-2.3.1 
-- All examples updated to prevent MIDI and usbMIDI stack crashes.
-
-2.3.0 
-- A major update to the Flicker library:
-    - thresholds for Capacitive Touch buttons are automatically detected 
-    - more stable expression control for MIDItouch(previously MIDIcapSens)
-    - MIDIdrum includes option to use velocity-sensitive Capacitive Touch
-- Even better stabilization of analog inputs
-- Added option for encoders to change 1 CC value per detent
-- Made "killSwitch" user-selectable (just put any CC# instead of KILL)
-- Added setKillSwitch(byte) to set kill CC (use OFF or 0 to disable it).
-- Added a few visual aides
-
-2.2.5 
-- Bugfixed jitter that occurred when using inputRange() with input maxed
-- Arguments for specific velocities can now be passed to velocity inputs
-- Added literals to highlight MOMENTARY, LATCH, TRIGGER and KILL modes
-- Long overdue completion of the "Flicker" library (for Cap Touch input)
-- Made separate examples for 'pot' and 'sensor' (to avoid confusion)
-
-2.2.0 
-- Added support for Piezos (Must be wired properly. See example)
-- "MIDInote" class changed to "MIDIdrum" and optimized for FSR and Piezo
-- Removed redundant 'velocity' variable. Just call outputRange(127, 127)
-- Added support for using a Capacitive Touch input as a MIDIbutton
-- Included 'Flicker' library (required for Capacitive Touch buttons)
-
-2.1.5 
-- got rid of useless '*MC' pointer. renamed 'kill' to 'mode'
-
-2.1.3 
-- included an example of how to implement aftertouch
-
-2.1.2 
-- many variables changed to 'byte' or 'uint16_t' for easy storage
-- public and private variables are better sorted
-
-2.1.0 
-- Split read() and send() functions. MIDI channel is now user selectable
-
-2.0.6 
-- Fixed a bug preventing poly CC to return to zero after note off.
-
-2.0.5 
-- Added a condition to prevent many double note triggers.
-
-2.0.4 
-- Added support for capacitive sensors (and started this version log)
-___
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+## License
+MIT License. Copyright (c) Josh Nishikawa.
