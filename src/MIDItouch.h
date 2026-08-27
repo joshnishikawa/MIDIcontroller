@@ -1,8 +1,8 @@
 #ifndef MIDItouch_h
 #define MIDItouch_h
 
-#include "Arduino.h"
-#include "Flicker.h"
+#include <Arduino.h>
+#include <Flicker.h>
 #include "MIDItransport.h"
 
 #define KILL 9 // previously undefined CC# safe for general purpose assignment

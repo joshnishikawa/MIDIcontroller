@@ -2,8 +2,13 @@
 
 byte MIDIchannel = 5;
 
-const int encPinA = 24;   // Change these numbers to
-const int encPinB = 25;   // the two pins your encoder is on.
+#if defined(D0)
+const int encPinA = D0;
+const int encPinB = D1;
+#else
+const int encPinA = 1;
+const int encPinB = 2;
+#endif
 
 /* Encoder parameters are: 
       1)  pin A (required)
@@ -20,6 +25,7 @@ MIDIenc myEnc(encPinA, encPinB, 24);
 // MIDIenc myEnc(encPinA, encPinB, PROGRAM_CHANGE); // Send program change instead of CC# 
 
 void setup(){
+  MIDI_setup();
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myEnc.write(64); // Initialize the encoder to 64
   // myEnc.outputRange(127, 0); // Reverse the direction of the encoder

@@ -8,9 +8,20 @@
 #include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
-const int touchPin = 22; // Change this to the correct TOUCH pin
 
-/* MIDIpot parameters are:
+#if defined(D0)
+const int touchPin = D0; // XIAO ESP32-S3 (D0 is GPIO 1 / TOUCH1)
+#elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(CONFIG_IDF_TARGET_ESP32S2)
+const int touchPin = 1;  // ESP32-S3 / S2 touch pin (GPIO 1)
+#elif defined(ARDUINO_ARCH_ESP32)
+const int touchPin = 4;  // Classic ESP32 touch pin T0 (GPIO 4)
+#elif defined(__AVR__)
+const int touchPin = A0; // AVR analog pin
+#else
+const int touchPin = 0;  // Teensy TSI touch pin 0
+#endif
+
+/* MIDItouch parameters are:
       1) pin (required)
       2) CC number (required)
       3) a secondary on/off CC# (optional)
@@ -21,6 +32,7 @@ MIDItouch myInput(touchPin, 60);
                                   // CC# 9 ON is sent when threshold is breached.
 
 void setup(){
+  MIDI_setup();
   myInput.inputRange(); // WARNING! If you touch the input during setup(), it won't work.
   // myInput.inputRange(70, 2100); // OR use the 'findTouchRange' example to find values to specify here
 

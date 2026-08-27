@@ -6,7 +6,7 @@
 #include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
-const int switchPin = 2; 
+const int switchPin = D0; 
 const int ledPin = 13; //Set an LED to show the state of the input.
 bool state = false;
 
@@ -14,6 +14,7 @@ MIDIswitch myInput(switchPin, START); // Don't use LATCH
 
 void setup(){
   pinMode(ledPin, OUTPUT);
+  myInput.setThreshold(); // Calibrates the touch sensor baseline threshold (do not touch on power-on)
 }
 
 void loop(){

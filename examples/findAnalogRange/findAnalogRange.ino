@@ -4,11 +4,11 @@
   Use that info to set the input range or threshold for objects in your sketch.
 */
 
-#include "Bounce2.h"
+#include <Bounce2.h>
 
 int analogPin = A0; // Change to the ANALOG pin you want to use.
 int resetPin = 19;  // You can assign a button to reset the values.
-Bounce reset = Bounce(resetPin, 50);
+Bounce reset = Bounce();
 int hi;
 int lo;
 
@@ -21,6 +21,8 @@ void setReset(){
 
 void setup(){
   pinMode(resetPin, INPUT_PULLUP);
+  reset.attach(resetPin);
+  reset.interval(50);
   setReset();
 }
 

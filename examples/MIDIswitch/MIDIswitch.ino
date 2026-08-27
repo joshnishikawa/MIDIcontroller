@@ -6,7 +6,7 @@
 #include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
-const int switchPin = 10; //any digital pin
+const int switchPin = D0; //any digital pin
 const int ledPin = 13;   //Set an LED to show the state of a latch button.
 
 /* MIDIswitch parameters are:
@@ -23,8 +23,8 @@ const int ledPin = 13;   //Set an LED to show the state of a latch button.
           (optional, BINARY is default, TOUCH is for capacitive touch sensors)
 */
 
-MIDIswitch myInput(switchPin, 21); // Momentary button for CC# 21
-// MIDIswitch myInput(switchPin, 21, LATCH);        // will latch on and off
+// MIDIswitch myInput(switchPin, 21); // Momentary button for CC# 21
+MIDIswitch myInput(switchPin, 21, LATCH);        // will latch on and off
 // MIDIswitch myInput(switchPin, 21, LATCH, TOUCH); // use a capacitive touch sensor instead of a switch
 // MIDIswitch myInput(switchPin, START);            // will send start messages
 // MIDIswitch myInput(switchPin, 38, NOTE);           // will send note messages
@@ -33,8 +33,8 @@ void setup(){
   pinMode(ledPin, OUTPUT);
 
   // YOU MUST UNCOMMENT ONE OF THE FOLLOWING 2 LINES TO USE A TOUCH SENSOR
-  // myInput.inputRange(); // WARNING! If you touch the input during setup(), it won't work!
-  // myInput.inputRange(70, 2100); // OR use the 'findTouchRange' example to find values to specify here
+  // myInput.setThreshold(); // Auto-calibrates baseline. WARNING: Do not touch during setup()!
+  // myInput.setThreshold(500); // OR specify a known threshold value directly
 
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myInput.setControlNumber(22); // change CC#

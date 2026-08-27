@@ -1,10 +1,12 @@
 #include "MIDIswitch.h"
 
 // constructors
-MIDIswitch::MIDIswitch() : Bounce(0, 10){};
+MIDIswitch::MIDIswitch() : Bounce(){};
 
-MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
+MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(){
   pinMode(p, INPUT_PULLUP);
+  Bounce::attach(p);
+  Bounce::interval(10);
   number = num;
   numberS = num;
 
@@ -22,9 +24,9 @@ MIDIswitch::MIDIswitch(int p, uint8_t num) : Bounce(p, 10){
 }
 
 #if defined(HAS_CAPACITIVE_TOUCH)
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10), TouchSwitch(p, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(), TouchSwitch(p, 0){
 #else
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(){
 #endif
 
   number = num;
@@ -51,13 +53,17 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t x) : Bounce(p, 10){
       break;
   }
 
-  if (inputType == BINARY) pinMode(p, INPUT_PULLUP);
+  if (inputType == BINARY) {
+    pinMode(p, INPUT_PULLUP);
+    Bounce::attach(p);
+    Bounce::interval(10);
+  }
 }
 
 #if defined(HAS_CAPACITIVE_TOUCH)
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(0, 10), TouchSwitch(p, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(), TouchSwitch(p, 0){
 #else
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(){
 #endif
 
   number = num;
@@ -72,38 +78,61 @@ MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t) : Bounce(p, 10)
       realTime = false;
   }
 
-  switch (m){
-    case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
-      mode = m;
-      break;
-    case BINARY: case TOUCH:
-      inputType = m;
-      break;
+  if (m == BINARY || m == TOUCH || t == BINARY || t == TOUCH) {
+    switch (m){
+      case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
+        mode = m;
+        break;
+      case BINARY: case TOUCH:
+        inputType = m;
+        break;
+    }
+
+    switch (t){
+      case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
+        mode = t;
+        break;
+      case BINARY: case TOUCH:
+        inputType = t;
+        break;
+    }
+  } else {
+    // Neither is BINARY or TOUCH -> treated as (pin, num, numS, mode)
+    numberS = m;
+    mode = t;
   }
 
-  switch (t){
-    case MOMENTARY: case LATCH: case TRIGGER: case NOTE: case DRUM:
-      mode = t;
-      break;
-    case BINARY: case TOUCH:
-      inputType = t;
-      break;
+  if (inputType == BINARY) {
+    pinMode(p, INPUT_PULLUP);
+    Bounce::attach(p);
+    Bounce::interval(10);
   }
-
-  if (inputType == BINARY) pinMode(p, INPUT_PULLUP);
 }
 
 #if defined(HAS_CAPACITIVE_TOUCH)
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m) : Bounce(p, 10), TouchSwitch(p, 0){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m, uint8_t t) : Bounce(), TouchSwitch(p, 0){
 #else
-MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m) : Bounce(p, 10){
+MIDIswitch::MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m, uint8_t t) : Bounce(){
 #endif
-  pinMode(p, INPUT_PULLUP);
   number = num;
   numberS = numS;
   mode = m;
-  realTime = false;
-  outHi = 127;
+  inputType = t;
+
+  switch (num){
+    case START: case STOP: case CONTINUE: case CLOCK: case SYSTEM_RESET:
+      realTime = true;
+      outHi = num;
+      break;
+    default:
+      realTime = false;
+  }
+
+  if (inputType == BINARY) {
+    pinMode(p, INPUT_PULLUP);
+    Bounce::attach(p);
+    Bounce::interval(10);
+  }
 }
 
 // destructor
@@ -273,17 +302,26 @@ void MIDIswitch::write(bool s){
 void MIDIswitch::setControlNumber(byte num){
   switch (num){
     case START: case STOP: case CONTINUE: case CLOCK: case SYSTEM_RESET:
-      number = outHi = num;
+      realTime = true;
+      mode = TRIGGER;
+      number = numberS = outHi = num;
       outLo = 0;
       break;
     default:
+      realTime = false;
       number = num;
+      numberS = num;
       switch (outHi){
         case START: case STOP: case CONTINUE: case CLOCK: case SYSTEM_RESET:
           outHi = 127; // reset to default if Real Time message previously used
           break;
       }
   }
+}
+
+void MIDIswitch::setControlNumber(byte num, byte numS){
+  setControlNumber(num);
+  numberS = numS;
 }
 
 // Set specific min and max values.

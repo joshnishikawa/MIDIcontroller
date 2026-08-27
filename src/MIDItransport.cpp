@@ -53,6 +53,28 @@ void USBMIDI_CompatibilityShim::sendRealTime(uint8_t type, uint8_t cable) {
 void USBMIDI_CompatibilityShim::send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel, uint8_t cable) {
   MIDI_send(type, data1, data2, channel, cable, MIDI_INTERFACE_USB);
 }
+
+bool USBMIDI_CompatibilityShim::read(uint8_t channel) {
+  ensureEsp32USBStarted();
+  return false;
+}
+#endif
+
+#if defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_TINYUSB_ENABLED)
+#include "USB.h"
+#include "USBMIDI.h"
+static USBMIDI esp32USBMIDI;
+static bool esp32USBStarted = false;
+
+void ensureEsp32USBStarted() {
+  if (!esp32USBStarted) {
+    esp32USBStarted = true;
+    esp32USBMIDI.begin();
+    USB.begin();
+  }
+}
+#else
+void ensureEsp32USBStarted() {}
 #endif
 
 void MIDI_send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel, 
@@ -116,6 +138,38 @@ void MIDI_send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel,
       } else {
         usbMIDI.send(type, data1, data2, channel, cable);
       }
+#elif defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_TINYUSB_ENABLED)
+      ensureEsp32USBStarted();
+      if (type >= 0x80 && type < 0xF0) {
+        uint8_t msgType = type & 0xF0;
+        switch (msgType) {
+          case MIDI_NOTE_OFF:
+            esp32USBMIDI.noteOff(data1, data2, channel);
+            break;
+          case MIDI_NOTE_ON:
+            esp32USBMIDI.noteOn(data1, data2, channel);
+            break;
+          case MIDI_CONTROL_CHANGE:
+            esp32USBMIDI.controlChange(data1, data2, channel);
+            break;
+          case MIDI_PROGRAM_CHANGE:
+            esp32USBMIDI.programChange(data1, channel);
+            break;
+          case MIDI_AFTERTOUCH_POLY:
+            esp32USBMIDI.polyPressure(data1, data2, channel);
+            break;
+          case MIDI_AFTERTOUCH_CHAN:
+            esp32USBMIDI.channelPressure(data1, channel);
+            break;
+          case MIDI_PITCH_BEND:
+            esp32USBMIDI.pitchBend((int16_t)(data1 | (data2 << 7)), channel);
+            break;
+          default:
+            break;
+        }
+      } else if (type >= 0xF8) {
+        esp32USBMIDI.write(type);
+      }
 #endif
       break;
 
@@ -145,6 +199,7 @@ void MIDI_send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel,
 }
 
 void MIDI_setup(unsigned long baud) {
+  ensureEsp32USBStarted();
   Serial.begin(baud);
 #if defined(HAVE_HWSERIAL1) || defined(Serial1)
   Serial1.begin(31250);
@@ -152,6 +207,7 @@ void MIDI_setup(unsigned long baud) {
 }
 
 void MIDI_loop(void) {
+  ensureEsp32USBStarted();
 #if defined(MIDI_PLATFORM_TEENSY)
   while (usbMIDI.read()) {}
 #endif

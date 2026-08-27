@@ -54,10 +54,12 @@ public:
   void sendSysEx(uint32_t length, const uint8_t *data, bool hasTerm = true, uint8_t cable = 0);
   void sendRealTime(uint8_t type, uint8_t cable = 0);
   void send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel, uint8_t cable = 0);
-  bool read(uint8_t channel = 0) { return false; }
+  bool read(uint8_t channel = 0);
 };
 extern USBMIDI_CompatibilityShim usbMIDI;
 #endif
+
+void ensureEsp32USBStarted(void);
 
 // Central Dispatch Function
 void MIDI_send(uint8_t type, uint8_t data1, uint8_t data2, uint8_t channel, 

@@ -2,7 +2,6 @@
 #define MIDIenc_h
 
 #include "Arduino.h"
-#include "Bounce2.h"
 #include "Encoder.h"
 #include "MIDItransport.h"
 
@@ -50,7 +49,10 @@ class MIDIenc{
     byte cable = 0;
     byte interface = MIDI_INTERFACE_USB;
 
+    int pinA = -1;
+    int pinB = -1;
     Encoder *myKnob = NULL;
+    void allocateKnob();
     void write(byte val);
     void setControlNumber(byte num);
     void outputRange(byte min, byte max);

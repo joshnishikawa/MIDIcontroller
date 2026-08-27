@@ -3,10 +3,14 @@
 // constructors
 MIDIenc::MIDIenc(){
   myKnob = NULL;
+  pinA = -1;
+  pinB = -1;
 };
 
 MIDIenc::MIDIenc(int a, int b, byte num){
-  myKnob = new Encoder(a, b);
+  pinA = a;
+  pinB = b;
+  myKnob = NULL;
   number = num;
   numberS = num;
   detentOrValue = PER_DETENT; // CC changes once per detent
@@ -16,7 +20,9 @@ MIDIenc::MIDIenc(int a, int b, byte num){
 };
 
 MIDIenc::MIDIenc(int a, int b, byte num, byte detentOrValue){
-  myKnob = new Encoder(a, b);
+  pinA = a;
+  pinB = b;
+  myKnob = NULL;
   number = num;
   numberS = num;
   this->detentOrValue = detentOrValue > 0 ? detentOrValue : PER_DETENT; // CC changes per encoder value or detent
@@ -26,7 +32,9 @@ MIDIenc::MIDIenc(int a, int b, byte num, byte detentOrValue){
 };
 
 MIDIenc::MIDIenc(int a, int b, byte num, byte numS, byte detentOrValue){
-  myKnob = new Encoder(a, b);
+  pinA = a;
+  pinB = b;
+  myKnob = NULL;
   number = num;
   numberS = numS;
   this->detentOrValue = detentOrValue > 0 ? detentOrValue : PER_DETENT; // CC changes per encoder value or detent
@@ -36,7 +44,9 @@ MIDIenc::MIDIenc(int a, int b, byte num, byte numS, byte detentOrValue){
 };
 
 MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue){
-  myKnob = new Encoder(a, b);
+  pinA = a;
+  pinB = b;
+  myKnob = NULL;
   number = num;
   numberS = num;
   this->detentOrValue = detentOrValue > 0 ? detentOrValue : PER_DETENT; // CC changes per encoder value or detent
@@ -46,7 +56,9 @@ MIDIenc::MIDIenc(int a, int b, byte num, byte min, byte max, byte detentOrValue)
 };
 
 MIDIenc::MIDIenc(int a, int b, byte num, byte numS, byte min, byte max, byte detentOrValue){
-  myKnob = new Encoder(a, b);
+  pinA = a;
+  pinB = b;
+  myKnob = NULL;
   number = num;
   numberS = numS;
   this->detentOrValue = detentOrValue > 0 ? detentOrValue : PER_DETENT; // CC changes per encoder value or detent
@@ -63,7 +75,16 @@ MIDIenc::~MIDIenc(){
   }
 };
 
+void MIDIenc::allocateKnob(){
+  if (myKnob == NULL && pinA >= 0 && pinB >= 0) {
+    pinMode(pinA, INPUT_PULLUP);
+    pinMode(pinB, INPUT_PULLUP);
+    myKnob = new Encoder(pinA, pinB);
+  }
+}
+
 int MIDIenc::read(){
+  allocateKnob();
   if (myKnob == NULL) return -1;
   int incdec = myKnob->read();
 
@@ -125,7 +146,11 @@ void MIDIenc::setChannel(byte chan, byte cable, byte iface){
 
 // Manually set the value.
 void MIDIenc::write(byte val){
+  allocateKnob();
   value = constrain(val, outLo, outHi);
+  if (myKnob != NULL) {
+    myKnob->write(0);
+  }
 };
 
 // Set the CC number.

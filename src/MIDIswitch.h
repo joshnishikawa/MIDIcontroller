@@ -1,8 +1,8 @@
 #ifndef MIDIswitch_h
 #define MIDIswitch_h
 
-#include "Arduino.h"
-#include "Bounce2.h"
+#include <Arduino.h>
+#include <Bounce2.h>
 #include "elapsedMillis.h"
 #include "MIDItransport.h"
 
@@ -10,7 +10,7 @@
 // Teensy 3.6, 3.2, 3.1, 3.0, LC, or ESP32 / ESP32-S3
 #if defined(__MK66FX1M0__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__) || defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   #define HAS_CAPACITIVE_TOUCH 1
-  #include "Flicker.h"
+  #include <Flicker.h>
 #endif
 
 #define MOMENTARY 0
@@ -49,12 +49,12 @@ class MIDIswitch: public Bounce{
     // 'x' could be BINARY, TOUCH, MOMENTARY, LATCH, TRIGGER, NOTE or DRUM
     MIDIswitch(int p, uint8_t num, uint8_t x);
 
-    // constructor for specifying mode (MOMENTARY, LATCH, TRIGGER)
-    // and type (BINARY, TOUCH)
+    // constructor for specifying mode (MOMENTARY, LATCH, TRIGGER, etc.)
+    // and type (BINARY, TOUCH), or shifted CC (num, numS, mode)
     MIDIswitch(int p, uint8_t num, uint8_t m, uint8_t t);
 
-    // constructor with shifted CC number
-    MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m);
+    // constructor specifying shifted CC, mode, and type
+    MIDIswitch(int p, uint8_t num, uint8_t numS, uint8_t m, uint8_t t);
 
     // destructor
     ~MIDIswitch();
@@ -98,6 +98,7 @@ class MIDIswitch: public Bounce{
     uint8_t offData2 = 0;
 
     void setControlNumber(byte num);
+    void setControlNumber(byte num, byte numS);
     void setMode(byte mod);
     void outputRange(byte min, byte max);
 };
