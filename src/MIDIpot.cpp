@@ -11,14 +11,13 @@ MIDIpot::MIDIpot(int p, uint8_t num){
   mode = false;
   killSwitch = 0;
   inLo = 0;
-  inHi = 1023;
+  inHi = MIDI_DEFAULT_ADC_MAX;
   outLo = 0;
   outHi = 127;
   invert = outLo > outHi;
 
-  // Sets the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+  divider = divider < 1 ? 1 : divider;
 };
 
 MIDIpot::MIDIpot(int p, uint8_t num, uint8_t k){
@@ -29,14 +28,13 @@ MIDIpot::MIDIpot(int p, uint8_t num, uint8_t k){
   mode = true;
   killSwitch = k;
   inLo = 0;
-  inHi = 1023;
+  inHi = MIDI_DEFAULT_ADC_MAX;
   outLo = 0;
   outHi = 127;
   invert = outLo > outHi;
 
-  // Sets the interval at which alalog signals will actually register.
   divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+  divider = divider < 1 ? 1 : divider;
 };
 
 // destructor
@@ -45,22 +43,21 @@ MIDIpot::~MIDIpot(){
 
 // returns new CC if there's enough change in the analog input; -1 otherwise
 int MIDIpot::read(){
-  int newValue = this->smooth(analogRead(pin), SMOOTHING);
-  if (newValue >= inHi && value != outHi){ // Assign hi analog to hi MIDI
-    value = outHi;
-    return value;
+  return read(analogRead(pin));
+};
+
+int MIDIpot::read(int rawVal){
+  int newValue = this->smooth(rawVal, SMOOTHING);
+  int clamped = constrain(newValue, (int)inLo, (int)inHi);
+
+  int mappedVal = map(clamped, inLo, inHi, outLo, outHi);
+  mappedVal = invert ? constrain(mappedVal, outHi, outLo)
+                     : constrain(mappedVal, outLo, outHi);
+
+  if (mappedVal != value){
+    return mappedVal;
   }
-  else if (newValue <= inLo && value != outLo){ // Assign low analog to low MIDI
-    value = outLo;
-    return value;
-  }
-  else if (newValue % divider == 0){ // Filter intermittent values
-    newValue = map(newValue, inLo, inHi, outLo, outHi);
-    newValue = invert ? constrain(newValue, outHi, outLo)
-                      : constrain(newValue, outLo, outHi);
-    return newValue == value ? -1 : newValue;
-  }
-  else{ return -1; }
+  return -1;
 };
 
 int MIDIpot::send(){
@@ -85,11 +82,13 @@ int MIDIpot::send(bool force){
   if (force){
     balancedValue = analogRead(pin);
     uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
-    uint8_t newValue = map(balancedValue, inLo, inHi, outLo, outHi);
+    int clamped = constrain((int)balancedValue, (int)inLo, (int)inHi);
+    uint8_t newValue = map(clamped, inLo, inHi, outLo, outHi);
     newValue = invert ? constrain(newValue, outHi, outLo)
                       : constrain(newValue, outLo, outHi);
 
     MIDI_send(MIDI_CONTROL_CHANGE, number, newValue, targetChan, cable, interface);
+    value = newValue;
     return newValue;
   }
   else{ return -1; }
@@ -109,19 +108,17 @@ void MIDIpot::setControlNumber(uint8_t num){ // Set the CC number.
 void MIDIpot::outputRange(uint8_t min, uint8_t max){
   outLo = constrain(min, 0, 127);
   outHi = constrain(max, 0, 127);
-  // Reset the interval at which alalog signals will actually register.
-  divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
   invert = outHi < outLo;              // Check again for reverse polarity.
+  divider = !invert ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
+  divider = divider < 1 ? 1 : divider;
 };
 
 // Limit the analog input to the usable range of a sensor.
 void MIDIpot::inputRange(uint16_t min, uint16_t max){
-  inLo = constrain(min, 0, 1023);
-  inHi = constrain(max, 0, 1023);
-  // Reset the interval at which alalog signals will actually register.
+  inLo = min;
+  inHi = max;
   divider = outHi > outLo ? (inHi-inLo)/(outHi-outLo):(inHi-inLo)/(outLo-outHi);
-  divider = divider < 1 ? 1 : divider; // Allows analog range < 127 (NOT GOOD!)
+  divider = divider < 1 ? 1 : divider;
 };
 
 void MIDIpot::setKillSwitch(uint8_t k){
@@ -138,7 +135,7 @@ int MIDIpot::smooth(int val, int NR){
   difference = val - balancedValue;
   buffer = val == 0 ? -NR : val == balancedValue ? buffer/2 : buffer+difference;
 
-  if (buffer*buffer >= NR*NR){ // This works better than abs(buffer) for me.
+  if ((long)buffer*buffer >= (long)NR*NR){
     balancedValue = val;
     buffer = 0;
   }

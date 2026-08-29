@@ -7,6 +7,7 @@ MIDIdrum myPad(FSRpin, 40);
 MIDIpot aftertouch(FSRpin, 77);
 
 void setup(){
+   myPad.setSensitivity(50);  // 100% triggers even without hit (any contact)
 }
 
 void loop(){

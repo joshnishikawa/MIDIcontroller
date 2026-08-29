@@ -10,11 +10,11 @@ MIDIdrum::MIDIdrum(int p, uint8_t num){
   outLo = 1;
   outHi = 127;
 
-  threshold = 12;
-  sensitivity = 10; // 90% sensitive by default
+  threshold = MIDI_DEFAULT_DRUM_THRESH;
+  sensitivity = MIDI_DEFAULT_DRUM_SENS;
   upperThreshold = threshold + sensitivity;
 
-  inHi = 1023;
+  inHi = MIDI_DEFAULT_DRUM_ADC_MAX;
   isOn = false;
   peak = 0;
   state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
@@ -29,12 +29,10 @@ MIDIdrum::MIDIdrum(int p, uint8_t num, uint8_t sens){
   outLo = 0;
   outHi = 127;
 
-  threshold = 10;
-  sens = constrain(sens, 0, 100);
-  sensitivity = 100 - sens;
-  upperThreshold = threshold + sensitivity;
+  threshold = MIDI_DEFAULT_DRUM_THRESH;
+  inHi = MIDI_DEFAULT_DRUM_ADC_MAX;
+  setSensitivity(sens);
 
-  inHi = 1023;
   isOn = false;
   peak = 0;
   state = 0; //0= idle, 1= test velocity, 2= look for peak, 3= ignore aftershock
@@ -142,12 +140,14 @@ void MIDIdrum::outputRange(uint8_t min, uint8_t max){ // Set min & max output va
 
 // Limit the analog input to the usable range of a sensor.
 void MIDIdrum::inputRange(uint16_t thresh, uint16_t max){
-  threshold = constrain(thresh, 0, 1023);
-  inHi = constrain(max, 0, 1023);
+  threshold = thresh;
+  inHi = max;
+  upperThreshold = threshold + sensitivity;
 };
 
 void MIDIdrum::setThreshold(unsigned int thresh){
-  threshold = constrain(thresh, 0, 1023);
+  threshold = thresh;
+  upperThreshold = threshold + sensitivity;
 };
 
 void MIDIdrum::setWaitTime(unsigned int time){
@@ -157,9 +157,10 @@ void MIDIdrum::setWaitTime(unsigned int time){
 void MIDIdrum::setSensitivity(uint8_t sens){
   // sensitivity(100) should be thought of as 100% sensitive meaning that notes
   // will always sound regardless of velocity. 0 would mean that there needs to
-  // be enough velocity to reach an analog reading 100 above the threshold
+  // be enough velocity to reach an analog reading above the threshold
   // within 2ms of the threshold crossing.
   sens = constrain(sens, 0, 100);
-  sensitivity = 100 - sens;
+  int scale = (inHi > 1023) ? (inHi / 1023) : 1;
+  sensitivity = (100 - sens) * scale;
   upperThreshold = threshold + sensitivity;
 };

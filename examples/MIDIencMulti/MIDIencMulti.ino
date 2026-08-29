@@ -4,10 +4,10 @@
 byte MIDIchannel = 1;
 
 // Pins
-const int enc1PinA = 2;
-const int enc1PinB = 3;
-const int enc2PinA = D0;
-const int enc2PinB = D1;
+const int enc1PinA = D0;
+const int enc1PinB = D1;
+const int enc2PinA = D2;
+const int enc2PinB = D3;
 const int shiftButtonPin = D2;
 
 // Create MIDIencMulti objects (can be initialized during setup based on mode switches)

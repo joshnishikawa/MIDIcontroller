@@ -4,7 +4,19 @@
 #include "Arduino.h"
 #include "MIDItransport.h"
 
-#define SMOOTHING 50 // Can be increased at the cost of some responsiveness
+// Platform-aware ADC defaults
+#if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
+  #define MIDI_DEFAULT_ADC_MAX 4095
+  #define MIDI_DEFAULT_POT_SMOOTHING 200
+#else
+  #define MIDI_DEFAULT_ADC_MAX 1023
+  #define MIDI_DEFAULT_POT_SMOOTHING 50
+#endif
+
+#ifndef SMOOTHING
+  #define SMOOTHING MIDI_DEFAULT_POT_SMOOTHING // Can be increased at the cost of some responsiveness
+#endif
+
 #define KILL 9 // previously undefined CC# safe for general purpose assignment
 #define OFF 0
 
@@ -32,12 +44,13 @@ class MIDIpot{
    	~MIDIpot();
 
     int read(); // read input and return a MIDI value (or -1 if none)
+    int read(int raw); // process a raw analog reading and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends/returns MIDI val (or -1 if none)
     int send(bool force); // forces MIDI output regardless of input
     void setChannel(byte chan, byte cable = 0, byte iface = MIDI_INTERFACE_USB);
 
     uint16_t inLo = 0;
-    uint16_t inHi = 1023;
+    uint16_t inHi = MIDI_DEFAULT_ADC_MAX;
     uint8_t outLo = 0;
     uint8_t outHi = 127;
     uint8_t number = 0;

@@ -5,6 +5,17 @@
 #include "elapsedMillis.h"
 #include "MIDItransport.h"
 
+// Platform-aware ADC defaults
+#if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
+  #define MIDI_DEFAULT_DRUM_ADC_MAX 4095
+  #define MIDI_DEFAULT_DRUM_THRESH  48
+  #define MIDI_DEFAULT_DRUM_SENS    40
+#else
+  #define MIDI_DEFAULT_DRUM_ADC_MAX 1023
+  #define MIDI_DEFAULT_DRUM_THRESH  12
+  #define MIDI_DEFAULT_DRUM_SENS    10
+#endif
+
 extern byte MIDIchannel;
 
 class MIDIdrum{
@@ -37,7 +48,7 @@ class MIDIdrum{
     uint8_t number;
     uint8_t outLo = 1;
     uint8_t outHi = 127;
-    unsigned int inHi = 1023;
+    unsigned int inHi = MIDI_DEFAULT_DRUM_ADC_MAX;
     unsigned int threshold, upperThreshold;
 
     byte channel = 0; // 0 = global MIDIchannel
@@ -53,3 +64,4 @@ class MIDIdrum{
 };
 
 #endif
+
