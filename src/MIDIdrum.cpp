@@ -26,7 +26,7 @@ MIDIdrum::MIDIdrum(int p, uint8_t num, uint8_t sens){
   pinMode(p, INPUT);
   pin = p;
   number = num;
-  outLo = 0;
+  outLo = 1;
   outHi = 127;
 
   threshold = MIDI_DEFAULT_DRUM_THRESH;

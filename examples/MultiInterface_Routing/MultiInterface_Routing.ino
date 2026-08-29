@@ -10,8 +10,13 @@
   - Potentiometer 2: Sends MIDI Debug messages to the Serial Monitor
 */
 
+#if defined(D0)
+const int btn1Pin = D0;
+const int btn2Pin = D1;
+#else
 const int btn1Pin = 2;
 const int btn2Pin = 3;
+#endif
 const int pot1Pin = A0;
 const int pot2Pin = A1;
 

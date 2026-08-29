@@ -332,5 +332,7 @@ void MIDIswitch::outputRange(byte min, byte max){
 
 // Set the button mode.
 void MIDIswitch::setMode(byte mod){
-  mode = constrain(mod, 0, 2);
+  if (mod == MOMENTARY || mod == LATCH || mod == TRIGGER || mod == NOTE || mod == DRUM) {
+    mode = mod;
+  }
 }

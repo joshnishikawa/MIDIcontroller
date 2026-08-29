@@ -29,6 +29,8 @@ MIDIpot myPot(potPin, 22);
                               // CC# 9 ON is sent when you start turning it up again.
 
 void setup(){
+  MIDI_setup(); // Optional helper: initializes serial ports
+
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myPot.inputRange(20, 900); // Specify the usable analog range for the pot
   // myPot.outputRange(127, 0); // Reverse the direction of the pot
@@ -36,12 +38,7 @@ void setup(){
 }
 
 void loop(){
+  MIDI_loop(); // Flushes incoming MIDI buffers
+
   myPot.send();
-
-
-// This prevents crashes that happen when incoming usbMIDI is ignored.
-  while(usbMIDI.read()){}
-
-// Also uncomment this if compiling for standard MIDI
-//  while(MIDI.read()){}
 }

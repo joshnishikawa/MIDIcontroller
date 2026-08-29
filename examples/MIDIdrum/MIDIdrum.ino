@@ -36,23 +36,20 @@ MIDIdrum myPad(pressPin, 37);
 // MIDIdrum myPad(pressPin, 37, 100); // Trigger even without hit (any contact)
 
 void setup(){
+  MIDI_setup(); // Optional helper: initializes serial ports
+
   // UNCOMMENT ANY OF THE FOLLOWING LINES TO CHANGE THE DEFAULTS
   // myPad.inputRange(12, 720);  // Specify the usable analog range for the FSR
   // myPad.outputRange(20, 120); // Map input to send only velocities 20 ~ 120
   // myPad.setSensitivity(100);  // 100% triggers even without hit (any contact)
-  myPad.setWaitTime(30);      //'debounce' 30ms before allowing next trigger
+  myPad.setWaitTime(30);        // 'debounce' 30ms before allowing next trigger
 }
 
 void loop(){
+  MIDI_loop(); // Flushes incoming MIDI buffers
+
   myPad.send();
-  //myPad.send(64); could be used for a fixed velocity e.g. 64
-
-
-// This prevents crashes that happen when incoming usbMIDI is ignored.
-  while(usbMIDI.read()){}
-
-// Also uncomment this if compiling for standard MIDI
-//  while(MIDI.read()){}
+  // myPad.send(64); // Optional: send with a fixed velocity (e.g. 64)
 }
 
 /* GM DRUM SOUNDS 

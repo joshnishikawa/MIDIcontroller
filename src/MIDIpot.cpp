@@ -61,7 +61,11 @@ int MIDIpot::read(int rawVal){
 };
 
 int MIDIpot::send(){
-  int newValue = read();
+  return send(analogRead(pin));
+};
+
+int MIDIpot::send(int rawVal){
+  int newValue = read(rawVal);
   uint8_t targetChan = (channel == 0) ? MIDIchannel : channel;
 
   if (killSwitch != 0 && value == outLo && newValue > outLo){ // ON before main CC

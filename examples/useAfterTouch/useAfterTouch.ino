@@ -1,23 +1,32 @@
+/*
+  useAfterTouch.ino
+
+  Demonstrates using a single Force-Sensitive Resistor (FSR) or pressure sensor
+  for BOTH velocity-sensitive drum hits (MIDIdrum) AND continuous pressure /
+  aftertouch (MIDIpot) on the same analog pin!
+*/
+
 #include "MIDIcontroller.h"
 
 byte MIDIchannel = 5;
-const int FSRpin = A0;  // Change this to the ANALOG pin you want to use.
+const int FSRpin = A0;  // Change this to the ANALOG pin connected to your FSR
 
+// Trigger Electric Snare (Note 40) on hit
 MIDIdrum myPad(FSRpin, 40);
-MIDIpot aftertouch(FSRpin, 77);
+
+// Continuous pressure sends Filter Cutoff / Aftertouch (CC 74 or Channel Pressure)
+MIDIpot aftertouch(FSRpin, 74);
 
 void setup(){
-   myPad.setSensitivity(50);  // 100% triggers even without hit (any contact)
+  MIDI_setup(); // Optional helper: initializes serial ports
+
+  myPad.setSensitivity(50); // 100% triggers on light contact; lower requires harder strike
+  myPad.setWaitTime(30);    // 30ms debounce interval
 }
 
 void loop(){
-  myPad.send();
-  aftertouch.send();
+  MIDI_loop(); // Flushes incoming MIDI buffers
 
-
-// This prevents crashes that happen when incoming usbMIDI is ignored.
-  while(usbMIDI.read()){}
-
-// Also uncomment this if compiling for standard MIDI
-//  while(MIDI.read()){}
+  myPad.send();      // Process drum hit trigger
+  aftertouch.send(); // Process continuous pressure modulation
 }

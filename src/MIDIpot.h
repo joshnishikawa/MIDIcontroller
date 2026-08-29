@@ -46,6 +46,7 @@ class MIDIpot{
     int read(); // read input and return a MIDI value (or -1 if none)
     int read(int raw); // process a raw analog reading and return a MIDI value (or -1 if none)
     int send(); // calls read(), sends/returns MIDI val (or -1 if none)
+    int send(int raw); // processes raw reading, sends/returns MIDI val (or -1 if none)
     int send(bool force); // forces MIDI output regardless of input
     void setChannel(byte chan, byte cable = 0, byte iface = MIDI_INTERFACE_USB);
 
