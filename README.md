@@ -91,8 +91,10 @@
 ## Acknowledgements & Community Credits
 Special thanks to the contributors whose forks and ideas helped shape this release:
 - **[JukkaPVK](https://github.com/JukkaPVK)**: Created the `MIDIencMulti` multipurpose encoder class, detent accumulator bugfix, and shifted CC concepts.
-- **[PatternAgents](https://github.com/PatternAgents) (Tom Moxon)**: Designed the multi-interface routing architecture (USB/Serial/Host/Debug), virtual USB cable support, and per-instance channel/message configuration.
+- **[PatternAgents](https://github.com/PatternAgents)**: Designed the multi-interface routing architecture (USB/Serial/Host/Debug), virtual USB cable support, and per-instance channel/message configuration.
 - **[Drc3p0](https://github.com/Drc3p0)**: Early multi-interface explorations and the General MIDI drum note and Standard CC reference tables.
+- **[digitalelements](https://digitalelements.net/)**: Invaluable testing and feedback including several
+great feature suggestions and bugfixes.
 
 ---
 
